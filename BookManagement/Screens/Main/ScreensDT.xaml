@@ -1,0 +1,29 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:BookManagement">
+
+    <DataTemplate DataType="{x:Type local:OfflineScreenVM}">
+        <local:OfflineScreen/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type local:HomeScreenVM}">
+        <local:HomeScreen/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type local:SaleBookScreenVM}">
+        <local:SaleBookScreen/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type local:BookManagementScreenVM}">
+        <local:BookManagementScreen/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type local:BillManagementScreenVM}">
+        <local:BillManagementScreen/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type local:DebtManagementScreenVM}">
+        <local:DebtManagementScreen/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type local:ImportBookManagementScreenVM}">
+        <local:ImportBookManagementScreen/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type local:SettingScreenVM}">
+        <local:SettingScreen/>
+    </DataTemplate>
+</ResourceDictionary>
