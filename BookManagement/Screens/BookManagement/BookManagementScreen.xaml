@@ -4,10 +4,101 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:BookManagement"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+      xmlns:fa="http://schemas.fontawesome.io/icons/"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800">
 
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="50 20">
+            <DockPanel>
+                <!-- Search bar -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <!--<Button Style="{StaticResource ButtonRectangle}"
+                            Margin="0 0 5 0">
+                        <Button.Content>
+                            <DockPanel LastChildFill="False">
+                                <fa:ImageAwesome 
+                                    Icon="Search"
+                                    Foreground="White"
+                                             Height="20"/>
+                                <TextBlock Text="Search"
+                                           VerticalAlignment="Center"
+                                           Margin="8 0 0 0"/>
+                            </DockPanel>
+                        </Button.Content>
+                    </Button>-->
+                    <TextBox 
+                        FontSize="{StaticResource FontSize14}"
+                        Padding="10 0"
+                        Width="320"
+                        Height="40"
+                        Style="{StaticResource MaterialDesignOutlinedTextBox}"/>
+                    <ComboBox Margin="5 0" SelectedItem="{Binding SearchBy}"
+                              Width="72"
+                              ItemsSource="{Binding SearchByOptions}"
+                                Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                                materialDesign:HintAssist.Hint="Search by"
+                                materialDesign:TextFieldAssist.UnderlineBrush="{StaticResource BlackColorBrush}"
+                                materialDesign:HintAssist.Foreground="{StaticResource BlackColorBrush}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding SearchCommand}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
+                </StackPanel>
+            </DockPanel>
+        </Grid>
+
+        <!--<ScrollViewer Grid.Row="2" x:Name="grid" Background="{StaticResource WhiteColorBrush}" 
+              HorizontalScrollBarVisibility="Auto" 
+                      Margin="50 0 50 20">-->
+
+        <DataGrid
+            Grid.Row="2"
+                Margin="50 0 50 20"
+                ItemsSource="{Binding BookList}" x:Name="datagrid" 
+                    MaxHeight="{Binding ElementName=grid, Path=ActualHeight}"
+                    AutoGenerateColumns="False" Grid.ColumnSpan="2"
+                      CanUserReorderColumns="False" CanUserAddRows="False"
+                      CanUserDeleteRows="False" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" MinWidth="100" MaxWidth="400" Width="auto" Binding="{Binding Id}"/>
+                <DataGridTextColumn Header="Book Title" Width="400" MinWidth="200" MaxWidth="700" Binding="{Binding Title}">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style>
+                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Author" Width="400" MinWidth="200" MaxWidth="700" Binding="{Binding Author}">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style>
+                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Category" Width="auto" MinWidth="100" MaxWidth="200" Binding="{Binding Category}"/>
+                <DataGridTextColumn Header="Quantity" Width="auto" MinWidth="100" MaxWidth="200" Binding="{Binding Quantity}"/>
+                <DataGridTextColumn Header="Price" Width="auto" MinWidth="100" MaxWidth="200" Binding="{Binding Price}"/>
+
+            </DataGrid.Columns>
+
+        </DataGrid>
+        <!--</ScrollViewer>-->
+        <Grid.InputBindings>
+            <KeyBinding Key="Enter"
+                            Command="{Binding SearchCommand}"/>
+            <KeyBinding Key="Esc"
+                            Command="{Binding CloseSearchCommand}"/>
+        </Grid.InputBindings>
     </Grid>
 </UserControl>
