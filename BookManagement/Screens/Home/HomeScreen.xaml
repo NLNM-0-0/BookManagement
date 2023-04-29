@@ -4,9 +4,321 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:BookManagement"
+      xmlns:materialDesign ="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+      xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
+      xmlns:fa="http://schemas.fontawesome.io/icons/"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800">
+      d:DesignHeight="900" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style TargetType="TextBlock" x:Key="WhiteText" BasedOn="{StaticResource BaseTextBlockStyle}">
+            <Setter Property="Foreground" Value="{StaticResource WhiteColorBrush}"/>
+            <Setter Property="FontSize" Value="{StaticResource FontSize18}"/>
+        </Style>
+
+        <Style TargetType="TextBlock" x:Key="WhiteBoldText" BasedOn="{StaticResource BaseTextBlockStyle}">
+            <Setter Property="Foreground" Value="{StaticResource WhiteColorBrush}"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="{StaticResource FontSize24}"/>
+        </Style>
+        <Style x:Key="RadioTabButton" TargetType="{x:Type RadioButton}" BasedOn="{StaticResource MaterialDesignTabRadioButton}">
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource PrimaryHueMidBrush}"/>
+            <Setter Property="FontFamily" Value="{StaticResource Regular}"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="FontSize" Value="{StaticResource FontSize24}"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style BasedOn="{StaticResource {x:Type TabItem}}" TargetType="TabItem" x:Key="RadioTabItem">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TabItem}">
+                        <RadioButton IsChecked="{Binding IsSelected, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                                     Style="{StaticResource RadioTabButton}"
+                                     Content="{TemplateBinding Header}"
+                                     FontSize="{StaticResource FontSize24}"
+                                     FontWeight="Regular"
+                                     Width="{TemplateBinding Width}"
+                                     />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
     <Grid>
-        
+        <TabControl Grid.Row="1" Margin="40 0 40 20" x:Name="tabcontrol">
+            <TabItem Style="{StaticResource RadioTabItem}"
+                     Header="Overview" Width="{c:Binding ElementName=tabcontrol, Path=ActualWidth/3}">
+                <Border Width="{c:Binding ElementName=tabcontrol, Path=ActualWidth}"
+                            Height="{c:Binding 'ActualHeight + 20',Path=tabcontrol}">
+                    <Grid Margin="0 20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="180"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="132"/>
+                                <RowDefinition Height="132"/>
+                                <RowDefinition Height="132"/>
+                            </Grid.RowDefinitions>
+
+                            <StackPanel Grid.Row="0" Margin="0 0 0 20">
+                                <DatePicker 
+                            Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
+                        SelectedDate="{Binding FromSelectedDate, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                             Padding="20 10 -80 10"
+                            DisplayDateEnd="{Binding FromSelectedDateMax, Mode=OneWay}"
+                            materialDesign:HintAssist.Hint="From"
+                            >
+                                </DatePicker>
+                                <DatePicker 
+                         Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
+                        SelectedDate="{Binding FromSelectedDate, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                            Padding="20 10 -80 10"
+                            DisplayDateEnd="{Binding FromSelectedDateMax, Mode=OneWay}"
+                            materialDesign:HintAssist.Hint="To"
+                            >
+                                </DatePicker>
+                            </StackPanel>
+                            <materialDesign:Card Grid.Row="1" Padding="20" Margin="0 10" Background="MediumSeaGreen">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Text="Sold Books: "
+                                               Style="{StaticResource WhiteText}"/>
+
+                                    <TextBlock Text="1000" Grid.Row="1"
+                                               VerticalAlignment="Center"
+                                               Style="{StaticResource WhiteBoldText}"/>
+                                    <fa:ImageAwesome Grid.Row="1"
+                                         Foreground="White"
+                                        HorizontalAlignment="Right"
+                                        Icon="ShoppingBag"
+                                        Opacity="1"
+                                        Width="40"
+                                        Height="40"/>
+                                </Grid>
+                            </materialDesign:Card>
+                            <materialDesign:Card Grid.Row="2" Padding="20" Margin="0 10" Background="OrangeRed">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Text="Purchased Books: "
+                                               Style="{StaticResource WhiteText}"/>
+                                    <TextBlock Text="2434" Grid.Row="1"
+                                               VerticalAlignment="Center"
+                                               Style="{StaticResource WhiteBoldText}"/>
+                                    <fa:ImageAwesome Grid.Row="1"
+                                         Foreground="White"
+                                        HorizontalAlignment="Right"
+                                        Icon="Inbox"
+                                        Opacity="1"
+                                        Width="40"
+                                        Height="40"/>
+                                </Grid>
+                            </materialDesign:Card>
+                            <materialDesign:Card Grid.Row="3" Padding="20" Margin="0 10" Background="DodgerBlue">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Text="Customer: "
+                                               Style="{StaticResource WhiteText}"/>
+                                    <TextBlock Text="354" Grid.Row="1"
+                                               VerticalAlignment="Center"
+                                               Style="{StaticResource WhiteBoldText}"/>
+                                    <fa:ImageAwesome Grid.Row="1"
+                                         Foreground="White"
+                                        HorizontalAlignment="Right"
+                                        Icon="Users"
+                                        Opacity="1"
+                                        Width="40"
+                                        Height="40"/>
+                                </Grid>
+                            </materialDesign:Card>
+                        </Grid>
+
+                        <Grid Grid.Column="1"
+                              Margin="20 0 0 0">
+                            <lvc:CartesianChart LegendLocation="Left" >
+                                <lvc:CartesianChart.Series>
+                                    <lvc:LineSeries Values="{Binding Values1}" 
+                       StrokeThickness="4" 
+                       StrokeDashArray="2" 
+                       Stroke="#6BBA45" 
+                       Fill="Transparent" 
+                       LineSmoothness="0" 
+                       PointGeometry="{x:Null}" />
+                                    <lvc:LineSeries Values="{Binding Values2}" 
+                       StrokeThickness="2" 
+                       Stroke="#1C8FC5" 
+                       Fill="Transparent" 
+                       LineSmoothness="1" 
+                       PointGeometrySize="15"/>
+                                </lvc:CartesianChart.Series>
+                                <lvc:CartesianChart.AxisX>
+                                    <lvc:Axis>
+                                        <lvc:Axis.Separator>
+                                            <lvc:Separator StrokeThickness="1" StrokeDashArray="2">
+                                                <lvc:Separator.Stroke>
+                                                    <SolidColorBrush Color="#404F56" />
+                                                </lvc:Separator.Stroke>
+                                            </lvc:Separator>
+                                        </lvc:Axis.Separator>
+                                    </lvc:Axis>
+                                </lvc:CartesianChart.AxisX>
+                                <lvc:CartesianChart.AxisY>
+                                    <lvc:Axis>
+                                        <lvc:Axis.Separator>
+                                            <lvc:Separator StrokeThickness="1.5" StrokeDashArray="4">
+                                                <lvc:Separator.Stroke>
+                                                    <SolidColorBrush Color="#404F56" />
+                                                </lvc:Separator.Stroke>
+                                            </lvc:Separator>
+                                        </lvc:Axis.Separator>
+                                    </lvc:Axis>
+                                </lvc:CartesianChart.AxisY>
+                            </lvc:CartesianChart>
+                        </Grid>
+                    </Grid>
+                </Border>
+            </TabItem>
+
+            <TabItem Header="Stock Report" Width="{c:Binding ElementName=tabcontrol, Path=ActualWidth/3}"
+                     Style="{StaticResource RadioTabItem}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <DockPanel Margin="0 0 0 15" Grid.Row="0" LastChildFill="False">
+                        <DatePicker DockPanel.Dock="Left"
+                            Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
+                        SelectedDate="{Binding FromSelectedDate, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                            Width="200" Padding="20 10 -80 10"
+                            DisplayDateEnd="{Binding FromSelectedDateMax, Mode=OneWay}"
+                            materialDesign:HintAssist.Hint="From"
+                            >
+                        </DatePicker>
+                        <DatePicker 
+                            DockPanel.Dock="Left"
+                         Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
+                        SelectedDate="{Binding FromSelectedDate, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                            Width="200" Margin="10 0 0 0" Padding="20 10 -80 10"
+                            DisplayDateEnd="{Binding FromSelectedDateMax, Mode=OneWay}"
+                            materialDesign:HintAssist.Hint="To"
+                            >
+                        </DatePicker>
+
+                        <Button Style="{StaticResource TransparentButton}" DockPanel.Dock="Right">
+                            <Button.Content>
+                                <fa:ImageAwesome Icon="Print" Height="24"/>
+                            </Button.Content>
+                        </Button>
+                        <TextBlock Text="Export to excel" Margin="0 0 10 0"
+                                   FontSize="{StaticResource FontSize14}"
+                                   DockPanel.Dock="Right" VerticalAlignment="Center"/>
+
+                    </DockPanel>
+
+                    <DataGrid ItemsSource="{Binding}" Grid.Row="1"
+                    MaxHeight="{Binding ElementName=grid, Path=ActualHeight}"
+                    AutoGenerateColumns="False" Grid.ColumnSpan="2"
+                      CanUserReorderColumns="False" CanUserAddRows="False"
+                      CanUserDeleteRows="False" IsReadOnly="True">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Book Id" MinWidth="100" MaxWidth="400" Width="auto" Binding="{Binding}"/>
+                            <DataGridTextColumn Header="Book Title" Width="*" MinWidth="200" MaxWidth="700" Binding="{Binding}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style>
+                                        <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Opening Stock" Width="auto" MinWidth="200" MaxWidth="700" Binding="{Binding}"/>
+                            <DataGridTextColumn Header="Receipt" Width="auto" MinWidth="200" MaxWidth="700" Binding="{Binding}"/>
+                            <DataGridTextColumn Header="Import" Width="auto" MinWidth="200" MaxWidth="700" Binding="{Binding}"/>
+                            <DataGridTextColumn Header="Closing Stock" Width="auto" MinWidth="200" MaxWidth="700" Binding="{Binding}"/>
+
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+
+            </TabItem>
+            <TabItem Header="Debt Report" Width="{c:Binding ElementName=tabcontrol, Path=ActualWidth/3}"
+                     Style="{StaticResource RadioTabItem}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <DockPanel Margin="0 0 0 15" Grid.Row="0" LastChildFill="False">
+                        <DatePicker DockPanel.Dock="Left"
+                            Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
+                        SelectedDate="{Binding FromSelectedDate, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                            Width="200" Padding="20 10 -80 10"
+                            DisplayDateEnd="{Binding FromSelectedDateMax, Mode=OneWay}"
+                            materialDesign:HintAssist.Hint="From"
+                            >
+                        </DatePicker>
+                        <DatePicker 
+                            DockPanel.Dock="Left"
+                         Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
+                        SelectedDate="{Binding FromSelectedDate, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                            Width="200" Margin="10 0 0 0" Padding="20 10 -80 10"
+                            DisplayDateEnd="{Binding FromSelectedDateMax, Mode=OneWay}"
+                            materialDesign:HintAssist.Hint="To"
+                            >
+                        </DatePicker>
+
+                        <Button Style="{StaticResource TransparentButton}" DockPanel.Dock="Right">
+                            <Button.Content>
+                                <fa:ImageAwesome Icon="Print" Height="24"/>
+                            </Button.Content>
+                        </Button>
+                        <TextBlock Text="Export to excel" Margin="0 0 10 0"
+                                   FontSize="{StaticResource FontSize14}"
+                                   DockPanel.Dock="Right" VerticalAlignment="Center"/>
+
+                    </DockPanel>
+                    <DataGrid ItemsSource="{Binding}" Grid.Row="1"
+                    MaxHeight="{Binding ElementName=grid, Path=ActualHeight}"
+                    AutoGenerateColumns="False" Grid.ColumnSpan="2"
+                      CanUserReorderColumns="False" CanUserAddRows="False"
+                      CanUserDeleteRows="False" IsReadOnly="True">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Book Id" MinWidth="100" MaxWidth="400" Width="auto" Binding="{Binding Id}"/>
+                            <DataGridTextColumn Header="Book Title" Width="*" MinWidth="200" MaxWidth="700" Binding="{Binding Title}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style>
+                                        <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Opening Balance" Width="auto" MinWidth="200" MaxWidth="700" Binding="{Binding Author}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style>
+                                        <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Arising amount" Width="auto" MinWidth="200" MaxWidth="700" Binding="{Binding Category}"/>
+                            <DataGridTextColumn Header="Closing Balance" Width="auto" MinWidth="200" MaxWidth="700" Binding="{Binding Quantity}"/>
+
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
+        </TabControl>
     </Grid>
 </UserControl>
