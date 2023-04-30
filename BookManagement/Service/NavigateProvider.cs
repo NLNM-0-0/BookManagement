@@ -81,7 +81,11 @@ namespace BookManagement {
             return new NavigationService<ImportBookManagementScreenVM>(
                 serviceProvider.GetRequiredService<ImportBookManagementScreenVM>);
         }
-
+        static public INavigationService ImportBookPage()
+        {
+            return new NavigationService<ImportBookPageVM>(
+                serviceProvider.GetRequiredService<ImportBookPageVM>);
+        }
         static public INavigationService SettingScreen()
         {
             return new NavigationService<SettingScreenVM>(

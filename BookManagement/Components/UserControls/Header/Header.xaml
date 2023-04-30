@@ -60,12 +60,6 @@
                                 ToolTipService.InitialShowDelay="100">
                 </fa:FontAwesome>
             </Button>
-
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="GotKeyboardFocus" SourceName="searchBar">
-                    <i:InvokeCommandAction Command="{Binding OpenSearchCommand}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
         </DockPanel>
     </Grid>
 </UserControl>

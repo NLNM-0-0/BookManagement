@@ -121,6 +121,10 @@
       <DependentUpon>Drawer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Components\UserControls\Drawer\DrawerVM.cs" />
+    <Compile Include="Components\UserControls\Drawer\ThemePopUp.xaml.cs">
+      <DependentUpon>ThemePopUp.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\UserControls\Drawer\ThemePopUpVM.cs" />
     <Compile Include="Components\UserControls\Header\Header.xaml.cs">
       <DependentUpon>Header.xaml</DependentUpon>
     </Compile>
@@ -163,10 +167,22 @@
       <DependentUpon>HomeScreen.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\Home\HomeScreenVM.cs" />
+    <Compile Include="Screens\ImportBookManagement\AddExistingBook\AddExistingBook.xaml.cs">
+      <DependentUpon>AddExistingBook.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\ImportBookManagement\AddExistingBook\AddExistingBookVM.cs" />
+    <Compile Include="Screens\ImportBookManagement\AddNewBook\AddNewBook.xaml.cs">
+      <DependentUpon>AddNewBook.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\ImportBookManagement\AddNewBook\AddNewBookVM.cs" />
     <Compile Include="Screens\ImportBookManagement\ImportBookManagementScreen.xaml.cs">
       <DependentUpon>ImportBookManagementScreen.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\ImportBookManagement\ImportBookManagementScreenVM.cs" />
+    <Compile Include="Screens\ImportBookManagement\ImportBookPage\ImportBookPage.xaml.cs">
+      <DependentUpon>ImportBookPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\ImportBookManagement\ImportBookPage\ImportBookPageVM.cs" />
     <Compile Include="Screens\Main\MainViewModel.cs" />
     <Compile Include="Screens\SaleBook\SaleBookScreen.xaml.cs">
       <DependentUpon>SaleBookScreen.xaml</DependentUpon>
@@ -189,6 +205,8 @@
     <Compile Include="Utils\RelayCommand.cs" />
     <Compile Include="Utils\RelayCommandWithNoParameter.cs" />
     <Compile Include="Utils\ValidationRule\EmailValidateRule.cs" />
+    <Compile Include="Utils\ValidationRule\NotEmptyValidation.cs" />
+    <Compile Include="Utils\ValidationRule\NumberTextBoxValidation.cs" />
     <Compile Include="Utils\ValidationRule\PasswordValidateRule.cs" />
     <Compile Include="Utils\ValidationRule\PhoneValidateRule.cs" />
     <Compile Include="Utils\ValidationRule\ValidateRegex.cs" />
@@ -212,6 +230,14 @@
     <Page Include="Components\Buttons\TransparentButton.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Components\Buttons\WhiteButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\Buttons\WhiteButtonRectangle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Components\OurDatePicker.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -249,6 +275,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Components\UserControls\Drawer\ThemePopUp.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Components\UserControls\Header\Header.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -278,6 +308,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Screens\DebtManagement\DebtDetail.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\ImportBookManagement\AddExistingBook\AddExistingBook.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\ImportBookManagement\AddNewBook\AddNewBook.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\ImportBookManagement\ImportBookPage\ImportBookPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -372,8 +414,8 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\Icons\Home.png" />
-    <Resource Include="Assets\Images\img_Boarding.jpg" />
     <Resource Include="Assets\Images\Offline.png" />
+    <Resource Include="Assets\Images\img_boarding.png" />
     <Content Include="Assets\Sounds\LoadingSound.mp3" />
   </ItemGroup>
   <ItemGroup />

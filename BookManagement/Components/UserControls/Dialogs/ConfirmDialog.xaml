@@ -9,7 +9,13 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:fa="http://schemas.fontawesome.io/icons/"
              mc:Ignorable="d" d:DesignWidth="590">
-    <Border Background="{StaticResource WhiteColorBrush}" BorderThickness="0" CornerRadius="20" Padding="40" Width="590" Height="auto">
+    <Border 
+        Background="{StaticResource WhiteColorBrush}" 
+        BorderThickness="0" 
+        CornerRadius="20" 
+        Padding="40" 
+        Width="590" 
+        Height="auto">
         <StackPanel x:Name="content">
             <Grid>
                 <TextBlock Text="{Binding Header}" HorizontalAlignment="Left" FontSize="{StaticResource FontSize24}"/>

@@ -27,6 +27,7 @@ namespace BookManagement {
             services.AddTransient<BookManagementScreenVM>();
             services.AddTransient<BillManagementScreenVM>();
             services.AddTransient<ImportBookManagementScreenVM>();
+            services.AddTransient<ImportBookPageVM>();
             services.AddTransient<DebtManagementScreenVM>();
             services.AddTransient<SettingScreenVM>();
             services.AddTransient<OfflineScreenVM>();

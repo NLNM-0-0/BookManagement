@@ -6,7 +6,7 @@
         <ResourceDictionary Source="/Constants/Fonts.xaml" />
         <ResourceDictionary Source="/Components/TextBoxes/TextBoxHintBlackBorder.xaml"/>
     </ResourceDictionary.MergedDictionaries>
-    <Style x:Key="TextBoxHintTransparentBorder" BasedOn="{StaticResource TextBoxHintBlackBorder}" TargetType="{x:Type TextBox}">
+    <Style x:Key="TextBoxHintTransparentBorder" BasedOn="{StaticResource MaterialDesignOutlinedTextBox}" TargetType="{x:Type TextBox}">
         <Setter Property="BorderBrush" Value="Transparent"/>
         <Style.Triggers>
             <Trigger Property="Validation.HasError" Value="True">

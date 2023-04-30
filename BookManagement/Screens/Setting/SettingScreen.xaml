@@ -1,13 +1,15 @@
-﻿<UserControl x:Class="BookManagement.SettingScreen"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
-      xmlns:local="clr-namespace:BookManagement"
-      mc:Ignorable="d" 
-    Background="{StaticResource BackgroundColorBrush}"
-      d:DesignHeight="450" d:DesignWidth="800">
+﻿<UserControl 
+    x:Class="BookManagement.SettingScreen"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:local="clr-namespace:BookManagement"
+    mc:Ignorable="d" 
+    d:Height="850"
+    d:Width="1340"
+    Background="{StaticResource WhiteColorBrush}">
     <UserControl.Resources>
         <Style x:Key="buttonColor" TargetType="{x:Type Button}" BasedOn="{StaticResource MaterialDesignRaisedLightButton}">
             <Setter Property="material:ButtonAssist.CornerRadius" Value="25"/>
@@ -33,97 +35,201 @@
                     <RowDefinition Height="30"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="30"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="30"/>
                 </Grid.RowDefinitions>
-                <StackPanel
+                <TextBlock
                     Grid.Row="1"
-                    Orientation="Vertical"
-                    Margin="30 0">
+                    Text="Setting"
+                    FontSize="{StaticResource FontSize34}"
+                    FontWeight="DemiBold"
+                    HorizontalAlignment="Center"/>
+                <Grid
+                    Grid.Row="3"
+                    HorizontalAlignment="Stretch"
+                    Margin="50 0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="15"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
                     <TextBlock
-                        Text="Color"
-                        FontWeight="SemiBold"
-                        FontSize="{StaticResource FontSize18}"/>
-                    <Grid
-                        Height="10"/>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition Height="10"/>
-                            <RowDefinition/>
-                            <RowDefinition Height="10"/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="10"/>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="10"/>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="10"/>
-                            <ColumnDefinition Width="auto"/>
-                        </Grid.ColumnDefinitions>
-                        <Button
-                            Grid.Column="0"
-                            Grid.Row="0"
-                            Style="{StaticResource buttonColor}"
-                            Background="#f44336"/>
-                        <Button
-                            Grid.Column="2"
-                            Grid.Row="0"
-                            Style="{StaticResource buttonColor}"
-                            Background="#e91e63"/>
-                        <Button
-                            Grid.Column="4"
-                            Grid.Row="0"
-                            Style="{StaticResource buttonColor}"
-                            Background="#9c27b0"/>
-                        <Button
-                            Grid.Column="6"
-                            Grid.Row="0"
-                            Style="{StaticResource buttonColor}"
-                            Background="#2196f3"/>
-                        <Button
-                            Grid.Column="0"
-                            Grid.Row="2"
-                            Style="{StaticResource buttonColor}"
-                            Background="#00bcd4"/>
-                        <Button
-                            Grid.Column="2"
-                            Grid.Row="2"
-                            Style="{StaticResource buttonColor}"
-                            Background="#009688"/>
-                        <Button
-                            Grid.Column="4"
-                            Grid.Row="2"
-                            Style="{StaticResource buttonColor}"
-                            Background="#4caf50"/>
-                        <Button
-                            Grid.Column="6"
-                            Grid.Row="2"
-                            Style="{StaticResource buttonColor}"
-                            Background="#8bc34a"/>
-                        <Button
-                            Grid.Column="0"
-                            Grid.Row="4"
-                            Style="{StaticResource buttonColor}"
-                            Background="#cddc39"/>
-                        <Button
-                            Grid.Column="2"
-                            Grid.Row="4"
-                            Style="{StaticResource buttonColor}"
-                            Background="#795548"/>
-                        <Button
-                            Grid.Column="4"
-                            Grid.Row="4"
-                            Style="{StaticResource buttonColor}"
-                            Background="#9e9e9e"/>
-                        <Button
-                            Grid.Column="6"
-                            Grid.Row="4"
-                            Style="{StaticResource buttonColor}"
-                            Background="#000000"/>
-                    </Grid>
-                </StackPanel>
+                        Grid.Row="0"
+                        Text="Import rule"
+                        FontSize="{StaticResource FontSize18}"
+                        FontWeight="DemiBold"/>
+                    <Border
+                        x:Name="borderContain"
+                        Grid.Row="2"
+                        BorderBrush="{StaticResource BoxLineColorBrush}"
+                        BorderThickness="1"
+                        Padding="15 15"
+                        CornerRadius="5"
+                        HorizontalAlignment="Stretch">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="15"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="30"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="15"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="15"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock
+                                Grid.Row="0"
+                                Text="Minimum number of imported books"
+                                FontSize="{StaticResource FontSize16}"
+                                FontWeight="SemiBold"/>
+                            <TextBox
+                                Grid.Row="2"
+                                Width="auto"
+                                HorizontalAlignment="Stretch"
+                                Height="auto"
+                                Style="{StaticResource TextBoxHintBlackBorder}"
+                                material:HintAssist.Hint=""
+                                material:HintAssist.IsFloating="False"/>
+                            <TextBlock
+                                Grid.Row="4"
+                                Text="Maximum stock before import"
+                                FontSize="{StaticResource FontSize16}"
+                                FontWeight="SemiBold"/>
+                            <TextBox
+                                Grid.Row="6"
+                                Width="auto"
+                                HorizontalAlignment="Stretch"
+                                Height="auto"
+                                Style="{StaticResource TextBoxHintBlackBorder}"
+                                material:HintAssist.Hint=""
+                                material:HintAssist.IsFloating="False"/>
+                        </Grid>
+                    </Border>
+                </Grid>
+                <Grid
+                    Grid.Row="5"
+                    HorizontalAlignment="Stretch"
+                    Margin="50 0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="15"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock
+                        Grid.Row="0"
+                        Text="Sale Rule"
+                        FontSize="{StaticResource FontSize18}"
+                        FontWeight="DemiBold"/>
+                    <Border
+                        Grid.Row="2"
+                        BorderBrush="{StaticResource BoxLineColorBrush}"
+                        BorderThickness="1"
+                        Padding="15 15"
+                        CornerRadius="5">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="15"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="30"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="15"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock
+                                Grid.Row="0"
+                                Text="Maximum debt"
+                                FontSize="{StaticResource FontSize16}"
+                                FontWeight="SemiBold"/>
+                            <TextBox
+                                Grid.Row="2"
+                                HorizontalAlignment="Stretch"
+                                Width="auto"
+                                Height="auto"
+                                Style="{StaticResource TextBoxHintBlackBorder}"
+                                material:HintAssist.Hint=""
+                                material:HintAssist.IsFloating="False"/>
+                            <TextBlock
+                                Grid.Row="4"
+                                Text="Minimum stock after sale"
+                                FontSize="{StaticResource FontSize16}"
+                                FontWeight="SemiBold"/>
+                            <TextBox
+                                Grid.Row="6"
+                                HorizontalAlignment="Stretch"
+                                Width="auto"
+                                Height="auto"
+                                Style="{StaticResource TextBoxHintBlackBorder}"
+                                material:HintAssist.Hint=""
+                                material:HintAssist.IsFloating="False"/>
+                        </Grid>
+                    </Border>
+                </Grid>
+                <Grid
+                    Grid.Row="7"
+                    HorizontalAlignment="Stretch"
+                    Margin="50 0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="15"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock
+                        Grid.Row="0"
+                        Text="Dept rule"
+                        FontSize="{StaticResource FontSize18}"
+                        FontWeight="DemiBold"/>
+                    <Border
+                        Grid.Row="2"
+                        BorderBrush="{StaticResource BoxLineColorBrush}"
+                        BorderThickness="1"
+                        Padding="15 15"
+                        CornerRadius="5">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Column="0"
+                                Text="The proceeds are not greater than the customer's debt"
+                                FontSize="{StaticResource FontSize16}"
+                                FontWeight="SemiBold"/>
+                            <ToggleButton
+                                Grid.Column="1"
+                                Style="{StaticResource MaterialDesignSwitchToggleButton}"
+                                IsChecked="True" />
+                        </Grid>
+                    </Border>
+                </Grid>
+                <Grid
+                    Grid.Row="9"
+                    Margin="30 0"
+                    Width="{Binding ElementName=borderContain,Path=ActualWidth}"
+                    HorizontalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="30"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Button
+                        Background="{StaticResource WhiteColorBrush}"
+                        Foreground="{DynamicResource PrimaryHueMidBrush}"
+                        BorderBrush="{DynamicResource PrimaryHueMidBrush}"
+                        HorizontalAlignment="Right"
+                        Grid.Column="0"
+                        Content="Mặc định"/>
+                    <Button
+                        Grid.Column="2"
+                        Content="Lưu"/>
+                </Grid>
             </Grid>
         </ScrollViewer>
     </Grid>
