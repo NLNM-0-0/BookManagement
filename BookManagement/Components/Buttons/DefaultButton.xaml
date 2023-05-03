@@ -63,7 +63,7 @@
         <ControlTemplate.Triggers>
             <Trigger Property="IsMouseOver" Value="true">
                 <Setter TargetName="border" Property="materialDesign:ShadowAssist.Darken" Value="True" />
-                <Setter Property="Background" Value="{StaticResource NotAvailableColorBrush}"/>
+                <Setter Property="Background" Value="{DynamicResource PrimaryHueLightBrush}"/>
             </Trigger>
             <Trigger Property="IsPressed" Value="true">
                 <Setter TargetName="border" Property="materialDesign:ShadowAssist.Darken" Value="True" />

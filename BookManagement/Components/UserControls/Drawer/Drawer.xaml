@@ -68,158 +68,216 @@
                     HorizontalAlignment="Left"
                     Width="60"
                     Background="{DynamicResource PrimaryHueMidBrush}">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="25*"/>
-                    <ColumnDefinition Width="19*"/>
-                </Grid.ColumnDefinitions>
-                <StackPanel x:Name="st_pnl" Grid.ColumnSpan="2">
-                    <!--// Grid for the Menu Toggle Button //-->
-                    <Grid Height="90">
-                        <!--// Menu title text //-->
-                        <TextBlock  Grid.Row="1"
-                            Grid.Column="0"
-                            Margin="70,-10,0,0"
-                            Text="W A N O"
-                            Foreground="white"
-                            FontSize="28"
-                            Background="Transparent"
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="30"/>
+                </Grid.RowDefinitions>
+                <!--// Grid for the Menu Toggle Button //-->
+                <Grid Height="90" 
+                      Grid.Row="0">
+                    <!--// Menu title text //-->
+                    <TextBlock 
+                        Margin="70,-10,0,0"
+                        Text="B U K U"
+                        Foreground="white"
+                        FontSize="28"
+                        Background="Transparent"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center">
+                        <!--// Shadow Effect //-->
+                        <TextBlock.Effect>
+                            <DropShadowEffect  BlurRadius="10"
+                                                ShadowDepth="1"
+                                                Direction="-90"
+                                                Color="White"/>
+                        </TextBlock.Effect>
+                    </TextBlock>
+                    <!--// Toggle Button //-->
+                    <ToggleButton x:Name="Tg_Btn"
+                            VerticalAlignment="Center"
                             HorizontalAlignment="Left"
-                            VerticalAlignment="Center">
-                            <!--// Shadow Effect //-->
-                            <TextBlock.Effect>
-                                <DropShadowEffect  BlurRadius="10"
-                                                   ShadowDepth="1"
-                                                   Direction="-90"
-                                                   Color="White"/>
-                            </TextBlock.Effect>
-                        </TextBlock>
-                        <!--// Toggle Button //-->
-                        <ToggleButton x:Name="Tg_Btn"
-                                Grid.Column="0"
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Left"
-                                Margin="15,-10,0,0"
-                                Height="30"
-                                Width="30"
-                                BorderThickness="0"
-                                Style="{StaticResource tb_style}">
-                            <!--// Toggle Button - Checked, Unchecked events //-->
-                            <ToggleButton.Triggers>
-                                <EventTrigger RoutedEvent="ToggleButton.Unchecked">
-                                    <BeginStoryboard>
-                                        <Storyboard x:Name="HideStackPanel">
-                                            <DoubleAnimation        
-                                                Storyboard.TargetName="nav_pnl"
-                                                Storyboard.TargetProperty="Width"
-                                                BeginTime="0:0:0"
-                                                From="220" To="60"
-                                                Duration="0:0:0.15">
-                                            </DoubleAnimation>
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </EventTrigger>
-                                <EventTrigger RoutedEvent="ToggleButton.Checked">
-                                    <BeginStoryboard>
-                                        <Storyboard x:Name="ShowStackPanel">
-                                            <DoubleAnimation
-                                                Storyboard.TargetName="nav_pnl"
-                                                Storyboard.TargetProperty="Width"
-                                                BeginTime="0:0:0"
-                                                From="60" To="220"
-                                                Duration="0:0:0.15">
-                                            </DoubleAnimation>
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </EventTrigger>
-                            </ToggleButton.Triggers>
-                        </ToggleButton>
+                            Margin="15,-10,0,0"
+                            Height="30"
+                            Width="30"
+                            BorderThickness="0"
+                            Style="{StaticResource tb_style}">
+                        <!--// Toggle Button - Checked, Unchecked events //-->
+                        <ToggleButton.Triggers>
+                            <EventTrigger RoutedEvent="ToggleButton.Unchecked">
+                                <BeginStoryboard>
+                                    <Storyboard x:Name="HideStackPanel">
+                                        <DoubleAnimation        
+                                            Storyboard.TargetName="nav_pnl"
+                                            Storyboard.TargetProperty="Width"
+                                            BeginTime="0:0:0"
+                                            From="220" To="60"
+                                            Duration="0:0:0.15">
+                                        </DoubleAnimation>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                            <EventTrigger RoutedEvent="ToggleButton.Checked">
+                                <BeginStoryboard>
+                                    <Storyboard x:Name="ShowStackPanel">
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="nav_pnl"
+                                            Storyboard.TargetProperty="Width"
+                                            BeginTime="0:0:0"
+                                            From="60" To="220"
+                                            Duration="0:0:0.15">
+                                        </DoubleAnimation>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </ToggleButton.Triggers>
+                    </ToggleButton>
+                </Grid>
+
+                <!--// ListView with menu list items //-->
+                <ListView   x:Name="LV"
+                            Background="Transparent"
+                            BorderBrush="Transparent"
+                            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                            ItemsSource="{Binding ButtonItems}"
+                            SelectedIndex="{Binding SelectedIndex}"
+                            Grid.Row="1">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged" >
+                            <i:InvokeCommandAction Command="{Binding OnChangeScreen}" CommandParameter="{Binding ElementName=LV}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <!--// Listview item's Container style template //-->
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                        <Border x:Name="Bd"
+                                                Height="55"
+                                                Width="220"
+                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                Background="{TemplateBinding Background}"
+                                                Padding="{TemplateBinding Padding}"
+                                                SnapsToDevicePixels="True">
+
+                                            <ContentPresenter   HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"                                                     
+                                                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+
+                                        </Border>
+
+                                        <ControlTemplate.Triggers>
+                                            <MultiTrigger>
+                                                <MultiTrigger.Conditions>
+                                                    <Condition Property="IsMouseOver" Value="True"/>
+                                                </MultiTrigger.Conditions>
+                                                <Setter Property="Background"
+                                                        TargetName="Bd"
+                                                        Value="{DynamicResource PrimaryHueLightBrush}"/>
+                                                <Setter Property="BorderBrush"
+                                                        TargetName="Bd"
+                                                        Value="{DynamicResource PrimaryHueLightBrush}"/>
+                                            </MultiTrigger>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter Property="Background"
+                                                        TargetName="Bd"
+                                                        Value="white"/>
+                                                <Setter Property="BorderBrush"
+                                                        TargetName="Bd"
+                                                        Value="white"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <!-- Item Template-->
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel x:Name="ButtonContainer" 
+                                        Orientation="Horizontal"
+                                        Width="220" 
+                                        Background="Transparent">
+                                <StackPanel.InputBindings>
+                                    <MouseBinding   Gesture="LeftClick" 
+                                                    Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:Drawer}}, Path=DataContext.OnButtonClick}"
+                                                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ListViewItem}, Path=DataContext.Index}"/>
+                                </StackPanel.InputBindings>
+                                <material:PackIcon  Kind="{Binding Icon}"
+                                                    Width="29" 
+                                                    Height="29"
+                                                    Margin="8, 0, 0, 0"
+                                                    VerticalAlignment="Center" 
+                                                    Style="{StaticResource iconItem}"/>
+                                <Label  x:Name="text" Content="{Binding Text}"
+                                        Margin="25,0,0,0"
+                                        Style="{StaticResource font_style}"
+                                        VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <Border x:Name="themeButton"
+                        Height="50"
+                        Grid.Row="2"
+                        SnapsToDevicePixels="True"
+                        Background="white"
+                        Margin="5 0"
+                        Padding="10 0"
+                        CornerRadius="25"
+                        Cursor="Hand">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <material:PackIcon  x:Name="icon" 
+                                            Grid.Column="0"
+                                            Kind="ColorLens"
+                                            Width="30" 
+                                            Height="30"
+                                            VerticalAlignment="Center"
+                                            Foreground="{DynamicResource PrimaryHueMidBrush}"/>
+                        <TextBlock  x:Name="text" 
+                                    Grid.Column="1"
+                                    Text="Theme"
+                                    Margin="25,0,0,0"
+                                    VerticalAlignment="Center"
+                                    FontSize="{StaticResource FontSize18}"
+                                    Foreground="{DynamicResource PrimaryHueMidBrush}"/>
                     </Grid>
-
-                    <!--// ListView with menu list items //-->
-                    <ListView  x:Name="LV"
-                               Background="Transparent"
-                               BorderBrush="Transparent"
-                               ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                               ItemsSource="{Binding ButtonItems}"
-                               SelectedIndex="{Binding SelectedIndex}">
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="SelectionChanged" >
-                                <i:InvokeCommandAction Command="{Binding OnChangeScreen}" CommandParameter="{Binding ElementName=LV}"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                        <!--// Listview item's Container style template //-->
-                        <ListView.ItemContainerStyle>
-                            <Style TargetType="ListViewItem">
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="{x:Type ListViewItem}">
-                                            <Border x:Name="Bd"
-                                                    Height="55"
-                                                    Width="220"
-                                                    BorderBrush="{TemplateBinding BorderBrush}"
-                                                    BorderThickness="{TemplateBinding BorderThickness}"
-                                                    Background="{TemplateBinding Background}"
-                                                    Padding="{TemplateBinding Padding}"
-                                                    SnapsToDevicePixels="True">
-
-                                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"                                                     VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-
-                                            </Border>
-
-                                            <ControlTemplate.Triggers>
-                                                <MultiTrigger>
-                                                    <MultiTrigger.Conditions>
-                                                        <Condition Property="IsMouseOver" Value="True"/>
-                                                    </MultiTrigger.Conditions>
-                                                    <Setter Property="Background"
-                                                            TargetName="Bd"
-                                                            Value="{DynamicResource PrimaryHueLightBrush}"/>
-                                                    <Setter Property="BorderBrush"
-                                                            TargetName="Bd"
-                                                            Value="{DynamicResource PrimaryHueLightBrush}"/>
-                                                </MultiTrigger>
-                                                <Trigger Property="IsSelected" Value="True">
-                                                    <Setter Property="Background"
-                                                            TargetName="Bd"
-                                                            Value="white"/>
-                                                    <Setter Property="BorderBrush"
-                                                            TargetName="Bd"
-                                                            Value="white"/>
-                                                </Trigger>
-                                            </ControlTemplate.Triggers>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                        </ListView.ItemContainerStyle>
-                        <!-- Item Template-->
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel x:Name="ButtonContainer" Orientation="Horizontal"
-                                        Width="220" Background="Transparent">
-                                    <StackPanel.InputBindings>
-                                        <MouseBinding Gesture="LeftClick" 
-                                                      Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:Drawer}}, Path=DataContext.OnButtonClick}"
-                                                      CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ListViewItem}, Path=DataContext.Index}"/>
-                                    </StackPanel.InputBindings>
-                                    <material:PackIcon Kind="{Binding Icon}"
-                                        Width="29" Height="29"
-                                        Margin="8, 0, 0, 0"
-                                        VerticalAlignment="Center" Style="{StaticResource iconItem}"/>
-                                    <Label x:Name="text" Content="{Binding Text}"
-                                           Margin="25,0,0,0"
-                                           Style="{StaticResource font_style}"
-                                   VerticalAlignment="Center"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-
-                </StackPanel>
+                </Border>
+                <i:Interaction.Triggers>
+                    <i:DataTrigger Binding="{Binding ElementName=themeButton, Path=IsMouseOver}" Value="True">
+                        <i:InvokeCommandAction 
+                                Command="{Binding OnThemeMouseOver}"
+                                CommandParameter="{Binding ElementName=ThemePopUp}"/>
+                    </i:DataTrigger>
+                    <i:DataTrigger Binding="{Binding ElementName=themeButton, Path=IsMouseOver}" Value="False">
+                        <i:InvokeCommandAction 
+                                Command="{Binding OnThemeMouseLeave}"
+                                CommandParameter="{Binding ElementName=ThemePopUp}"/>
+                    </i:DataTrigger>
+                </i:Interaction.Triggers>
+            </Grid>
+            <Grid Grid.Column="1"
+                  Margin="20 0 0 0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="30"/>
+                </Grid.RowDefinitions>
+                <local:ThemePopUp   x:Name="ThemePopUp" 
+                                    Grid.Row="1" 
+                                    Visibility="Collapsed"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Top"/>
             </Grid>
         </Grid>
-
         <!--Blur Box-->
         <Grid x:Name="blurBox" 
               Background="{StaticResource BlackColorBrush}" 

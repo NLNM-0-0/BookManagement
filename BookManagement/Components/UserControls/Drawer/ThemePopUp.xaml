@@ -1,0 +1,75 @@
+﻿<UserControl x:Class="BookManagement.ThemePopUp"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:local="clr-namespace:BookManagement"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style x:Key="buttonColor" TargetType="{x:Type Button}" BasedOn="{StaticResource MaterialDesignRaisedLightButton}">
+            <Setter Property="material:ButtonAssist.CornerRadius" Value="25"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Width" Value="30"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="VerticalContentAlignment" Value="Top"/>
+            <Setter Property="material:ElevationAssist.Elevation" Value="Dp0"/>
+            <Setter Property="Padding" Value="8"/>
+            <Setter Property="Foreground" Value="{StaticResource WhiteColorBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BoxLineColorBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Command" Value="{Binding OnChangePrimaryColor}"/>
+            <Setter Property="CommandParameter" 
+                    Value="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.OpacityMask>
+            <VisualBrush Visual="{Binding ElementName=Container}"/>
+        </Grid.OpacityMask>
+        <Grid.Effect>
+            <DropShadowEffect BlurRadius="50" ShadowDepth="10" Opacity="0.2" Color="{StaticResource Blur}"/>
+        </Grid.Effect>
+        <Border x:Name="Container" 
+                Background="{StaticResource WhiteColorBrush}"
+                CornerRadius="10"
+                BorderBrush="{StaticResource BoxLineColorBrush}"
+                BorderThickness="1"
+                Padding="0 10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="15"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="15"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="15"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="15"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="15"/>
+                </Grid.ColumnDefinitions>
+                <Button
+                    Grid.Column="1"
+                    Grid.Row="0"
+                    Style="{StaticResource buttonColor}"
+                    Background="#2196f3"/>
+                <Button
+                    Grid.Column="3"
+                    Grid.Row="0"
+                    Style="{StaticResource buttonColor}"
+                    Background="#009688"/>
+                <Button
+                    Grid.Column="5"
+                    Grid.Row="0"
+                    Style="{StaticResource buttonColor}"
+                    Background="#e91e63"/>
+                <Button
+                    Grid.Column="7"
+                    Grid.Row="0"
+                    Style="{StaticResource buttonColor}"
+                    Background="#000000"/>
+            </Grid>
+        </Border>
+        
+    </Grid>
+</UserControl>

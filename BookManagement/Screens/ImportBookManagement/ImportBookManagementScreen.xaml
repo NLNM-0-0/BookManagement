@@ -3,11 +3,240 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:fa="http://schemas.fontawesome.io/icons/"
+      xmlns:materialDesign = "http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
       xmlns:local="clr-namespace:BookManagement"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800">
-
+      d:Height="850"
+      d:Width="1340"
+      Background="{StaticResource WhiteColorBrush}">
+    <UserControl.Resources>
+        <Style 
+            TargetType="{x:Type Button}" 
+            x:Key="WhiteButton" 
+            BasedOn="{StaticResource MaterialDesignPaperLightButton}">
+            <Setter Property="Background" Value="{StaticResource WhiteColorBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BoxLineColorBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}"/>
+            <Setter Property="TextBlock.FontFamily" Value="{StaticResource Regular}"/>
+            <Setter Property="TextBlock.FontSize" Value="{DynamicResource FontSizeText}"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Width" Value="100"/>
+            <Setter Property="Content" Value="Button"/>
+            <Setter Property="materialDesign:ButtonAssist.CornerRadius" Value="{c:Binding Path=Height*0.5, RelativeSource={RelativeSource Mode=Self}}"/>
+            <Setter Property="materialDesign:ElevationAssist.Elevation" Value="Dp0"/>
+            <Setter Property="materialDesign:RippleAssist.Feedback" Value="{DynamicResource PrimaryHueLightBrush}"/>
+        </Style>
+        <Style x:Key="RoundButtonAdd" TargetType="{x:Type Button}">
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Width" Value="50"/>
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="Background" Value="{DynamicResource PrimaryHueMidBrush}"/>
+            <Setter Property="materialDesign:ElevationAssist.Elevation" Value="Dp0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border 
+                            x:Name="border" 
+                            Background="{TemplateBinding Background}" 
+                            BorderBrush="{TemplateBinding BorderBrush}" 
+                            BorderThickness="{TemplateBinding BorderThickness}" 
+                            CornerRadius="30" 
+                            SnapsToDevicePixels="true">
+                            <Grid x:Name="Icon">
+                                <fa:ImageAwesome
+                                    Visibility="Visible"
+                                    x:Name="ActiveIcon"
+                                    Icon="Plus"
+                                    Margin="10"
+                                    Foreground="{StaticResource WhiteColorBrush}"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Background" Value="{DynamicResource PrimaryHueLightBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Background" Value="{DynamicResource PrimaryHueMidBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Grid 
+            Margin="50 0" 
+            Grid.Row="1"
+            Height="{Binding ElementName=addButton, Path=ActualHeight}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                x:Name="Header"
+                Grid.ColumnSpan="2"
+                Text="Import"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+                FontSize="{StaticResource FontSize34}"/>
+            <Button 
+                x:Name="addButton"
+                Grid.Column="1"
+                Style="{DynamicResource RoundButtonAdd}"
+                Command="{Binding OnChangeScreen, UpdateSourceTrigger=PropertyChanged}"/>
+        </Grid>
+        <Border Background="{StaticResource BackgroundColorBrush}"
+                Padding="50 30"
+                Margin="0 0 0 30"
+                Grid.Row="3">
+            <Grid>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid 
+                        Grid.Column="0"
+                        Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox 
+                            x:Name="idTextBox"
+                            Grid.Column="0"
+                            Text="{Binding ProductNameSearch}"
+                            Width="auto"
+                            Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                            MaxWidth="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Grid}, Path=ActualWidth}"
+                            materialDesign:HintAssist.Hint="Product Name"/>
+                        <DatePicker
+                            Grid.Column="2"
+                            Style="{StaticResource OurDatePicker}"
+                            materialDesign:HintAssist.Hint="Date import"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Stretch"
+                            Width="auto"
+                            SelectedDate="{Binding SelectedPromo.DateBegin, UpdateSourceTrigger=PropertyChanged}">
+                        </DatePicker>
+                    </Grid>
+                    <Grid 
+                        Grid.Column="0"
+                        Grid.Row="2"
+                        VerticalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="15"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="15"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox 
+                            Grid.Column="0"
+                            x:Name="minPriceTextBox"
+                            Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                            MaxWidth="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Grid}, Path=ActualWidth}"
+                            materialDesign:HintAssist.Hint="Min Price"
+                            materialDesign:TextFieldAssist.SuffixText=" VND"
+                            Width="auto">
+                            <TextBox.Text>
+                                <Binding
+                                        Path="MinPriceSearch"
+                                        UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <local:NumberTextBoxValidation
+                                                IsCanEmpty="True"
+                                                Min="0"/>
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
+                        <TextBlock
+                            Grid.Column="2"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                            Text="-"
+                            Foreground="{StaticResource NotAvailableColorBrush}"
+                            FontSize="{StaticResource FontSize34}"/>
+                        <TextBox 
+                            x:Name="maxPriceTextBox"
+                            Grid.Column="5"
+                            Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                            MaxWidth="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Grid}, Path=ActualWidth}"
+                            materialDesign:HintAssist.Hint="Max Price"
+                            materialDesign:TextFieldAssist.SuffixText=" VND"
+                            Width="auto">
+                            <TextBox.Text>
+                                <Binding
+                                    Path="MaxPriceSearch"
+                                    UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                    <local:NumberTextBoxValidation
+                                        IsCanEmpty="True"
+                                        Min="0"/>
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
+                    </Grid>
+                    <Button 
+                        x:Name="searchButton"
+                        Grid.Column="2"
+                        Grid.Row="0"
+                        Content="Search"
+                        Command="{Binding SearchProductCommand}">
+                    </Button>
+                    <Button
+                        Grid.Column="2"
+                        Grid.Row="2"
+                        Style="{StaticResource WhiteButton}"
+                        Content="Reset">
+                    </Button>
+                </Grid>
+            </Grid>
+        </Border>
+        <DataGrid
+            Grid.Row="5"
+            ItemsSource="{Binding ImportList}" 
+            AutoGenerateColumns="False"
+            CanUserReorderColumns="False" 
+            CanUserAddRows="False"
+            CanUserDeleteRows="False" 
+            IsReadOnly="True"
+            Margin="50 0">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Width="*" Binding="{Binding Id}"/>
+                <DataGridTextColumn Header="Date import" Width="2*" Binding="{Binding Dateimport}"/>
+                <DataGridTextColumn Header="Total" Width="2*" Binding="{Binding Price}"/>
+                <DataGridTemplateColumn Header="Action" Width="*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="View"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+
+        </DataGrid>
     </Grid>
 </UserControl>

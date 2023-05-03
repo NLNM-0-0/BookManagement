@@ -17,7 +17,7 @@ namespace BookManagement {
     public class DrawerVM : BaseViewModel {
         private readonly NavigationStore _navigationStore;
 
-        public ObservableCollection<ButtonItem> ButtonItems => NormalButtonCreate();
+        public ObservableCollection<ButtonItem> ButtonItems => ButtonCreate();
 
         #region Props
         private int selectedIndex = 0;
@@ -42,6 +42,8 @@ namespace BookManagement {
         #region Command
         public ICommand OnChangeScreen { get; set; }
         public ICommand OnButtonClick { get; }
+        public ICommand OnThemeMouseOver { get; set; }
+        public ICommand OnThemeMouseLeave { get; set; }
         #endregion
 
         public DrawerVM() {
@@ -49,7 +51,6 @@ namespace BookManagement {
             _navigationStore.CurrentVMChanged += OnScreenChange;
 
             CanReload = true;
-
             #region Command define
 
             OnChangeScreen = new RelayCommand<object>((p) => {
@@ -110,6 +111,33 @@ namespace BookManagement {
                     stackScreen.RemoveAt(stackScreen.Count - 1);
                 }
             });
+
+            //Theme popup Handle
+            var timer = new DispatcherTimer();
+            OnThemeMouseOver = new RelayCommand<object>(p => {
+                return true;
+            }, p => {
+                ThemePopUp themePopUp = (ThemePopUp)p;
+                timer.Stop();
+                timer.Interval = TimeSpan.FromMilliseconds(200);
+                timer.Tick += delegate {
+                    themePopUp.Visibility = Visibility.Visible;
+                };
+                timer.Start();
+            });
+
+            OnThemeMouseLeave = new RelayCommand<object>(p => {
+                return true;
+            }, p => {
+                ThemePopUp themePopUp = (ThemePopUp)p;
+                timer.Stop();
+                timer.Interval = TimeSpan.FromMilliseconds(300);
+                timer.Tick += delegate {
+                    if (themePopUp.IsMouseOver == false)
+                        themePopUp.Visibility = Visibility.Collapsed;
+                };
+                timer.Start();
+            });
             #endregion
         }
 
@@ -160,7 +188,7 @@ namespace BookManagement {
             SelectedIndex = prevSelected;
         }
 
-        private ObservableCollection<ButtonItem> NormalButtonCreate() {
+        private ObservableCollection<ButtonItem> ButtonCreate() {
             return new ObservableCollection<ButtonItem> {
                     new ButtonItem("Home", "Home", 0),
                     new ButtonItem("CreditCardSettings", "Sale", 1),

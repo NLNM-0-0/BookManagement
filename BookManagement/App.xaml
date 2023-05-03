@@ -13,8 +13,8 @@
                 <ResourceDictionary Source="Constants/Fonts.xaml"/>
                 <ResourceDictionary Source="Components/Buttons/Buttons.xaml"/>
                 <ResourceDictionary Source="Components/TextBoxes/TextBoxes.xaml"/>
-                <ResourceDictionary Source="Components/Scroll.xaml"/>   
-                
+                <ResourceDictionary Source="Components/OurDatePicker.xaml"/>
+                <ResourceDictionary Source="Components/Scroll.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <Color x:Key="PrimaryHue">#2196F3</Color>
 
