@@ -11,7 +11,7 @@ namespace BookManagement {
         public static bool Validate(string value) {
             var str = value;
             if(str == null ||
-                str.Length < 6) {
+                (str.Length < 6 && str.Length != 0)) {
                 return false;
             }
             return true;

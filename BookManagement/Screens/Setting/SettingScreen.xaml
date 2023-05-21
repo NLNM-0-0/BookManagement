@@ -5,12 +5,13 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
     xmlns:local="clr-namespace:BookManagement"
     mc:Ignorable="d" 
-    d:Height="850"
     d:Width="1340"
     Background="{StaticResource WhiteColorBrush}">
     <UserControl.Resources>
+        <local:FalsesToTrueConverters x:Key="FalsesToTrueConverters"/>
         <Style x:Key="buttonColor" TargetType="{x:Type Button}" BasedOn="{StaticResource MaterialDesignRaisedLightButton}">
             <Setter Property="material:ButtonAssist.CornerRadius" Value="25"/>
             <Setter Property="Height" Value="50"/>
@@ -26,211 +27,416 @@
             <Setter Property="CommandParameter" 
                     Value="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
         </Style>
+        <Style x:Key="RadioTabButton" TargetType="{x:Type RadioButton}" BasedOn="{StaticResource MaterialDesignTabRadioButton}">
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource PrimaryHueMidBrush}"/>
+            <Setter Property="FontFamily" Value="{StaticResource Regular}"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="FontSize" Value="{StaticResource FontSize24}"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style 
+            x:Key="RadioTabItem"
+            BasedOn="{StaticResource {x:Type TabItem}}" 
+            TargetType="TabItem">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TabItem}">
+                        <RadioButton IsChecked="{Binding IsSelected, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                                     Style="{StaticResource RadioTabButton}"
+                                     Content="{TemplateBinding Header}"
+                                     FontSize="{StaticResource FontSize24}"
+                                     FontWeight="Regular"
+                                     Width="{TemplateBinding Width}"
+                                     />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </UserControl.Resources>
-    <Grid>
-        <ScrollViewer
-            x:Name="scroll">
+    <TabControl Margin="40 0 40 20" 
+                x:Name="tabcontrol"
+                SelectedIndex="{Binding SelectedPage}">
+        <TabItem Style="{StaticResource RadioTabItem}"
+                 Header="Qui định" 
+                 Width="{c:Binding ElementName=tabcontrol, Path=ActualWidth/2, UpdateSourceTrigger=PropertyChanged}"
+                 IsEnabled="{Binding IsAllowChangeRule, UpdateSourceTrigger=PropertyChanged}">
+            <Grid>
+                <ScrollViewer
+                    x:Name="scroll">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="30"/>
+                        </Grid.RowDefinitions>
+                        <Grid
+                            Grid.Row="1"
+                            Margin="30 0"
+                            HorizontalAlignment="Stretch">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="15"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock
+                                Grid.Row="0"
+                                Text="Qui định nhập"
+                                FontSize="{StaticResource FontSize18}"
+                                FontWeight="DemiBold"/>
+                            <Border
+                                x:Name="borderContain"
+                                Grid.Row="2"
+                                BorderBrush="{StaticResource BoxLineColorBrush}"
+                                BorderThickness="1"
+                                Padding="15 15"
+                                CornerRadius="5"
+                                HorizontalAlignment="Stretch">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="15"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="30"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="15"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="15"/>
+                                        <RowDefinition Height="auto"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock
+                                        Grid.Row="0"
+                                        Text="Lượng sách nhỏ nhất được nhập"
+                                        FontSize="{StaticResource FontSize16}"
+                                        FontWeight="SemiBold"/>
+                                    <TextBox
+                                        x:Name="minImportTextBox"
+                                        Grid.Row="2"
+                                        Width="auto"
+                                        HorizontalAlignment="Stretch"
+                                        Height="auto"
+                                        FontSize="{StaticResource FontSize16}"
+                                        Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                                        material:HintAssist.Hint=""
+                                        material:HintAssist.IsFloating="False">
+                                        <TextBox.Text>
+                                            <Binding
+                                                Path="MinImport"
+                                                UpdateSourceTrigger="PropertyChanged">
+                                                <Binding.ValidationRules>
+                                                    <local:NumberTextBoxValidation
+                                                        Min="0"
+                                                        Type="IntergerType"
+                                                        ValidatesOnTargetUpdated="True"/>
+                                                </Binding.ValidationRules>
+                                            </Binding>
+                                        </TextBox.Text>
+                                    </TextBox>
+                                    <TextBlock
+                                        Grid.Row="4"
+                                        Text="Lượng tồn kho tối đa được phép nhập"
+                                        FontSize="{StaticResource FontSize16}"
+                                        FontWeight="SemiBold"/>
+                                    <TextBox
+                                        x:Name="maxInStockWhenImportTextBox"
+                                        Grid.Row="6"
+                                        Width="auto"
+                                        HorizontalAlignment="Stretch"
+                                        Height="auto"
+                                        FontSize="{StaticResource FontSize16}"
+                                        Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                                        material:HintAssist.Hint=""
+                                        material:HintAssist.IsFloating="False">
+                                        <TextBox.Text>
+                                            <Binding
+                                                Path="MaxInStockWhenImport"
+                                                UpdateSourceTrigger="PropertyChanged">
+                                                <Binding.ValidationRules>
+                                                    <local:NumberTextBoxValidation
+                                                        Min="0"
+                                                        Type="IntergerType"
+                                                        ValidatesOnTargetUpdated="True"/>
+                                                </Binding.ValidationRules>
+                                            </Binding>
+                                        </TextBox.Text>
+                                    </TextBox>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                        <Grid
+                            Grid.Row="3"
+                            Margin="30 0"
+                            HorizontalAlignment="Stretch">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="15"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock
+                                Grid.Row="0"
+                                Text="Qui định bán"
+                                FontSize="{StaticResource FontSize18}"
+                                FontWeight="DemiBold"/>
+                            <Border
+                                Grid.Row="2"
+                                BorderBrush="{StaticResource BoxLineColorBrush}"
+                                BorderThickness="1"
+                                Padding="15 15"
+                                CornerRadius="5">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="15"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="30"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="15"/>
+                                        <RowDefinition Height="auto"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock
+                                        Grid.Row="0"
+                                        Text="Tiền nợ tối đa được phép bán"
+                                        FontSize="{StaticResource FontSize16}"
+                                        FontWeight="SemiBold"/>
+                                    <TextBox
+                                        x:Name="maxDeptTextBox"
+                                        Grid.Row="2"
+                                        HorizontalAlignment="Stretch"
+                                        Width="auto"
+                                        Height="auto"
+                                        FontSize="{StaticResource FontSize16}"
+                                        Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                                        material:HintAssist.Hint=""
+                                        material:HintAssist.IsFloating="False">
+                                        <TextBox.Text>
+                                            <Binding
+                                                Path="MaxDept"
+                                                UpdateSourceTrigger="PropertyChanged">
+                                                <Binding.ValidationRules>
+                                                    <local:NumberTextBoxValidation
+                                                        Min="0"
+                                                        Type="IntergerType"
+                                                        ValidatesOnTargetUpdated="True"/>
+                                                </Binding.ValidationRules>
+                                            </Binding>
+                                        </TextBox.Text>
+                                    </TextBox>
+                                    <TextBlock
+                                        Grid.Row="4"
+                                        Text="Số lượng sách còn lại ít nhất sau khi bán"
+                                        FontSize="{StaticResource FontSize16}"
+                                        FontWeight="SemiBold"/>
+                                    <TextBox
+                                        x:Name="maxInStockWhenSellTextBox"
+                                        Grid.Row="6"
+                                        HorizontalAlignment="Stretch"
+                                        Width="auto"
+                                        Height="auto"
+                                        FontSize="{StaticResource FontSize16}"
+                                        Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                                        material:HintAssist.Hint=""
+                                        material:TextFieldAssist.HasTrailingIcon="True"
+                                        material:TextFieldAssist.TrailingIcon="Percent"
+                                        material:HintAssist.IsFloating="False">
+                                        <TextBox.Text>
+                                            <Binding
+                                                Path="MaxInStockWhenSell"
+                                                UpdateSourceTrigger="PropertyChanged">
+                                                <Binding.ValidationRules>
+                                                    <local:NumberTextBoxValidation
+                                                        Min="0"
+                                                        Type="IntergerType"
+                                                        ValidatesOnTargetUpdated="True"/>
+                                                </Binding.ValidationRules>
+                                            </Binding>
+                                        </TextBox.Text>
+                                    </TextBox>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                        <Grid
+                            Grid.Row="5"
+                            Margin="30 0"
+                            HorizontalAlignment="Stretch">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="15"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock
+                                Grid.Row="0"
+                                Text="Qui định nợ"
+                                FontSize="{StaticResource FontSize18}"
+                                FontWeight="DemiBold"/>
+                            <Border
+                                Grid.Row="2"
+                                BorderBrush="{StaticResource BoxLineColorBrush}"
+                                BorderThickness="1"
+                                Padding="15 15"
+                                CornerRadius="5">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock
+                                        Grid.Column="0"
+                                        Text="Số tiền thu không vượt quá số tiền khách hàng nợ"
+                                        FontSize="{StaticResource FontSize16}"
+                                        FontWeight="SemiBold"/>
+                                    <ToggleButton
+                                        Grid.Column="1"
+                                        Style="{StaticResource MaterialDesignSwitchToggleButton}"
+                                        IsChecked="{Binding IsCheckCollectedMoney, UpdateSourceTrigger=PropertyChanged}" />
+                                </Grid>
+                            </Border>
+                        </Grid>
+                        <Grid
+                            Grid.Row="7"
+                            Margin="30 0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Button
+                                Background="{StaticResource WhiteColorBrush}"
+                                Foreground="{DynamicResource PrimaryHueMidBrush}"
+                                BorderBrush="{DynamicResource PrimaryHueMidBrush}"
+                                HorizontalAlignment="Right"
+                                Grid.Column="0"
+                                FontSize="{StaticResource FontSize16}"
+                                Content="Khôi phục"
+                                Command="{Binding BackToPreviousRuleCommand, UpdateSourceTrigger=PropertyChanged}"/>
+                            <Button
+                                Grid.Column="2"
+                                FontSize="{StaticResource FontSize16}"
+                                Content="Lưu"
+                                Command="{Binding SaveRuleCommand, UpdateSourceTrigger=PropertyChanged}">
+                                <Button.IsEnabled>
+                                    <MultiBinding Converter="{StaticResource FalsesToTrueConverters}">
+                                        <Binding ElementName="minImportTextBox" Path="(Validation.HasError)"/>
+                                        <Binding ElementName="maxInStockWhenImportTextBox" Path="(Validation.HasError)"/>
+                                        <Binding ElementName="maxDeptTextBox" Path="(Validation.HasError)"/>
+                                        <Binding ElementName="maxInStockWhenSellTextBox" Path="(Validation.HasError)"/>
+                                    </MultiBinding>
+                                </Button.IsEnabled>
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </ScrollViewer>
+            </Grid>
+        </TabItem>
+        <TabItem Style="{StaticResource RadioTabItem}"
+                 Header="Phân quyền"
+                 Width="{c:Binding ElementName=tabcontrol, Path=ActualWidth/2}"
+                 IsEnabled="{c:Binding IsAllowDecentralization, UpdateSourceTrigger=PropertyChanged}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="30"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="30"/>
-                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
                     <RowDefinition Height="30"/>
                     <RowDefinition Height="auto"/>
-                    <RowDefinition Height="30"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="30"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="30"/>
                 </Grid.RowDefinitions>
-                <TextBlock
-                    Grid.Row="1"
-                    Text="Setting"
-                    FontSize="{StaticResource FontSize34}"
-                    FontWeight="DemiBold"
-                    HorizontalAlignment="Center"/>
                 <Grid
-                    Grid.Row="3"
-                    HorizontalAlignment="Stretch"
-                    Margin="50 0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="15"/>
-                        <RowDefinition Height="auto"/>
-                    </Grid.RowDefinitions>
-                    <TextBlock
-                        Grid.Row="0"
-                        Text="Import rule"
-                        FontSize="{StaticResource FontSize18}"
-                        FontWeight="DemiBold"/>
-                    <Border
-                        x:Name="borderContain"
-                        Grid.Row="2"
-                        BorderBrush="{StaticResource BoxLineColorBrush}"
-                        BorderThickness="1"
-                        Padding="15 15"
-                        CornerRadius="5"
-                        HorizontalAlignment="Stretch">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="15"/>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="30"/>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="15"/>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="15"/>
-                                <RowDefinition Height="auto"/>
-                            </Grid.RowDefinitions>
-                            <TextBlock
-                                Grid.Row="0"
-                                Text="Minimum number of imported books"
-                                FontSize="{StaticResource FontSize16}"
-                                FontWeight="SemiBold"/>
-                            <TextBox
-                                Grid.Row="2"
-                                Width="auto"
-                                HorizontalAlignment="Stretch"
-                                Height="auto"
-                                Style="{StaticResource TextBoxHintBlackBorder}"
-                                material:HintAssist.Hint=""
-                                material:HintAssist.IsFloating="False"/>
-                            <TextBlock
-                                Grid.Row="4"
-                                Text="Maximum stock before import"
-                                FontSize="{StaticResource FontSize16}"
-                                FontWeight="SemiBold"/>
-                            <TextBox
-                                Grid.Row="6"
-                                Width="auto"
-                                HorizontalAlignment="Stretch"
-                                Height="auto"
-                                Style="{StaticResource TextBoxHintBlackBorder}"
-                                material:HintAssist.Hint=""
-                                material:HintAssist.IsFloating="False"/>
-                        </Grid>
-                    </Border>
+                    Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <!--The column below just to decorate has not use-->
+                        <ColumnDefinition Width="4*"/>
+                    </Grid.ColumnDefinitions>
+                    <ComboBox
+                        x:Name="userGroupComboBox"
+                        Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                        material:TextFieldAssist.TextFieldCornerRadius="5"
+                        ItemsSource="{Binding UserGroupList, UpdateSourceTrigger=PropertyChanged}"
+                        SelectedItem="{Binding UserGroup,UpdateSourceTrigger=PropertyChanged}"
+                        FontSize="{StaticResource FontSize16}"
+                        material:HintAssist.Hint="Nhóm người dùng"
+                        DisplayMemberPath="TenNhomNguoiDung"/>
                 </Grid>
+                <ScrollViewer
+                    Grid.Row="3">
+                    <StackPanel 
+                        IsHitTestVisible="True"
+                        ScrollViewer.CanContentScroll="False"
+                        Margin="30 0">
+                        <ItemsControl 
+                            ItemsSource="{Binding AccessList, UpdateSourceTrigger=PropertyChanged}"
+                            ScrollViewer.CanContentScroll="True">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border
+                                        BorderBrush="{StaticResource BoxLineColorBrush}"
+                                        BorderThickness="0 0 0 1">
+                                        <Grid
+                                            Margin="0 15">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="auto"/>
+                                                <ColumnDefinition Width="auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="30"/>
+                                                <ColumnDefinition Width="auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock
+                                                Grid.Column="0"
+                                                Margin="0 5 0 0"
+                                                Text="{Binding Index, UpdateSourceTrigger=PropertyChanged}"
+                                                FontSize="{StaticResource FontSize16}"/>
+                                            <TextBlock
+                                                Grid.Column="1"
+                                                Margin="0 5 0 0"
+                                                Text=". "
+                                                FontSize="{StaticResource FontSize16}"/>
+                                            <TextBlock
+                                                Grid.Column="2"
+                                                Margin="0 5 0 0"
+                                                Text="{Binding Access.TenChucNang, UpdateSourceTrigger=PropertyChanged}"
+                                                FontSize="{StaticResource FontSize16}"/>
+                                            <CheckBox
+                                                Grid.Column="3"
+                                                Style="{StaticResource MaterialDesignCheckBox}"
+                                                material:CheckBoxAssist.CheckBoxSize="30"
+                                                IsChecked="{Binding IsAllowed, UpdateSourceTrigger=PropertyChanged}"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </ScrollViewer>
                 <Grid
                     Grid.Row="5"
-                    HorizontalAlignment="Stretch"
-                    Margin="50 0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="15"/>
-                        <RowDefinition Height="auto"/>
-                    </Grid.RowDefinitions>
-                    <TextBlock
-                        Grid.Row="0"
-                        Text="Sale Rule"
-                        FontSize="{StaticResource FontSize18}"
-                        FontWeight="DemiBold"/>
-                    <Border
-                        Grid.Row="2"
-                        BorderBrush="{StaticResource BoxLineColorBrush}"
-                        BorderThickness="1"
-                        Padding="15 15"
-                        CornerRadius="5">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="15"/>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="30"/>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="15"/>
-                                <RowDefinition Height="auto"/>
-                            </Grid.RowDefinitions>
-                            <TextBlock
-                                Grid.Row="0"
-                                Text="Maximum debt"
-                                FontSize="{StaticResource FontSize16}"
-                                FontWeight="SemiBold"/>
-                            <TextBox
-                                Grid.Row="2"
-                                HorizontalAlignment="Stretch"
-                                Width="auto"
-                                Height="auto"
-                                Style="{StaticResource TextBoxHintBlackBorder}"
-                                material:HintAssist.Hint=""
-                                material:HintAssist.IsFloating="False"/>
-                            <TextBlock
-                                Grid.Row="4"
-                                Text="Minimum stock after sale"
-                                FontSize="{StaticResource FontSize16}"
-                                FontWeight="SemiBold"/>
-                            <TextBox
-                                Grid.Row="6"
-                                HorizontalAlignment="Stretch"
-                                Width="auto"
-                                Height="auto"
-                                Style="{StaticResource TextBoxHintBlackBorder}"
-                                material:HintAssist.Hint=""
-                                material:HintAssist.IsFloating="False"/>
-                        </Grid>
-                    </Border>
-                </Grid>
-                <Grid
-                    Grid.Row="7"
-                    HorizontalAlignment="Stretch"
-                    Margin="50 0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="15"/>
-                        <RowDefinition Height="auto"/>
-                    </Grid.RowDefinitions>
-                    <TextBlock
-                        Grid.Row="0"
-                        Text="Dept rule"
-                        FontSize="{StaticResource FontSize18}"
-                        FontWeight="DemiBold"/>
-                    <Border
-                        Grid.Row="2"
-                        BorderBrush="{StaticResource BoxLineColorBrush}"
-                        BorderThickness="1"
-                        Padding="15 15"
-                        CornerRadius="5">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="auto"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock
-                                Grid.Column="0"
-                                Text="The proceeds are not greater than the customer's debt"
-                                FontSize="{StaticResource FontSize16}"
-                                FontWeight="SemiBold"/>
-                            <ToggleButton
-                                Grid.Column="1"
-                                Style="{StaticResource MaterialDesignSwitchToggleButton}"
-                                IsChecked="True" />
-                        </Grid>
-                    </Border>
-                </Grid>
-                <Grid
-                    Grid.Row="9"
-                    Margin="30 0"
-                    Width="{Binding ElementName=borderContain,Path=ActualWidth}"
-                    HorizontalAlignment="Center">
+                    Margin="30 0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="30"/>
                         <ColumnDefinition Width="auto"/>
                     </Grid.ColumnDefinitions>
                     <Button
+                        Grid.Column="0"
                         Background="{StaticResource WhiteColorBrush}"
                         Foreground="{DynamicResource PrimaryHueMidBrush}"
                         BorderBrush="{DynamicResource PrimaryHueMidBrush}"
                         HorizontalAlignment="Right"
-                        Grid.Column="0"
-                        Content="Mặc định"/>
+                        FontSize="{StaticResource FontSize16}"
+                        Content="Khôi phục"
+                        Command="{Binding BackToPreviousAccessCommand, UpdateSourceTrigger=PropertyChanged}"/>
                     <Button
                         Grid.Column="2"
-                        Content="Lưu"/>
+                        FontSize="{StaticResource FontSize16}"
+                        Content="Lưu"
+                        Command="{Binding SaveAccessCommand, UpdateSourceTrigger=PropertyChanged}"/>
                 </Grid>
             </Grid>
-        </ScrollViewer>
-    </Grid>
+        </TabItem>
+    </TabControl>
 </UserControl>

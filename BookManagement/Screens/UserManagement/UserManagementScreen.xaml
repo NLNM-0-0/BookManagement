@@ -1,0 +1,334 @@
+﻿<UserControl x:Class="BookManagement.UserManagementScreen"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
+             xmlns:local="clr-namespace:BookManagement"
+             mc:Ignorable="d" 
+             d:DesignHeight="900" d:DesignWidth="1440">
+    <UserControl.Resources>
+        <local:BindingProxy x:Key="proxy" Data="{Binding}"/>
+        <local:FalsesToTrueConverters x:Key="FalsesToTrueConverters"/>
+        <Style x:Key="buttonColor" TargetType="{x:Type Button}" BasedOn="{StaticResource MaterialDesignRaisedLightButton}">
+            <Setter Property="materialDesign:ButtonAssist.CornerRadius" Value="25"/>
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="Width" Value="50"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="VerticalContentAlignment" Value="Top"/>
+            <Setter Property="materialDesign:ElevationAssist.Elevation" Value="Dp0"/>
+            <Setter Property="Padding" Value="8"/>
+            <Setter Property="Foreground" Value="{StaticResource WhiteColorBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BoxLineColorBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Command" Value="{Binding OnChangePrimaryColor}"/>
+            <Setter Property="CommandParameter" 
+                    Value="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
+        </Style>
+        <Style x:Key="RadioTabButton" TargetType="{x:Type RadioButton}" BasedOn="{StaticResource MaterialDesignTabRadioButton}">
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource PrimaryHueMidBrush}"/>
+            <Setter Property="FontFamily" Value="{StaticResource Regular}"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="FontSize" Value="{StaticResource FontSize24}"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style 
+            x:Key="RadioTabItem"
+            BasedOn="{StaticResource {x:Type TabItem}}" 
+            TargetType="TabItem">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TabItem}">
+                        <RadioButton IsChecked="{Binding IsSelected, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                                     Style="{StaticResource RadioTabButton}"
+                                     Content="{TemplateBinding Header}"
+                                     FontSize="{StaticResource FontSize24}"
+                                     FontWeight="Regular"
+                                     Width="{TemplateBinding Width}"
+                                     />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    <TabControl Margin="40 0 40 20" 
+                x:Name="tabcontrol"
+                SelectedIndex="{Binding SelectedPage}">
+        <TabItem Style="{StaticResource RadioTabItem}"
+                 Header="Quản lý nhân viên" 
+                 Width="{c:Binding ElementName=tabcontrol, Path=ActualWidth/2, UpdateSourceTrigger=PropertyChanged}"
+                 IsEnabled="{c:Binding '(IsAllowSearchUser or IsAllowAddUser)', UpdateSourceTrigger=PropertyChanged}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid 
+                    Grid.Row="0"
+                    Margin="0 50 0 30">
+                    <DockPanel>
+                        <Button 
+                            DockPanel.Dock="Right"
+                            Content="Thêm"
+                            Padding="30 0"
+                            Width="auto"
+                            FontSize="{StaticResource FontSize16}"
+                            Command="{Binding OpenAddUserDialogCommand, UpdateSourceTrigger=PropertyChanged}"
+                            Visibility="{c:Binding IsAllowAddUser, UpdateSourceTrigger=PropertyChanged}"/>
+
+
+                        <Button 
+                            DockPanel.Dock="Right" 
+                            Margin="0 0 15 0"
+                            Padding="30 0"
+                            Width="auto"
+                            FontSize="{StaticResource FontSize16}"
+                            Content="{Binding RemoveOrUnBanned}"
+                            Command="{Binding RemoveUserCommand}"
+                            CommandParameter="{Binding ElementName=datagrid, Path=SelectedItem}"/>
+
+                        <!-- Search bar -->
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+
+                            <local:SearchBar Width="600" SearchText="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
+                            <ComboBox 
+                                Margin="15 0" 
+                                Width="100"
+                                FontSize="{StaticResource FontSize16}"
+                                SelectedItem="{Binding SearchBy}"
+                                ItemsSource="{Binding SearchByOptions}"
+                                Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                                materialDesign:HintAssist.Hint="Search by">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="SelectionChanged">
+                                        <i:InvokeCommandAction Command="{Binding SearchCommand}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </ComboBox>
+                        </StackPanel>
+                    </DockPanel>
+                </Grid>
+
+                <TextBlock
+                    Grid.Row="1"
+                    Text="* Bạn hiện không có quyền tra cứu nhân viên. Hãy liên hệ với người có quyền hành để được giải quyết."
+                    FontSize="{StaticResource FontSize16}"
+                    Foreground="{StaticResource ErrorColorBrush}"
+                    Margin="0 0 0 30"
+                    Visibility="{c:Binding '!IsAllowSearchUser', UpdateSourceTrigger=PropertyChanged, FalseToVisibility=Collapsed}"/>
+                <StackPanel Grid.Row="2" 
+                            Orientation="Horizontal" 
+                            HorizontalAlignment="Right">
+                    <TextBlock 
+                        Text="{Binding StatusText}" Margin="5 0 5 0"
+                        FontSize="{StaticResource FontSize14}"/>
+
+                    <ToggleButton 
+                        Margin="5 0 5 0"
+                        Style="{StaticResource MaterialDesignSwitchToggleButton}"
+                        materialDesign:ToggleButtonAssist.SwitchTrackOnBackground="{StaticResource BlackColorBrush}"
+                        IsChecked="{Binding IsChecked, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
+                <ScrollViewer
+                    x:Name="grid" 
+                    Grid.Row="3" 
+                    Margin="0 30 0 0"
+                    Background="{StaticResource WhiteColorBrush}"
+                    HorizontalScrollBarVisibility="Auto" 
+                    ScrollViewer.CanContentScroll="True">
+                    <DataGrid 
+                        x:Name="datagrid" 
+                        Grid.ColumnSpan="2"
+                        ItemsSource="{Binding FilteredUsers, UpdateSourceTrigger=PropertyChanged}"
+                        MaxHeight="{Binding ElementName=grid, Path=ActualHeight}"
+                        AutoGenerateColumns="False" 
+                        CanUserResizeColumns="False" 
+                        CanUserReorderColumns="False" 
+                        CanUserAddRows="False"
+                        CanUserDeleteRows="False" 
+                        IsReadOnly="True">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID" Width="100" Binding="{Binding MaNhanVien}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style>
+                                        <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Tên" Width="200" Binding="{Binding TenNhanVien}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style>
+                                        <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Giới tính" Width="100" Binding="{Binding GioiTinh}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style>
+                                        <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Ngày sinh" Width="100" Binding="{Binding NgaySinh, Converter={x:Static local:DateTimeToShortConverter.Instance}}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style>
+                                        <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="SĐT" Width="150" Binding="{Binding DienThoai}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style>
+                                        <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Địa chỉ" Width="150" Binding="{Binding DiaChi}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style>
+                                        <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Ngày vào làm" Width="150" Binding="{Binding NgayVaoLam, Converter={x:Static local:DateTimeToShortConverter.Instance}}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style>
+                                        <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Username" Width="130" Binding="{Binding UserName}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style>
+                                        <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Trang thái" Width="130" Binding="{Binding isActive, Converter={x:Static local:StatusToTextConverter.Instance}}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style>
+                                        <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                        <Setter Property="TextBlock.Foreground" Value="{Binding isActive, Converter={x:Static local:StatusToColorConverter.Instance}}"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTemplateColumn Header="Mật khẩu" Width="100">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Label>
+                                            <Hyperlink
+                                                Foreground="#4B8CDE"
+                                                Command="{Binding RelativeSource={RelativeSource AncestorType=local:UserManagementScreen}, Path=DataContext.ShowPasswordCommand, UpdateSourceTrigger=PropertyChanged}"
+                                                CommandParameter="{Binding}">
+                                                <TextBlock
+                                                    Text="Xem">
+                                                </TextBlock>
+                                            </Hyperlink>
+                                        </Label>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </ScrollViewer>
+                <Grid.InputBindings>
+                    <KeyBinding Key="Enter"
+                        Command="{Binding SearchCommand}"/>
+                    <KeyBinding Key="Esc"
+                        Command="{Binding CloseSearchCommand}"/>
+                </Grid.InputBindings>
+            </Grid>
+        </TabItem>
+        <TabItem Style="{StaticResource RadioTabItem}"
+                 Header="Thay đổi mật khẩu" 
+                 Width="{c:Binding ElementName=tabcontrol, Path=ActualWidth/2, UpdateSourceTrigger=PropertyChanged}"
+                 IsEnabled="{Binding IsAllowChangePassword, UpdateSourceTrigger=PropertyChanged}">
+            <StackPanel 
+                HorizontalAlignment="Center" 
+                Width="600"
+                Margin="0 50">
+                <PasswordBox 
+                    x:Name="CurrentPW"
+                    Margin="0 0 0 30"
+                    Style="{StaticResource MaterialDesignOutlinedRevealPasswordBox}"            
+                    materialDesign:HintAssist.Hint="Current Password"
+                    materialDesign:TextFieldAssist.HasClearButton="True"
+                    Width="auto"
+                    FontSize="{StaticResource FontSize16}"
+                    HorizontalContentAlignment="Stretch"
+                    materialDesign:HintAssist.HelperText="">
+                    <materialDesign:PasswordBoxAssist.Password>
+                        <Binding Path="CurrentPassword" UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <local:PasswordValidateRule ValidatesOnTargetUpdated="True" CanRefresh="False"/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </materialDesign:PasswordBoxAssist.Password>
+                </PasswordBox>
+
+                <PasswordBox 
+                    x:Name="PW"
+                    Margin="0 0 0 30" 
+                    Style="{StaticResource MaterialDesignOutlinedRevealPasswordBox}"            
+                    materialDesign:HintAssist.Hint="New Password"
+                    materialDesign:TextFieldAssist.HasClearButton="True"
+                    Width="auto"
+                    FontSize="{StaticResource FontSize16}"
+                    HorizontalContentAlignment="Stretch"
+                    materialDesign:HintAssist.HelperText="">
+                    <materialDesign:PasswordBoxAssist.Password>
+                        <Binding Path="NewPassword" UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <local:PasswordValidateRule ValidatesOnTargetUpdated="True" CanRefresh="False"/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </materialDesign:PasswordBoxAssist.Password>
+                </PasswordBox>
+
+                <PasswordBox 
+                    x:Name="ConfirmPW"
+                    Margin="0 0 0 30"
+                    Style="{StaticResource MaterialDesignOutlinedRevealPasswordBox}"            
+                    materialDesign:HintAssist.Hint="Confirm New Password"
+                    materialDesign:TextFieldAssist.HasClearButton="True"
+                    Width="auto"
+                    FontSize="{StaticResource FontSize16}"
+                    HorizontalContentAlignment="Stretch"
+                    materialDesign:HintAssist.HelperText="">
+                    <materialDesign:PasswordBoxAssist.Password>
+                        <Binding Path="ConfirmNewPassword" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
+                            <Binding.ValidationRules>
+                                <local:PasswordValidateRule ValidatesOnTargetUpdated="True" CheckPrevPass="True" CanRefresh="False">
+                                    <local:PasswordValidateRule.Wrapper>
+                                        <local:Wrapper PrevPassword="{Binding Data.NewPassword, Source={StaticResource proxy}}"/>
+                                    </local:PasswordValidateRule.Wrapper>
+                                </local:PasswordValidateRule>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </materialDesign:PasswordBoxAssist.Password>
+                </PasswordBox>
+                <Button 
+                    Content="Save" 
+                    Margin="0 10" 
+                    Command="{Binding SavePasswordCommand}"
+                    CommandParameter=""
+                    FontSize="{StaticResource FontSize16}"
+                    HorizontalAlignment="Right">
+                    <Button.IsEnabled>
+                        <MultiBinding Converter="{StaticResource FalsesToTrueConverters}">
+                            <Binding ElementName="PW" Path="(Validation.HasError)"/>
+                            <Binding ElementName="CurrentPW" Path="(Validation.HasError)"/>
+                            <Binding ElementName="ConfirmPW" Path="(Validation.HasError)"/>
+                        </MultiBinding>
+                    </Button.IsEnabled>
+                </Button>
+            </StackPanel>
+        </TabItem>
+    </TabControl>
+</UserControl>

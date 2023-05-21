@@ -7,7 +7,7 @@
     </ResourceDictionary.MergedDictionaries>
 
     <Style x:Key="TextBoxHintBlackBorder" BasedOn="{StaticResource MaterialDesignOutlinedTextBox}" TargetType="{x:Type TextBox}">
-        <Setter Property="FontSize" Value="{StaticResource FontSize16}"/>
+        <Setter Property="FontSize" Value="{StaticResource FontSizeText}"/>
         <Setter Property="Padding" Value="5"/>
         <Setter Property="BorderBrush" Value="{StaticResource BoxLineColorBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
