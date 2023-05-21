@@ -10,17 +10,20 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
+using BookManagement.Models;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BookManagement {
     public class DrawerVM : BaseViewModel {
+        private readonly AccountStore _accountStore;
         private readonly NavigationStore _navigationStore;
 
+        public NHANVIEN CurrentUser => _accountStore?.CurrentAccount;
         public ObservableCollection<ButtonItem> ButtonItems => ButtonCreate();
 
         #region Props
-        private int selectedIndex = 0;
+        private int selectedIndex = -1;
         public int SelectedIndex {
             get { return selectedIndex; }
             set {
@@ -30,7 +33,7 @@ namespace BookManagement {
                 }
             }
         }
-        private int prevSelected { get; set; } = 0;
+        private int prevSelected { get; set; } = -1;
 
         private bool canReload;
         public bool CanReload {
@@ -47,6 +50,9 @@ namespace BookManagement {
         #endregion
 
         public DrawerVM() {
+            _accountStore = AccountStore.instance;
+            _accountStore.AccountChanged += OnAccountChange;
+
             _navigationStore = NavigationStore.instance;
             _navigationStore.CurrentVMChanged += OnScreenChange;
 
@@ -55,40 +61,16 @@ namespace BookManagement {
 
             OnChangeScreen = new RelayCommand<object>((p) => {
                 if(CanReload) return true;
-                if(!CanReload && SelectedIndex != 4) {
+                if(!CanReload) {
                     CanReload = true;
                     return true;
                 }
                 return false;
             },
             (p) => {
-                if(DialogHost.IsDialogOpen("Main"))
+                if (DialogHost.IsDialogOpen("Main"))
                     DialogHost.Close("Main");
-                if(SelectedIndex == 0) {
-                    ChangeIndex(NavigateProvider.HomeScreen());
-                }
-                else if(SelectedIndex == 1) {
-                    ChangeIndex(NavigateProvider.SaleBookScreen());
-                }
-                else if(SelectedIndex == 2) {
-                    ChangeIndex(NavigateProvider.BookManagementScreen());
-                }
-                else if(SelectedIndex == 3) {
-                    ChangeIndex(NavigateProvider.ImportBookManagementScreen());
-                }
-                else if(SelectedIndex == 4) {
-                    ChangeIndex(NavigateProvider.BillManagementScreen());
-                }
-                else if(SelectedIndex == 5) {
-                    ChangeIndex(NavigateProvider.DebtManagementScreen());
-                }
-                else if (SelectedIndex == 6)
-                {
-                    ChangeIndex(NavigateProvider.SettingScreen());
-                }
-                else {
-                    //Unknown
-                }
+                ChangeScreen();
                 prevSelected = SelectedIndex;
 
             });
@@ -167,6 +149,12 @@ namespace BookManagement {
                 case "SettingScreenVM":
                     SelectedIndex = 6;
                     break;
+                case "StaffManagementVM":
+                    SelectedIndex = 7;
+                    break;
+                case "NoAccessScreenVM":
+                    SelectedIndex = 8;
+                    break;
             }
         }
         #endregion
@@ -183,21 +171,117 @@ namespace BookManagement {
                 else nav.Navigate();
             }
         }
+        void ChangeScreen()
+        {
+            if (SelectedIndex == 0)
+            {
+                ChangeIndex(NavigateProvider.HomeScreen());
+            }
+            else if (SelectedIndex == 1)
+            {
+                ChangeIndex(NavigateProvider.SaleBookScreen());
+            }
+            else if (SelectedIndex == 2)
+            {
+                ChangeIndex(NavigateProvider.BookManagementScreen());
+            }
+            else if (SelectedIndex == 3)
+            {
+                ChangeIndex(NavigateProvider.ImportBookManagementScreen());
+            }
+            else if (SelectedIndex == 4)
+            {
+                ChangeIndex(NavigateProvider.BillManagementScreen());
+            }
+            else if (SelectedIndex == 5)
+            {
+                ChangeIndex(NavigateProvider.DebtManagementScreen());
+            }
+            else if (SelectedIndex == 6)
+            {
+                ChangeIndex(NavigateProvider.SettingScreen());
+            }
+            else if (selectedIndex == 7)
+            {
+                ChangeIndex(NavigateProvider.StaffManagementScreen());
+            }
+            else if (selectedIndex == 8)
+            {
+                ChangeIndex(NavigateProvider.NoAccessScreen());
+            }
+        }
+        private void OnAccountChange()
+        {
+            OnPropertyChanged(nameof(CurrentUser));
+            OnPropertyChanged(nameof(ButtonItems));
+            changeDefaultSelectedIndex();
+            ChangeScreen();
+        }
+        
+        private void changeDefaultSelectedIndex()
+        {
+            int i = 0;
+            for (; i < ButtonItems.Count - 1; i++)
+            {
+                if (ButtonItems[i].IsNotCollapsed)
+                {
+                    break;
+                }
+            }
+            SelectedIndex = prevSelected = i;
+        }
+        public override void Dispose()
+        {
+            _accountStore.AccountChanged -= OnAccountChange;
+            base.Dispose();
+        }
 
         private void ClosingEventHandler(object sender, DialogClosingEventArgs eventArgs) {
             SelectedIndex = prevSelected;
         }
 
         private ObservableCollection<ButtonItem> ButtonCreate() {
-            return new ObservableCollection<ButtonItem> {
-                    new ButtonItem("Home", "Home", 0),
-                    new ButtonItem("CreditCardSettings", "Sale", 1),
-                    new ButtonItem("Book", "Book", 2),
-                    new ButtonItem("Import", "Import", 3),
-                    new ButtonItem("PageLayoutFooter", "Bill", 4),
-                    new ButtonItem("CashRefund", "Debt", 5),
-                    new ButtonItem("Cog", "Setting", 6),
-                };
+            ObservableCollection<ButtonItem> buttonItems = new ObservableCollection<ButtonItem>();
+            if (CurrentUser == null)
+            {
+                return buttonItems;
+            }
+            else
+            {
+                List<CHUCNANG> accessList = CurrentUser.NHOMNGUOIDUNG.CHUCNANGs.ToList();
+                buttonItems.Add(new ButtonItem("Home", "Home", 0, 
+                    isExistAccess(accessList, AppEnum.LapBaoCaoThang)));
+                buttonItems.Add(new ButtonItem("CreditCardSettings", "Sale", 1, 
+                    isExistAccess(accessList, AppEnum.LapHoaDonBanSach)));
+                buttonItems.Add(new ButtonItem("Book", "Book", 2, 
+                    isExistAccess(accessList, AppEnum.TraCuuSach)));
+                buttonItems.Add(new ButtonItem("Import", "Import", 3, 
+                    isExistAccess(accessList, AppEnum.LapPhieuNhapSach) ||
+                      isExistAccess(accessList, AppEnum.TraCuuPhieuNhapSach)));
+                buttonItems.Add(new ButtonItem("PageLayoutFooter", "Bill", 4, 
+                    isExistAccess(accessList, AppEnum.TraCuuHoaDonBanSach)));
+                buttonItems.Add(new ButtonItem("CashRefund", "Debt", 5, 
+                    isExistAccess(accessList, AppEnum.LapPhieuThuTien) || 
+                    isExistAccess(accessList, AppEnum.TraCuuPhieuThuTien) || 
+                    isExistAccess(accessList, AppEnum.LuuThongTinKhachHang)));
+                buttonItems.Add(new ButtonItem("Cog", "Setting", 6, 
+                    isExistAccess(accessList, AppEnum.ThayDoiQuiDinh) || 
+                    isExistAccess(accessList, AppEnum.PhanQuyen)));
+                buttonItems.Add(new ButtonItem("Account", "Setting", 7, 
+                    isExistAccess(accessList, AppEnum.ThayDoiMatKhau) ||
+                    isExistAccess(accessList, AppEnum.TraCuuNhanVien)));
+                buttonItems.Add(new ButtonItem("Exclamation", "NoAccess", 8, false));
+                return buttonItems;
+            }    
+        }
+
+        private bool isExistAccess(List<CHUCNANG> accessList, String  access)
+        {
+            if(accessList.Where(a => a.MaChucNang.Equals(access)).Count() > 0)
+            {
+                return true;
+            }
+            return false;
         }
     }
 
@@ -206,9 +290,11 @@ public class ButtonItem {
     public string Icon { get; set; }
     public string Text { get; set; }
     public int Index { get; set; }
-    public ButtonItem(string icon, string text, int index) {
+    public bool IsNotCollapsed { get; set; }
+    public ButtonItem(string icon, string text, int index, bool isNotCollapsed) {
         Icon=icon;
         Text=text;
         Index=index;
+        IsNotCollapsed = isNotCollapsed;
     }
 }

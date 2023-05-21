@@ -1,6 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using BookManagement.Models;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Data;
 using System.Linq;
@@ -48,12 +50,7 @@ namespace BookManagement
             Internet.instance = new Internet();
             Task.Run(async () => {
                 DPIService dpi = new DPIService();
-
-
-                //await load();
-
-
-
+                await load();
             }).ContinueWith(_ => {
                 Internet.instance.Start();
 
@@ -87,13 +84,11 @@ namespace BookManagement
             }, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
-        //All the shit need to be load in here
-        /*async Task load()
+        async Task load()
         {
-            var t = new GenericDataRepository<MUser>();
-            var u = await t.GetSingleAsync(d => d.Id.Equals(Hashing.Base64Decode(WPFEcommerceApp.Properties.Settings.Default.Cookie)),
-                d => d.Products1, d => d.UserLogin);
-            AccountStore.instance.CurrentAccount = u;
-        }*/
+            GenericDataRepository<THAMSO> ruleRepo = new GenericDataRepository<THAMSO>();
+            ICollection<THAMSO> ruleList = await ruleRepo.GetAllAsync();
+            RuleStore.instance.CurrentRules = new ObservableCollection<THAMSO>(ruleList);
+        }
     }
 }

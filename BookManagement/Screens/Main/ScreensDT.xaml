@@ -26,7 +26,13 @@
     <DataTemplate DataType="{x:Type local:SettingScreenVM}">
         <local:SettingScreen/>
     </DataTemplate>
+    <DataTemplate DataType="{x:Type local:UserManagementScreenVM}">
+        <local:UserManagementScreen/>
+    </DataTemplate>
     <DataTemplate DataType="{x:Type local:ImportBookPageVM}">
         <local:ImportBookPage/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type local:NoAccessScreenVM}">
+        <local:NoAccessScreen/>
     </DataTemplate>
 </ResourceDictionary>

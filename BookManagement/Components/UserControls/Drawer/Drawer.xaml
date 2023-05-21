@@ -4,7 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:fa= "http://schemas.fontawesome.io/icons/"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
              xmlns:material="http://materialdesigninxaml.net/winfx/xaml/themes" 
              xmlns:local="clr-namespace:BookManagement"
              mc:Ignorable="d" 
@@ -155,13 +156,13 @@
                                 <Setter.Value>
                                     <ControlTemplate TargetType="{x:Type ListViewItem}">
                                         <Border x:Name="Bd"
-                                                Height="55"
                                                 Width="220"
                                                 BorderBrush="{TemplateBinding BorderBrush}"
                                                 BorderThickness="{TemplateBinding BorderThickness}"
                                                 Background="{TemplateBinding Background}"
                                                 Padding="{TemplateBinding Padding}"
-                                                SnapsToDevicePixels="True">
+                                                SnapsToDevicePixels="True"
+                                                Visibility="{c:Binding IsNotCollapsed, FalseToVisibility=Collapsed}">
 
                                             <ContentPresenter   HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                                                 SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"                                                     
@@ -201,6 +202,7 @@
                             <StackPanel x:Name="ButtonContainer" 
                                         Orientation="Horizontal"
                                         Width="220" 
+                                        Height="55"
                                         Background="Transparent">
                                 <StackPanel.InputBindings>
                                     <MouseBinding   Gesture="LeftClick" 

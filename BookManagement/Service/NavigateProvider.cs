@@ -91,6 +91,16 @@ namespace BookManagement {
             return new NavigationService<SettingScreenVM>(
                 serviceProvider.GetRequiredService<SettingScreenVM>);
         }
+        static public INavigationService StaffManagementScreen()
+        {
+            return new NavigationService<UserManagementScreenVM>(
+                serviceProvider.GetRequiredService<UserManagementScreenVM>);
+        }
+        static public INavigationService NoAccessScreen()
+        {
+            return new NavigationService<NoAccessScreenVM>(
+                serviceProvider.GetRequiredService<NoAccessScreenVM>);
+        }
         /*static public INavigationService ProductDetailScreen()
         {
             return new ParamNavigationService<ProductDetailViewModel>(

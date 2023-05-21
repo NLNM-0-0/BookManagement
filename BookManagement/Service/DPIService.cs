@@ -15,6 +15,8 @@ namespace BookManagement {
             #region Set Store and some initial dependences
 
             NavigationStore.instance = new NavigationStore();
+            AccountStore.instance = new AccountStore();
+            RuleStore.instance = new RuleStore();
 
             services.AddTransient<DrawerVM>();
             #endregion
@@ -30,6 +32,8 @@ namespace BookManagement {
             services.AddTransient<ImportBookPageVM>();
             services.AddTransient<DebtManagementScreenVM>();
             services.AddTransient<SettingScreenVM>();
+            services.AddTransient<UserManagementScreenVM>();
+            services.AddTransient<NoAccessScreenVM>();
             services.AddTransient<OfflineScreenVM>();
             #endregion
 
