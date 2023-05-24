@@ -71,7 +71,6 @@ namespace BookManagement {
         
         public DrawerVM DrawerVM { get; }
         public ICommand CloseCM { get; }
-        public bool IsConnected => Internet.IsConnected;
         public BaseViewModel CurrentViewModel => _navigationStore?.CurrentViewModel;
 
         public MainViewModel(
@@ -86,10 +85,6 @@ namespace BookManagement {
             CloseCM = new ImmediateCommand<object>(p => {
                 App.Current.MainWindow.Close();
             });
-
-            Internet.instance.NetworkChanged += (sender, obj) => {
-                OnPropertyChanged(nameof(IsConnected));
-            };
         }
         private void OnCurrentVMChanged() {
             OnPropertyChanged(nameof(CurrentViewModel));

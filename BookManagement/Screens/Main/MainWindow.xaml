@@ -8,7 +8,7 @@
         xmlns:fa= "http://schemas.fontawesome.com/icons/"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
-        Icon="..\..\Assets\Icons\Home.png"
+        Icon="..\..\Assets\Icons\BUKU.png"
         Height="950" Width="1440"
         MinWidth="1212.63" MinHeight="800"
         WindowStyle="None"
@@ -25,7 +25,6 @@
     <Window.Resources>
         <ResourceDictionary>
             <local:MultiValueConverter x:Key="MultiValueConverter"/>
-            <local:Internet x:Key="MyInternet"/>
         </ResourceDictionary>
     </Window.Resources>
     <materialDesign:DialogHost
@@ -72,7 +71,7 @@
                                     <RowDefinition/>
                                 </Grid.RowDefinitions>
 
-                                <local:Header IsEnabled="{Binding ElementName=MainWD, Path=DataContext.IsConnected}"/>
+                                <local:Header/>
 
                                 <ContentControl
                                 Grid.Row="1"

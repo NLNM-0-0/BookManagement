@@ -1,15 +1,15 @@
-﻿<UserControl x:Class="BookManagement.AddExistingBook"
+﻿<UserControl x:Class="BookManagement.AddBook"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:fa="http://schemas.fontawesome.io/icons/"
-             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             
              xmlns:local="clr-namespace:BookManagement"
+             xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
              mc:Ignorable="d">
     <UserControl.Resources>
+        <local:FalsesToTrueConverters x:Key="FalsesToTrueConverters"/>
         <Style x:Key="RoundButtonAdd" TargetType="{x:Type Button}">
             <Setter Property="Padding" Value="0"/>
             <Setter Property="Width" Value="40"/>
@@ -67,12 +67,17 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="auto"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             <Grid
                 Grid.Row="0">
-                <TextBlock Text="Add a book" HorizontalAlignment="Left" FontSize="{StaticResource FontSize24}"/>
+                <TextBlock Text="Thêm sách" HorizontalAlignment="Left" FontSize="{StaticResource FontSize24}"/>
                 <Button HorizontalAlignment="Right"
                         Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
                         x:Name="ButtonClose"
@@ -92,53 +97,102 @@
                             Height="10"/>
                 </Button>
             </Grid>
-            <Grid
-                Grid.Row="2">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="10"/>
-                    <ColumnDefinition Width="auto"/>
-                </Grid.ColumnDefinitions>
-                <ComboBox
-                    x:Name="titleComboBox"
-                    Style="{StaticResource MaterialDesignOutlinedComboBox}"
-                    materialDesign:TextFieldAssist.TextFieldCornerRadius="5"
-                    IsEditable="True"
-                    materialDesign:HintAssist.Hint="Title"
-                    SelectedValuePath="Content">
-                    <ComboBoxItem Content="Book a"/>
-                    <ComboBoxItem Content="Book b"/>
-                    <ComboBoxItem Content="Book c"/>
-                </ComboBox>
-                <Button 
-                    x:Name="addButton"
-                    Grid.Column="2"
-                    Style="{DynamicResource RoundButtonAdd}"
-                    Command="{Binding OnAddNewBoook, UpdateSourceTrigger=PropertyChanged}"
-                    ToolTip="Can't find the book you need? Add new book in here."/>
-            </Grid>
+            <TextBlock
+                Grid.Row="2"
+                Text="Lưu ý: Nếu như bạn không chọn các giá trị có sẵn, hệ thống sẽ tự tạo cho bạn."
+                FontSize="{StaticResource FontSize16}"
+                TextWrapping="Wrap"
+                Foreground="{StaticResource SuccessColorBrush}"/>
+            <ComboBox
+                Grid.Row="4"
+                Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                ItemsSource="{Binding FilterBookHeaders, UpdateSourceTrigger=PropertyChanged}"
+                IsTextSearchEnabled="True"
+                DisplayMemberPath="TenSach"
+                FontSize="{StaticResource FontSize16}"
+                IsEditable="True"
+                materialDesign:HintAssist.Hint="Tên sách"
+                SelectedItem="{Binding SelectedBookHeader, UpdateSourceTrigger=PropertyChanged}"
+                MaxDropDownHeight="200"
+                Text="{Binding SelectedBookHeaderString, Mode=OneWayToSource}"
+                materialDesign:ComboBoxAssist.MaxLength="100"/>
+            <ComboBox
+                Grid.Row="6"
+                Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                ItemsSource="{Binding FilterNXBs, UpdateSourceTrigger=PropertyChanged}"
+                IsTextSearchEnabled="True"
+                FontSize="{StaticResource FontSize16}"
+                IsEditable="True"
+                SelectedItem="{Binding SelectedNXB, UpdateSourceTrigger=PropertyChanged}"
+                materialDesign:HintAssist.Hint="Nhà xuất bản"
+                MaxDropDownHeight="200"
+                IsEnabled="{c:Binding 'FinalBookHeader != null', UpdateSourceTrigger=PropertyChanged}"
+                Text="{Binding SelectedNXBString, Mode=OneWayToSource}"
+                materialDesign:ComboBoxAssist.MaxLength="100"/>
             <TextBox
                 x:Name="authorTextBox"
-                Grid.Row="4"
+                Grid.Row="8"
                 Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                materialDesign:HintAssist.Hint="Author"
+                materialDesign:HintAssist.Hint="Tác giả"
+                FontSize="{StaticResource FontSize16}"
+                TextWrapping="Wrap"
+                Height="100"
+                MaxHeight="100"
+                VerticalAlignment="Top"
+                VerticalContentAlignment="Top"
                 Width="auto"
-                VerticalAlignment="Center"
                 materialDesign:TextFieldAssist.CharacterCounterVisibility="Visible"
-                IsEnabled="False">
-            </TextBox>
-            <TextBox
-                x:Name="categoryTextBox"
-                Grid.Row="6"
-                Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                materialDesign:HintAssist.Hint="Category"
-                Width="auto"
-                VerticalAlignment="Center"
-                materialDesign:TextFieldAssist.CharacterCounterVisibility="Visible"
-                IsEnabled="False">
+                IsReadOnly="True">
+                <TextBox.Text>
+                    <Binding
+                        Path="Authors"
+                        Converter="{x:Static local:AuthorsToTextConverter.Instance}"
+                        UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <local:NotEmptyValidationRule
+                                IsNotCheckFirstTime="False"/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
             </TextBox>
             <Grid
-                Grid.Row="8">
+                Grid.Row="9"
+                Margin="0 5 0 0"
+                Visibility="{c:Binding 'FinalBookHeader != null', UpdateSourceTrigger=PropertyChanged}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <Label
+                    Grid.Column="1">
+                    <Hyperlink
+                        Foreground="#4B8CDE"
+                        Command="{Binding SeeDetailAuthorsCommand, UpdateSourceTrigger=PropertyChanged}">
+                        <TextBlock
+                            FontSize="{StaticResource FontSize14}"
+                            Text="{Binding AuthorActionText, UpdateSourceTrigger=PropertyChanged}"
+                            TextAlignment="Right">
+                        </TextBlock>
+                    </Hyperlink>
+                </Label>
+            </Grid>
+            <ComboBox
+                Grid.Row="11"
+                Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                ItemsSource="{Binding FilterCategories, UpdateSourceTrigger=PropertyChanged}"
+                IsTextSearchEnabled="True"
+                DisplayMemberPath="TenTheLoai"
+                FontSize="{StaticResource FontSize16}"
+                IsEditable="True"
+                materialDesign:HintAssist.Hint="Thể loại"
+                SelectedItem="{Binding SelectedCategory, UpdateSourceTrigger=PropertyChanged}"
+                MaxDropDownHeight="200"
+                IsEnabled="{c:Binding 'FinalBookHeader != null and FinalBookHeader.MaDauSach == null', UpdateSourceTrigger=PropertyChanged}"
+                Text="{Binding SelectedCategoryString, UpdateSourceTrigger=PropertyChanged}"
+                materialDesign:ComboBoxAssist.MaxLength="100"/>
+
+            <Grid
+                Grid.Row="13">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition Width="30"/>
@@ -148,8 +202,9 @@
                     x:Name="amountTextBox"
                     Grid.Column="0"
                     Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                    materialDesign:HintAssist.Hint="Amount"
+                    materialDesign:HintAssist.Hint="Số lượng"
                     Width="auto"
+                    FontSize="{StaticResource FontSize16}"
                     VerticalAlignment="Center">
                     <TextBox.Text>
                         <Binding
@@ -168,9 +223,12 @@
                     x:Name="priceTextBox"
                     Grid.Column="2"
                     Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                    materialDesign:HintAssist.Hint="Price"
+                    materialDesign:HintAssist.Hint="Đơn giá"
                     Width="auto"
-                    VerticalAlignment="Center">
+                    IsEnabled="{Binding IsCanChangePrice, UpdateSourceTrigger=PropertyChanged}"
+                    VerticalAlignment="Center"
+                    FontSize="{StaticResource FontSize16}"
+                    materialDesign:TextFieldAssist.SuffixText=" VND">
                     <TextBox.Text>
                         <Binding
                             Path="Price"
@@ -186,16 +244,18 @@
                 </TextBox>
             </Grid>
             <Button 
-                Grid.Row="10"
-                Content="ADD" 
-                HorizontalAlignment="Right" 
-                Command="{Binding CM}" 
-                CommandParameter="{Binding Param}">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="Click" SourceName="ConfirmButton">
-                        <i:InvokeCommandAction Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
+                Grid.Row="15"
+                Content="Thêm" 
+                HorizontalAlignment="Right"
+                Command="{Binding AddBookCommand, UpdateSourceTrigger=PropertyChanged}"
+                CommandParameter="">
+                <Button.IsEnabled>
+                    <MultiBinding Converter="{StaticResource FalsesToTrueConverters}">
+                        <Binding ElementName="authorTextBox" Path="(Validation.HasError)"/>
+                        <Binding ElementName="amountTextBox" Path="(Validation.HasError)"/>
+                        <Binding ElementName="priceTextBox" Path="(Validation.HasError)"/>
+                    </MultiBinding>
+                </Button.IsEnabled>
             </Button>
         </Grid>
     </Border>

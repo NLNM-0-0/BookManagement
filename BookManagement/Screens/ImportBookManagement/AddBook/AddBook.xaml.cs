@@ -18,11 +18,11 @@ namespace BookManagement
     /// <summary>
     /// Interaction logic for AddExistingBook.xaml
     /// </summary>
-    public partial class AddExistingBook : UserControl
+    public partial class AddBook : UserControl
     {
-        public AddExistingBook()
+        public AddBook()
         {
-            InitializeComponent();
+            InitializeComponent();  
         }
     }
 }

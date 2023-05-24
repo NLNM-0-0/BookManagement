@@ -10,15 +10,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace BookManagement {
+namespace BookManagement
+{
     /// <summary>
-    /// Interaction logic for NoInternetScreen.xaml
+    /// Interaction logic for SplashScreen.xaml
     /// </summary>
-    public partial class OfflineScreen : UserControl {
-        public OfflineScreen() {
+    public partial class SplashScreen : Window
+    {
+        public SplashScreen()
+        {
             InitializeComponent();
         }
     }

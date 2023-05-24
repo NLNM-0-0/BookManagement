@@ -5,41 +5,41 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="b444132428094ef9bd56ea7783265d30" Name="Diagram1">
-        <EntityTypeShape EntityType="WPFBookManagementModel.BAOCAOCONGNO" Width="1.5" PointX="6" PointY="21.625" />
-        <EntityTypeShape EntityType="WPFBookManagementModel.BAOCAOTON" Width="1.5" PointX="5.25" PointY="1.625" />
-        <EntityTypeShape EntityType="WPFBookManagementModel.CHITIETBAOCAOCONGNO" Width="1.5" PointX="8.25" PointY="18.25" />
-        <EntityTypeShape EntityType="WPFBookManagementModel.CHITIETBAOCAOTON" Width="1.5" PointX="7.5" PointY="4.25" />
-        <EntityTypeShape EntityType="WPFBookManagementModel.CHITIETHOADON" Width="1.5" PointX="7.5" PointY="7.375" />
-        <EntityTypeShape EntityType="WPFBookManagementModel.CHITIETPHIEUNHAP" Width="1.5" PointX="7.5" PointY="1.375" />
-        <EntityTypeShape EntityType="WPFBookManagementModel.CHUCNANG" Width="1.5" PointX="1.5" PointY="15.375" />
+        <EntityTypeShape EntityType="WPFBookManagementModel.BAOCAOCONGNO" Width="1.5" PointX="3" PointY="22.25" />
+        <EntityTypeShape EntityType="WPFBookManagementModel.BAOCAOTON" Width="1.5" PointX="5.25" PointY="1.5" />
+        <EntityTypeShape EntityType="WPFBookManagementModel.CHITIETBAOCAOCONGNO" Width="1.5" PointX="5.25" PointY="20.875" />
+        <EntityTypeShape EntityType="WPFBookManagementModel.CHITIETBAOCAOTON" Width="1.5" PointX="7.5" PointY="4.125" />
+        <EntityTypeShape EntityType="WPFBookManagementModel.CHITIETHOADON" Width="1.5" PointX="7.5" PointY="1.25" />
+        <EntityTypeShape EntityType="WPFBookManagementModel.CHITIETPHIEUNHAP" Width="1.5" PointX="7.5" PointY="7.375" />
+        <EntityTypeShape EntityType="WPFBookManagementModel.CHUCNANG" Width="1.5" PointX="1.5" PointY="15" />
         <EntityTypeShape EntityType="WPFBookManagementModel.DAUSACH" Width="1.5" PointX="3" PointY="5.5" />
-        <EntityTypeShape EntityType="WPFBookManagementModel.HOADON" Width="1.5" PointX="5.25" PointY="18.125" />
-        <EntityTypeShape EntityType="WPFBookManagementModel.KHACHHANG" Width="1.5" PointX="3" PointY="17.875" />
-        <EntityTypeShape EntityType="WPFBookManagementModel.NHANVIEN" Width="1.5" PointX="3" PointY="10.25" />
-        <EntityTypeShape EntityType="WPFBookManagementModel.NHOMNGUOIDUNG" Width="1.5" PointX="0.75" PointY="11.25" />
-        <EntityTypeShape EntityType="WPFBookManagementModel.PHIEUNHAPSACH" Width="1.5" PointX="5.25" PointY="11.125" />
-        <EntityTypeShape EntityType="WPFBookManagementModel.PHIEUTHUNO" Width="1.5" PointX="5.25" PointY="14.375" />
-        <EntityTypeShape EntityType="WPFBookManagementModel.SACH" Width="1.5" PointX="5.25" PointY="4.125" />
-        <EntityTypeShape EntityType="WPFBookManagementModel.TACGIA" Width="1.5" PointX="5.25" PointY="7.625" />
+        <EntityTypeShape EntityType="WPFBookManagementModel.HOADON" Width="1.5" PointX="5.25" PointY="12.375" />
+        <EntityTypeShape EntityType="WPFBookManagementModel.KHACHHANG" Width="1.5" PointX="3" PointY="17.5" />
+        <EntityTypeShape EntityType="WPFBookManagementModel.NHANVIEN" Width="1.5" PointX="3" PointY="9.875" />
+        <EntityTypeShape EntityType="WPFBookManagementModel.NHOMNGUOIDUNG" Width="1.5" PointX="0.75" PointY="10.875" />
+        <EntityTypeShape EntityType="WPFBookManagementModel.PHIEUNHAPSACH" Width="1.5" PointX="5.25" PointY="17.25" />
+        <EntityTypeShape EntityType="WPFBookManagementModel.PHIEUTHUNO" Width="1.5" PointX="8.25" PointY="14.125" />
+        <EntityTypeShape EntityType="WPFBookManagementModel.SACH" Width="1.5" PointX="5.25" PointY="4" />
+        <EntityTypeShape EntityType="WPFBookManagementModel.TACGIA" Width="1.5" PointX="5.25" PointY="7.5" />
         <EntityTypeShape EntityType="WPFBookManagementModel.THAMSO" Width="1.5" PointX="0.75" PointY="0.75" />
-        <EntityTypeShape EntityType="WPFBookManagementModel.THELOAI" Width="1.5" PointX="0.75" PointY="5.875" />
-        <AssociationConnector Association="WPFBookManagementModel.FK__CHITIETBA__MaBao__6FE99F9F" />
-        <AssociationConnector Association="WPFBookManagementModel.FK__CHITIETBA__MaBao__6A30C649" />
-        <AssociationConnector Association="WPFBookManagementModel.FK__CHITIETBA__MaKha__70DDC3D8" />
-        <AssociationConnector Association="WPFBookManagementModel.FK__CHITIETBA__MaSac__6B24EA82" />
-        <AssociationConnector Association="WPFBookManagementModel.FK__CHITIETHO__MaHoa__6477ECF3" />
-        <AssociationConnector Association="WPFBookManagementModel.FK__CHITIETHO__MaSac__656C112C" />
-        <AssociationConnector Association="WPFBookManagementModel.FK__CHITIETPH__MaPhi__5DCAEF64" />
-        <AssociationConnector Association="WPFBookManagementModel.FK__CHITIETPH__MaSac__5CD6CB2B" />
+        <EntityTypeShape EntityType="WPFBookManagementModel.THELOAI" Width="1.5" PointX="0.75" PointY="5.75" />
+        <AssociationConnector Association="WPFBookManagementModel.FK__CHITIETBA__MaBao__6EF57B66" />
+        <AssociationConnector Association="WPFBookManagementModel.FK__CHITIETBA__MaBao__693CA210" />
+        <AssociationConnector Association="WPFBookManagementModel.FK__CHITIETBA__MaKha__6FE99F9F" />
+        <AssociationConnector Association="WPFBookManagementModel.FK__CHITIETBA__MaSac__6A30C649" />
+        <AssociationConnector Association="WPFBookManagementModel.FK__CHITIETHO__MaHoa__6383C8BA" />
+        <AssociationConnector Association="WPFBookManagementModel.FK__CHITIETHO__MaSac__6477ECF3" />
+        <AssociationConnector Association="WPFBookManagementModel.FK__CHITIETPH__MaPhi__5CD6CB2B" />
+        <AssociationConnector Association="WPFBookManagementModel.FK__CHITIETPH__MaSac__5BE2A6F2" />
         <AssociationConnector Association="WPFBookManagementModel.FK__DAUSACH__MaTheLo__4E88ABD4" />
-        <AssociationConnector Association="WPFBookManagementModel.FK__SACH__MaDauSach__5629CD9C" />
-        <AssociationConnector Association="WPFBookManagementModel.FK__HOADON__MaKhachH__619B8048" />
-        <AssociationConnector Association="WPFBookManagementModel.FK__HOADON__MaNhanVi__60A75C0F" />
-        <AssociationConnector Association="WPFBookManagementModel.FK__PHIEUTHUN__MaKha__74AE54BC" />
+        <AssociationConnector Association="WPFBookManagementModel.FK__SACH__MaDauSach__5535A963" />
+        <AssociationConnector Association="WPFBookManagementModel.FK__HOADON__MaKhachH__60A75C0F" />
+        <AssociationConnector Association="WPFBookManagementModel.FK__HOADON__MaNhanVi__5FB337D6" />
+        <AssociationConnector Association="WPFBookManagementModel.FK__PHIEUTHUN__MaKha__73BA3083" />
         <AssociationConnector Association="WPFBookManagementModel.FK__NHANVIEN__MaNhom__412EB0B6" />
-        <AssociationConnector Association="WPFBookManagementModel.FK__PHIEUNHAP__MaNha__59FA5E80" />
-        <AssociationConnector Association="WPFBookManagementModel.FK__PHIEUTHUN__MaNha__73BA3083" />
-        <AssociationConnector Association="WPFBookManagementModel.CHITTIETTACGIA" />
+        <AssociationConnector Association="WPFBookManagementModel.FK__PHIEUNHAP__MaNha__59063A47" />
+        <AssociationConnector Association="WPFBookManagementModel.FK__PHIEUTHUN__MaNha__72C60C4A" />
+        <AssociationConnector Association="WPFBookManagementModel.CHITIETTACGIA" />
         <AssociationConnector Association="WPFBookManagementModel.PHANQUYEN" />
       </Diagram>
     </edmx:Diagrams>

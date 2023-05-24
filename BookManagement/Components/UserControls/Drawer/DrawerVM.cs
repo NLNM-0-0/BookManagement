@@ -78,9 +78,9 @@ namespace BookManagement {
             OnButtonClick = new RelayCommand<object>(p => {
                 if((int)p != SelectedIndex) {
                     SelectedIndex = (int)p;
-                    return false;
+                    return true;
                 }
-                return true;
+                return false;
             }, p => {
                 NavigationStore.instance.CurrentViewModel = null;
                 SelectedIndex = -1;
@@ -161,10 +161,6 @@ namespace BookManagement {
 
         void ChangeIndex(INavigationService nav, object o = null) {
             var _navStore = NavigationStore.instance;
-            if(!Internet.IsConnected) {
-                _navStore.stackScreen.Add(new Tuple<INavigationService, object>(nav, o));
-                return;
-            }
             if(_navStore.currentViewModel == null || nav.GetViewModel() != _navStore.CurrentViewModel.GetType()) {
                 if(o != null)
                     nav.Navigate(o);
