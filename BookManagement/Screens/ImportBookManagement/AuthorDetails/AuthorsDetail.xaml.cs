@@ -18,9 +18,9 @@ namespace BookManagement
     /// <summary>
     /// Interaction logic for AddNewBook.xaml
     /// </summary>
-    public partial class AddNewBook : UserControl
+    public partial class AuthorsDetail : UserControl
     {
-        public AddNewBook()
+        public AuthorsDetail()
         {
             InitializeComponent();
         }

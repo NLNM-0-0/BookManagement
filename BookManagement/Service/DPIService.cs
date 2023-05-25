@@ -34,7 +34,6 @@ namespace BookManagement {
             services.AddTransient<SettingScreenVM>();
             services.AddTransient<UserManagementScreenVM>();
             services.AddTransient<NoAccessScreenVM>();
-            services.AddTransient<OfflineScreenVM>();
             #endregion
 
             //Setup MainWindow

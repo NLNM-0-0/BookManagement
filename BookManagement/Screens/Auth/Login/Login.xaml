@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BookManagement"
         xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
-        Icon="..\..\..\Assets\Icons\Home.png"
+        Icon="..\..\..\Assets\Icons\BUKU.png"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"

@@ -1,5 +1,6 @@
 ﻿using BookManagement.Models;
 using Microsoft.Extensions.DependencyInjection;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -21,6 +22,7 @@ namespace BookManagement
 
         public App()
         {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
         }
 
         protected override void OnStartup(StartupEventArgs e)
@@ -44,40 +46,32 @@ namespace BookManagement
                 Application.Current.Resources["PrimaryHueDarkBrush"] = new SolidColorBrush(hSL.ToRGB());
             }
 
-            /*SplashScreen splashScreen = new SplashScreen();
-            splashScreen.Show();*/
+            SplashScreen splashScreen = new SplashScreen();
+            splashScreen.Show();
 
-            Internet.instance = new Internet();
+
             Task.Run(async () => {
                 DPIService dpi = new DPIService();
                 await load();
             }).ContinueWith(_ => {
-                Internet.instance.Start();
-
                 MainWindow = null;
                 INavigationService initial;
 
                 initial = serviceProvider.GetRequiredService<INavigationService>();
 
                 initial.Navigate();
-                Internet.IsConnected = true;
-                if (!Internet.CheckConnection())
-                {
-                    Internet.IsConnected = false;
-                    NavigateProvider.OfflineScreen().NoBackNavigate();
-                }
 
                 var mainWindow = serviceProvider.GetRequiredService<MainWindow>();
 
                 Login p = serviceProvider.GetRequiredService<Login>(); //initial
-                /*p.Show();
-                p.Hide();*/
+
                 //Subcribe access SplashScreen from MainWindow
-                mainWindow.Loaded += (sender, args) =>
+                p.Loaded += (sender, args) =>
                 {
-                    /*splashScreen.Close();
-                    splashScreen = null;*/
+                    splashScreen.Close();
+                    splashScreen = null;
                 };
+
                 MainWindow = mainWindow;
                 p.Show();
 

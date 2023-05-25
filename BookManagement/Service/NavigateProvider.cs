@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BookManagement.Models;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BookManagement {
@@ -46,11 +47,6 @@ namespace BookManagement {
             catch { return false; }
         }
 
-        static public INavigationService OfflineScreen()
-        {
-            return new NavigationService<OfflineScreenVM>(
-                serviceProvider.GetRequiredService<OfflineScreenVM>);
-        }
         static public INavigationService SaleBookScreen()
         {
             return new NavigationService<SaleBookScreenVM>(
@@ -83,8 +79,8 @@ namespace BookManagement {
         }
         static public INavigationService ImportBookPage()
         {
-            return new NavigationService<ImportBookPageVM>(
-                serviceProvider.GetRequiredService<ImportBookPageVM>);
+            return new ParamNavigationService<ImportBookPageVM>(
+                (p) => new ImportBookPageVM(p as PHIEUNHAPSACH));
         }
         static public INavigationService SettingScreen()
         {

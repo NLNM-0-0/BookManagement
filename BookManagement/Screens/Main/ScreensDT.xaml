@@ -2,9 +2,6 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:BookManagement">
 
-    <DataTemplate DataType="{x:Type local:OfflineScreenVM}">
-        <local:OfflineScreen/>
-    </DataTemplate>
     <DataTemplate DataType="{x:Type local:HomeScreenVM}">
         <local:HomeScreen/>
     </DataTemplate>

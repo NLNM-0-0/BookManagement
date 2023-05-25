@@ -46,8 +46,6 @@
                 </StackPanel>
             </Button>
 
-            <!-- Cart and heart icon -->
-
             <Button Style="{StaticResource TransparentButton}" 
                     x:Name="loginBt"
                     Width="{Binding RelativeSource={RelativeSource Self}, Path=ActualHeight}"

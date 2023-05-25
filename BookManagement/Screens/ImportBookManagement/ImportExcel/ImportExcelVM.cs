@@ -1,0 +1,588 @@
+﻿using BookManagement.Models;
+using OfficeOpenXml.Style;
+using OfficeOpenXml;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using MaterialDesignThemes.Wpf;
+using System.Drawing;
+using OfficeOpenXml.FormulaParsing.ExpressionGraph.FunctionCompilers;
+using System.Runtime.InteropServices.WindowsRuntime;
+using DocumentFormat.OpenXml.Bibliography;
+using System.Windows.Forms;
+using System.Collections.ObjectModel;
+
+namespace BookManagement
+{
+    public class ImportExcelVM:BaseViewModel
+    {
+        #region Action
+        public Action ImportSuccess { get;set; }
+        #endregion 
+        #region GenericDataRepository
+        private GenericDataRepository<DAUSACH> bookHeaderRepo = new GenericDataRepository<DAUSACH>();
+        private GenericDataRepository<THELOAI> categoryRepo = new GenericDataRepository<THELOAI>();
+        private GenericDataRepository<TACGIA> authorRepo = new GenericDataRepository<TACGIA>();
+        private GenericDataRepository<SACH> bookRepo = new GenericDataRepository<SACH>();
+        private GenericDataRepository<PHIEUNHAPSACH> importRepo = new GenericDataRepository<PHIEUNHAPSACH>();
+        #endregion
+
+        #region Command
+        public ICommand DowloadTemplateCommand { get; set; }
+        public ICommand UploadExcelCommand { get; set; }
+        private System.Windows.Controls.UserControl PreviousItem;
+        #endregion
+
+        #region Properties
+        private ICollection<DAUSACH> bookHeaders;
+        private ICollection<THELOAI> categories;
+        private ICollection<TACGIA> authors;
+        private List<ImportExcelObject> importExcelObjects = new List<ImportExcelObject>();
+        #endregion
+        public ImportExcelVM()
+        {
+            Task.Run(async () =>
+            {
+                MainViewModel.IsLoading = true;
+                await Load();
+                DowloadTemplateCommand = new RelayCommandWithNoParameter(async () =>
+                {
+                    MainViewModel.IsLoading = true;
+                    bool result = await DowloadTemplate();
+                    if (result)
+                    {
+                        MainViewModel.SetLoading(false);
+                    }
+                    else
+                    {
+                        PreviousItem = MainViewModel.UpdateDialog("Main");
+                        var dl = new ConfirmDialog()
+                        {
+                            ContentString = "File đang được sử dụng. Xin hãy đóng file rùi thử lại!",
+                            Header = "Oops",
+                            CM = new RelayCommandWithNoParameter(() =>
+                            {
+                                DialogHost.CloseDialogCommand.Execute(null, null);
+                                DialogHost.Show(PreviousItem, "Main");
+                            })
+                        };
+                        MainViewModel.IsLoading = false;
+                        await DialogHost.Show(dl, "Main");
+                    }
+                });
+                UploadExcelCommand = new RelayCommandWithNoParameter(async () =>
+                {
+                    MainViewModel.IsLoading = true;
+                    OpenFileDialog openDialog = new OpenFileDialog();
+                    openDialog.Title = "Select file";
+                    openDialog.InitialDirectory = @"c:\";
+                    openDialog.Filter = "Excel Sheet(*.xlsx)|*.xlsx|All Files(*.*)|*.*";
+                    openDialog.FilterIndex = 1;
+                    openDialog.RestoreDirectory = true;
+                    if (openDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        if (openDialog.FileName != "")
+                        {
+                            FileInfo fileInfo = new FileInfo(openDialog.FileName);
+                            bool isAvailable = await CheckGetDataFromExcel(fileInfo);
+                            PreviousItem = MainViewModel.UpdateDialog("Main");
+                            if (!isAvailable)
+                            {
+                                var dl = new ConfirmDialog()
+                                {
+                                    Header = "Oops",
+                                    ContentString = "File bạn vừa nhập không đúng dạng dữ liệu tiêu chuẩn. Xin hãy sửa lại.",
+                                    CM = new RelayCommandWithNoParameter(() =>
+                                    {
+                                        DialogHost.CloseDialogCommand.Execute(null, null);
+                                        DialogHost.Show(PreviousItem, "Main");
+                                    })
+                                };
+                                MainViewModel.IsLoading = false;
+                                await DialogHost.Show(dl, "Main");
+                                return;
+                            }
+                            else
+                            {
+                                await SaveImport();
+                                MainViewModel.IsLoading = false;
+                                DialogHost.CloseDialogCommand.Execute(null, null);
+                                ImportSuccess?.Invoke();
+                                return;
+                            }    
+                        }
+                        else
+                        {
+                            
+                            var dl = new ConfirmDialog()
+                            {
+                                Header = "Oops",
+                                ContentString = "Hãy chọn file excel.",
+                                CM = new RelayCommandWithNoParameter(() =>
+                                {
+                                    DialogHost.CloseDialogCommand.Execute(null, null);
+                                    DialogHost.Show(PreviousItem, "Main");
+                                })
+                            };
+                            MainViewModel.IsLoading = false;
+                            await DialogHost.Show(dl, "Main");
+                            return;
+                        }
+                    }
+                    MainViewModel.IsLoading = false;
+                    return;
+                });
+                MainViewModel.IsLoading = false;
+            });
+        }
+        private async Task Load()
+        {
+            bookHeaders = await bookHeaderRepo.GetAllAsync(p=>p.SACHes, p=>p.THELOAI, p=>p.TACGIAs);
+            categories = await categoryRepo.GetAllAsync();
+            authors = await authorRepo.GetAllAsync();
+        }
+        private async Task SaveImport()
+        {
+            //import page handle
+            PHIEUNHAPSACH import = new PHIEUNHAPSACH();
+            import.MaPhieuNhap = await GenerateId.Gen(typeof(PHIEUNHAPSACH), "MaPhieuNhap");
+            import.NgayNhap = DateTime.Now;
+            import.MaNhanVien = AccountStore.instance.CurrentAccount.MaNhanVien;
+            import.TongTien = importExcelObjects.Sum(p=>p.UnitPrice*p.Amount);
+            await importRepo.Add(import);
+
+            for (int i = 0; i < importExcelObjects.Count; i++)
+            {
+                ImportExcelObject importExcelObject = importExcelObjects[i];
+                SACH book = await bookRepo.GetSingleAsync(p => p.DAUSACH.TenSach == importExcelObject.BookName && p.NhaXuatBan == importExcelObject.NXB);
+                if(book == null)
+                {
+                    book = new SACH();
+
+                    //book header handle
+                    DAUSACH bookHeader = await bookHeaderRepo.GetSingleAsync(p=>p.TenSach == importExcelObject.BookName);
+                    if (bookHeader == null)
+                    {
+                        bookHeader = new DAUSACH();
+                        bookHeader.MaDauSach = await GenerateId.Gen(typeof(DAUSACH), "MaDauSach");
+
+                        //category handle
+                        THELOAI bookCategory = await categoryRepo.GetSingleAsync(p => p.TenTheLoai == importExcelObject.TheLoai);
+                        if (bookCategory == null)
+                        {
+                            bookCategory = new THELOAI();
+                            bookCategory.MaTheLoai = await GenerateId.Gen(typeof(THELOAI), "MaTheLoai");
+                            bookCategory.TenTheLoai = importExcelObject.TheLoai;
+                            await categoryRepo.Add(bookCategory);
+                        }
+                        bookHeader.MaTheLoai = bookCategory.MaTheLoai;
+
+                        //author handle
+                        for (int j = 0; j < importExcelObject.Authors.Count; j++)
+                        {
+                            String authorName = importExcelObject.Authors[j];
+                            TACGIA author = await authorRepo.GetSingleAsync(p => p.TenTacGia == authorName);
+                            if (author == null)
+                            {
+                                author = new TACGIA();
+                                author.TenTacGia = authorName;
+                                author.MaTacGia = await GenerateId.Gen(typeof(TACGIA), "MaTacGia");
+                                await authorRepo.Add(author);
+                            }
+                        }
+
+                        //book's name handle
+                        bookHeader.TenSach = importExcelObject.BookName;
+
+                        //add to db
+                        bookHeader.MaDauSach = await GenerateId.Gen(typeof(DAUSACH), "MaDauSach");
+                        await bookHeaderRepo.Add(bookHeader);
+                    }
+
+
+                    //change author name to author Id and add to db
+                    for (int j = 0; j < importExcelObject.Authors.Count; j++)
+                    {
+                        TACGIA author = await authorRepo.GetSingleAsync(p=>p.TenTacGia == importExcelObject.Authors[j]);
+                        await AuthorDetailAPI.Add(author.MaTacGia, bookHeader.MaDauSach);
+                    }
+
+                    book.MaDauSach = bookHeader.MaDauSach;
+                    book.MaSach = await GenerateId.Gen(typeof(SACH), "MaSach");
+                    book.DonGiaNhap = importExcelObject.UnitPrice;
+                    book.SoLuong = importExcelObject.Amount;
+                    book.NhaXuatBan = importExcelObject.NXB;
+                    await bookRepo.Add(book);
+                }
+                else
+                {
+                    book.SoLuong += importExcelObject.Amount;
+                    await bookRepo.Update(book);
+                }
+                await ImportDetailAPI.Add(book.MaSach, import.MaPhieuNhap, importExcelObject.Amount);
+            }
+        }
+        private async Task<bool> CheckGetDataFromExcel(FileInfo fileInfo)
+        {
+            if (!IsFileLocked(fileInfo) && fileInfo.Exists)
+            {
+                using (var package = new ExcelPackage(fileInfo))
+                {
+                    await package.LoadAsync(fileInfo.FullName);
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+                    if (worksheet.Cells[6, 1].Value == null || worksheet.Cells[6, 1].Value.ToString() != "Tên sách")
+                    {
+                        return false;
+                    }
+                    if (worksheet.Cells[6, 2].Value == null || worksheet.Cells[6, 2].Value.ToString() != "Nhà xuất bản")
+                    {
+                        return false;
+                    }
+                    if (worksheet.Cells[6, 3].Value == null || worksheet.Cells[6, 3].Value.ToString() != "Tác giả")
+                    {
+                        return false;
+                    }
+                    if (worksheet.Cells[6, 4].Value == null || worksheet.Cells[6, 4].Value.ToString() != "Thể loại")
+                    {
+                        return false;
+                    }
+                    if (worksheet.Cells[6, 5].Value == null || worksheet.Cells[6, 5].Value.ToString() != "Đơn giá")
+                    {
+                        return false;
+                    }
+                    if (worksheet.Cells[6, 6].Value == null || worksheet.Cells[6, 6].Value.ToString() != "Số lượng")
+                    {
+                        return false;
+                    }
+
+                    int row = 7;
+                    while (worksheet.Cells[row,1].Value != null && worksheet.Cells[row, 1].Value.ToString() != "")
+                    {
+                        if (worksheet.Cells[row, 2].Value == null || worksheet.Cells[6, 2].Value.ToString() == "")
+                        {
+                            return false;
+                        }
+                        if (worksheet.Cells[row, 3].Value == null || worksheet.Cells[6, 3].Value.ToString() == "")
+                        {
+                            return false;
+                        }
+                        if (worksheet.Cells[row, 4].Value == null || worksheet.Cells[6, 4].Value.ToString() == "")
+                        {
+                            return false;
+                        }
+                        if (worksheet.Cells[row, 5].Value == null || worksheet.Cells[6, 5].Value.ToString() == "")
+                        {
+                            return false;
+                        }
+                        if (worksheet.Cells[row, 6].Value == null || worksheet.Cells[6, 6].Value.ToString() == "")
+                        {
+                            return false;
+                        }
+
+                        ImportExcelObject importExcelObject = new ImportExcelObject();
+
+                        String bookName = worksheet.Cells[row, 1].Value.ToString();
+                        importExcelObject.BookName = bookName;
+
+                        String NXB = worksheet.Cells[row, 2].Value.ToString();
+                        importExcelObject.NXB = NXB;
+
+                        String bookAuthors = worksheet.Cells[row, 3].Value.ToString();
+                        List<string> authorNames = bookAuthors.Split(',').ToList();
+                        if(authorNames.Any(p=>p.Length == 0))
+                        {
+                            return false;
+                        }    
+                        else
+                        {
+                            if (!bookHeaders.Any(p=>p.TenSach == bookName) || bookHeaders.Any(p =>
+                            {
+                                if(p.TenSach!=bookName)
+                                    { return false; }
+
+                                List<string> tempAuthors = p.TACGIAs.Select(a => a.TenTacGia).ToList();
+                                if(tempAuthors.Count != authorNames.Count)
+                                {
+                                    return false;
+                                }    
+                                tempAuthors.Sort();
+                                authorNames.Sort();
+                                for(int i = 0; i < tempAuthors.Count;i++)
+                                {
+                                    if (tempAuthors[i] != authorNames[i])
+                                    {
+                                        return false;
+                                    }    
+                                }
+                                return true;
+                            }))
+                            {
+                                importExcelObject.Authors = authorNames.ToList();
+                            }
+                            else
+                            {
+                                return false;
+                            }    
+                        }
+
+                        String category = worksheet.Cells[row, 4].Value.ToString();
+                        if (!bookHeaders.Any(p=>p.TenSach == bookName) || bookHeaders.Any(p =>
+                        {
+                            return p.TenSach == bookName && p.THELOAI.TenTheLoai == category;
+                        }))
+                        {
+                            importExcelObject.TheLoai = category;
+                        }
+                        else
+                        {
+                            return false;
+                        }    
+
+                        String unitPrice = worksheet.Cells[row, 5].Value.ToString();
+                        try
+                        {
+                            
+                            importExcelObject.UnitPrice = decimal.Parse(unitPrice);
+                            SACH book = await bookRepo.GetSingleAsync(p => p.DAUSACH.TenSach == bookName && p.NhaXuatBan == NXB);
+                            if (book != null && book.DonGiaNhap != importExcelObject.UnitPrice)
+                            {
+                                return false;
+                            }
+                            else if (importExcelObject.UnitPrice <= 0) 
+                            {
+                                return false;
+                            }
+                        }
+                        catch
+                        {
+                            return false;
+                        }
+
+                        String amount = worksheet.Cells[row, 6].Value.ToString();
+                        try
+                        {
+                            importExcelObject.Amount = int.Parse(amount);
+                            if (importExcelObject.Amount <= 0)
+                            {
+                                return false;
+                            }
+                        }
+                        catch
+                        {
+                            return false;
+                        }
+
+                        importExcelObjects.Add(importExcelObject);
+                        row++;
+                    } 
+                    if(row == 7)
+                    {
+                        return false;
+                    }    
+                }
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        private async Task<bool> DowloadTemplate()
+        {
+            string userRoot = System.Environment.GetEnvironmentVariable("USERPROFILE");
+            string downloadFolder = Path.Combine(userRoot, "Downloads");
+
+            FileInfo fileInfo = new FileInfo($"{downloadFolder}\\template.xlsx");
+            if (!IsFileLocked(fileInfo))
+            {
+                if (fileInfo.Exists)
+                {
+                    fileInfo.Delete();
+                }
+                using (var package = new ExcelPackage(fileInfo))
+                {
+                    //MainReport
+                    ExcelWorksheet worksheetMain = package.Workbook.Worksheets.Add("MainReport");
+                    worksheetMain.Cells["A1:F1"].Merge = true;
+                    worksheetMain.Cells["A2:F2"].Merge = true;
+                    worksheetMain.Cells["A3:F3"].Merge = true;
+                    worksheetMain.Cells["A4:F4"].Merge = true;
+                    worksheetMain.Cells["A5:F5"].Merge = true;
+                    worksheetMain.Cells[1, 1].Value = "//Các dòng này chỉ để giới thiệu với bạn. Bạn có thể xóa tùy bạn.";
+                    worksheetMain.Cells[2, 1].Value = "//Bạn có thể chuyển sheet để có thể thấy rõ hơn các thông tin cần điền.";
+                    worksheetMain.Cells[3, 1].Value = "//Bạn không thể điền cùng lúc 2 sách có cùng tên và nhà xuất bản.";
+                    worksheetMain.Cells[4, 1].Value = "//Sách gồm nhiều tác giả, giữa tên các tác tác giả cần thêm \",\".";
+                    worksheetMain.Cells[5, 1].Value = "//Mỗi tên sách chỉ ứng với 1 thể loại và 1 nhóm tác giả tương ứng.";
+                    using (ExcelRange excelRange = worksheetMain.Cells[$"A1:F5"])
+                    {
+                        excelRange.Style.Font.Color.SetColor(Color.FromArgb(42, 169, 82));
+                    }
+
+                    worksheetMain.Cells[6, 1].Value = "Tên sách";
+                    worksheetMain.Cells[6, 2].Value = "Nhà xuất bản";
+                    worksheetMain.Cells[6, 3].Value = "Tác giả";
+                    worksheetMain.Cells[6, 4].Value = "Thể loại";
+                    worksheetMain.Cells[6, 5].Value = "Đơn giá";
+                    worksheetMain.Cells[6, 6].Value = "Số lượng";
+                    using (ExcelRange excelRange = worksheetMain.Cells[$"A6:F1000"])
+                    {
+                        excelRange.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                        excelRange.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                        excelRange.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                        excelRange.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                    }
+
+                    var allCellsMain = worksheetMain.Cells[1, 1, worksheetMain.Dimension.End.Row, worksheetMain.Dimension.End.Column];
+                    var cellFontMain = allCellsMain.Style.Font;
+                    cellFontMain.SetFromFont("Times New Roman", 13);
+
+                    worksheetMain.Cells.AutoFitColumns();
+                    for (int i = 1; i <= 6; i++)
+                    {
+                        worksheetMain.Column(i).Width *= 1.2;
+                    }
+
+                    //Book template
+                    ExcelWorksheet worksheetBook = package.Workbook.Worksheets.Add("BookData");
+                    worksheetBook.Cells[1, 1].Value = "Tên sách";
+                    worksheetBook.Cells[1, 2].Value = "Thể loại";
+                    worksheetBook.Cells[1, 3].Value = "Tác giả";
+                    worksheetBook.Cells[1, 4].Value = "Nhà xuất bản";
+                    worksheetBook.Cells[1, 5].Value = "Đơn giá";
+                    int row = 0;
+                    for(int i = 0; i < bookHeaders.Count; i++)
+                    {
+                        DAUSACH bookHeader = bookHeaders.ElementAt(i);
+                        for(int j = 0; j < bookHeader.SACHes.Count; j++)
+                        {
+                            worksheetBook.Cells[2 + row, 1].Value = bookHeader.TenSach;
+                            worksheetBook.Cells[2 + row, 2].Value = bookHeader.THELOAI.TenTheLoai;
+                            worksheetBook.Cells[2 + row, 3].Value = string.Join(",", bookHeader.TACGIAs.Select(p => p.TenTacGia).ToList());
+                            worksheetBook.Cells[2 + row, 4].Value = bookHeader.SACHes.ElementAt(j).NhaXuatBan;
+                            worksheetBook.Cells[2 + row, 5].Value = bookHeader.SACHes.ElementAt(j).DonGiaNhap;
+                            row++;
+                        }    
+                    }
+
+                    var allCellsBook = worksheetBook.Cells[1, 1, worksheetBook.Dimension.End.Row, worksheetBook.Dimension.End.Column];
+                    var cellFontBook = allCellsBook.Style.Font;
+                    cellFontBook.SetFromFont("Times New Roman", 13);
+
+                    worksheetBook.Cells.AutoFitColumns();
+                    for (int i = 1; i <= 4; i++)
+                    {
+                        worksheetBook.Column(i).Width *= 1.2;
+                    }
+                    
+                    using (ExcelRange excelRange = worksheetBook.Cells[$"A1:E{row + 1}"])
+                    {
+                        excelRange.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                        excelRange.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                        excelRange.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                        excelRange.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                    }
+                    
+                    //Author template
+                    ExcelWorksheet worksheetAuthor = package.Workbook.Worksheets.Add("AuthorData");
+                    worksheetAuthor.Cells[1, 1].Value = "Tên tác giả";
+                    for (int i = 0; i < authors.Count; i++)
+                    {
+                        TACGIA author = authors.ElementAt(i);
+
+                        worksheetAuthor.Cells[2 + i, 1].Value = author.TenTacGia;
+     
+                    }
+
+                    var allCellsAuthors = worksheetAuthor.Cells[1, 1, worksheetAuthor.Dimension.End.Row, worksheetAuthor.Dimension.End.Column];
+                    var cellFontAuthors = allCellsAuthors.Style.Font;
+                    cellFontAuthors.SetFromFont("Times New Roman", 13);
+
+                    worksheetAuthor.Cells.AutoFitColumns();
+                    for (int i = 1; i <= 1; i++)
+                    {
+                        worksheetAuthor.Column(i).Width *= 1.2;
+                    }
+
+                    using (ExcelRange excelRange = worksheetAuthor.Cells[$"A1:A{authors.Count + 1}"])
+                    {
+                        excelRange.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                        excelRange.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                        excelRange.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                        excelRange.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                    }
+
+                    //Category template
+                    ExcelWorksheet worksheetCategory = package.Workbook.Worksheets.Add("CategoryData");
+                    worksheetCategory.Cells[1, 1].Value = "Tên thể loại";
+                    for (int i = 0; i < categories.Count; i++)
+                    {
+                        THELOAI category = categories.ElementAt(i);
+
+                        worksheetCategory.Cells[2 + i, 1].Value = category.TenTheLoai;
+
+                    }
+
+                    var allCellsCategories = worksheetCategory.Cells[1, 1, worksheetCategory.Dimension.End.Row, worksheetCategory.Dimension.End.Column];
+                    var cellFontCategories = allCellsCategories.Style.Font;
+                    cellFontCategories.SetFromFont("Times New Roman", 13);
+
+                    worksheetCategory.Cells.AutoFitColumns();
+                    for (int i = 1; i <= 1; i++)
+                    {
+                        worksheetCategory.Column(i).Width *= 1.2;
+                    }
+
+                    using (ExcelRange excelRange = worksheetCategory.Cells[$"A1:A{categories.Count + 1}"])
+                    {
+                        excelRange.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                        excelRange.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                        excelRange.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                        excelRange.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                    }
+
+                    await package.SaveAsAsync(fileInfo);
+
+                    System.Diagnostics.Process.Start(fileInfo.FullName);
+                }
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        private bool IsFileLocked(FileInfo file)
+        {
+            try
+            {
+                if (!file.Exists) 
+                {
+                    return false;
+                }
+                using (FileStream stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None))
+                {
+                    stream.Close();
+                }
+            }
+            catch (IOException)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private class ImportExcelObject
+        {
+            public string BookName { get; set; }
+            public string NXB { get; set; }
+            public List<string> Authors { get; set; }
+            public string TheLoai { get; set; }
+            public decimal UnitPrice { get; set; }
+            public int Amount { set; get; }
+        }
+    }
+}

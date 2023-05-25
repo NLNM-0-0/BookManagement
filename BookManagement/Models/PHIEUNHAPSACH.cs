@@ -23,6 +23,7 @@ namespace BookManagement.Models
         public string MaPhieuNhap { get; set; }
         public Nullable<System.DateTime> NgayNhap { get; set; }
         public string MaNhanVien { get; set; }
+        public decimal TongTien { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CHITIETPHIEUNHAP> CHITIETPHIEUNHAPs { get; set; }

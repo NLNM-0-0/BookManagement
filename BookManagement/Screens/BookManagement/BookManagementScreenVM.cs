@@ -14,6 +14,7 @@ namespace BookManagement
         #region Public Properties
         public ObservableCollection<BookModel> BookList { get; set; }
         public List<string> SearchByOptions { get; set; }
+        public string SearchBy { get; set; }
 
         #endregion
 
