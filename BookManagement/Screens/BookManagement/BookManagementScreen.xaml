@@ -9,7 +9,9 @@
       xmlns:fa="http://schemas.fontawesome.io/icons/"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800">
-
+    <UserControl.Resources>
+        <local:DauSachToTacGiaStringConverter x:Key="DauSachToTacGiaStringConverter"/>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -17,79 +19,231 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" Margin="50 20">
-            <DockPanel>
-                <!-- Search bar -->
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <!--<Button Style="{StaticResource ButtonRectangle}"
-                            Margin="0 0 5 0">
-                        <Button.Content>
-                            <DockPanel LastChildFill="False">
-                                <fa:ImageAwesome 
-                                    Icon="Search"
-                                    Foreground="White"
-                                             Height="20"/>
-                                <TextBlock Text="Search"
-                                           VerticalAlignment="Center"
-                                           Margin="8 0 0 0"/>
-                            </DockPanel>
-                        </Button.Content>
-                    </Button>-->
-                    <TextBox 
-                        FontSize="{StaticResource FontSize14}"
-                        Padding="10 0"
-                        Width="320"
-                        Height="40"
-                        Style="{StaticResource MaterialDesignOutlinedTextBox}"/>
-                    <ComboBox Margin="5 0" SelectedItem="{Binding SearchBy}"
-                              Width="72"
-                              ItemsSource="{Binding SearchByOptions}"
-                                Style="{StaticResource MaterialDesignFloatingHintComboBox}"
-                                materialDesign:HintAssist.Hint="Search by"
-                                materialDesign:TextFieldAssist.UnderlineBrush="{StaticResource BlackColorBrush}"
-                                materialDesign:HintAssist.Foreground="{StaticResource BlackColorBrush}">
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="SelectionChanged">
-                                <i:InvokeCommandAction Command="{Binding SearchCommand}"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                    </ComboBox>
-                </StackPanel>
-            </DockPanel>
-        </Grid>
+        <Grid Grid.Row="0" Margin="50 10">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
 
-        <!--<ScrollViewer Grid.Row="2" x:Name="grid" Background="{StaticResource WhiteColorBrush}" 
-              HorizontalScrollBarVisibility="Auto" 
-                      Margin="50 0 50 20">-->
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBox 
+                    Margin="0 0 5 0"
+                    Grid.Column="0"
+                    Text="{Binding SearchName, UpdateSourceTrigger=PropertyChanged}"
+                    Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                    materialDesign:HintAssist.Hint="Tên sách"/>
+                <TextBox 
+                    Margin="5 0"
+                    Grid.Column="1"
+                    Text="{Binding SearchAuthor, UpdateSourceTrigger=PropertyChanged}"
+                    Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                    materialDesign:HintAssist.Hint="Tác giả"/>
+                <TextBox 
+                    Margin="5 0"
+                    Grid.Column="2"
+                    Text="{Binding SearchNXB, UpdateSourceTrigger=PropertyChanged}"
+                    Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                    materialDesign:HintAssist.Hint="NXB"/>
+                <TextBox 
+                     Margin="5 0 0 0"
+                    Grid.Column="3"
+                    Text="{Binding SearchType, UpdateSourceTrigger=PropertyChanged}"
+                    Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                    materialDesign:HintAssist.Hint="Thể loại"/>
+                <Button Margin="10 0 0 0"
+                        x:Name="searchButton"
+                        Grid.Column="4"
+                        Content="Search"
+                        Command="{Binding SearchCommand}">
+                </Button>
+            </Grid>
+            <Grid Grid.Row="1" Margin="0 10 0 0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0" 
+                      Margin="0 0 5 0">
+                    <Grid
+                        VerticalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="15"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="15"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox 
+                            Grid.Column="0"
+                            Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                            MaxWidth="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Grid}, Path=ActualWidth}"
+                            materialDesign:HintAssist.Hint="Giá từ"
+                            materialDesign:TextFieldAssist.SuffixText=" VND"
+                            Width="auto">
+                            <TextBox.Text>
+                                <Binding
+                                    Path="MinPriceSearch"
+                                    UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <local:NumberTextBoxValidation
+                                        IsCanEmpty="True"
+                                        Min="0"/>
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
+                        <TextBlock
+                            Grid.Column="2"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                            Text="-"
+                            Foreground="{StaticResource NotAvailableColorBrush}"
+                            FontSize="{StaticResource FontSize34}"/>
+                        <TextBox 
+                            x:Name="maxPriceTextBox"
+                            Grid.Column="5"
+                            Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                            MaxWidth="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Grid}, Path=ActualWidth}"
+                            materialDesign:HintAssist.Hint="Giá đến"
+                            materialDesign:TextFieldAssist.SuffixText=" VND"
+                            Width="auto">
+                            <TextBox.Text>
+                                <Binding
+                                    Path="MaxPriceSearch"
+                                    UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <local:NumberTextBoxValidation
+                                        IsCanEmpty="True"
+                                        Min="0"/>
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
+                    </Grid>
+                </Grid>
+
+                <Grid Grid.Column="1" 
+                      Margin="5 0 5 0">
+                    <Grid
+                        VerticalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="15"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="15"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox 
+                            Grid.Column="0"
+                            Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                            MaxWidth="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Grid}, Path=ActualWidth}"
+                            materialDesign:HintAssist.Hint="Số lượng từ"
+                            materialDesign:TextFieldAssist.SuffixText=" VND"
+                            Width="auto">
+                            <TextBox.Text>
+                                <Binding
+                                        Path="MinQuantitySearch"
+                                        UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <local:NumberTextBoxValidation
+                                                IsCanEmpty="True"
+                                                Min="0"/>
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
+                        <TextBlock
+                            Grid.Column="2"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                            Text="-"
+                            Foreground="{StaticResource NotAvailableColorBrush}"
+                            FontSize="{StaticResource FontSize34}"/>
+                        <TextBox 
+                            Grid.Column="5"
+                            Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                            MaxWidth="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Grid}, Path=ActualWidth}"
+                            materialDesign:HintAssist.Hint="Số lượng đến"
+                            materialDesign:TextFieldAssist.SuffixText=" VND"
+                            Width="auto">
+                            <TextBox.Text>
+                                <Binding
+                                    Path="MaxQuantitySearch"
+                                    UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <local:NumberTextBoxValidation
+                                        IsCanEmpty="True"
+                                        Min="0"/>
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
+                    </Grid>
+                </Grid>
+                <Button Margin="5 0 0 0"
+                        Grid.Column="4"
+                        Command="{Binding ResetCommand}"
+                        Style="{StaticResource WhiteButton}"
+                        Content="Reset" HorizontalAlignment="Right" Width="100">
+                </Button>
+            </Grid>
+        </Grid>
 
         <DataGrid
             Grid.Row="2"
                 Margin="50 0 50 20"
-                ItemsSource="{Binding BookList}" x:Name="datagrid" 
+                ItemsSource="{Binding FilteredBooks}" x:Name="datagrid" 
                     MaxHeight="{Binding ElementName=grid, Path=ActualHeight}"
                     AutoGenerateColumns="False" Grid.ColumnSpan="2"
                       CanUserReorderColumns="False" CanUserAddRows="False"
                       CanUserDeleteRows="False" IsReadOnly="True">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" MinWidth="100" MaxWidth="400" Width="auto" Binding="{Binding Id}"/>
-                <DataGridTextColumn Header="Book Title" Width="400" MinWidth="200" MaxWidth="700" Binding="{Binding Title}">
+                <DataGridTextColumn Header="ID" MinWidth="100" MaxWidth="400" Width="auto" 
+                                    Binding="{Binding MaSach}"/>
+                <DataGridTextColumn Header="Tên sách" Width="300" MinWidth="200" MaxWidth="700" 
+                                    Binding="{Binding DAUSACH.TenSach}">
                     <DataGridTextColumn.ElementStyle>
                         <Style>
                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Author" Width="400" MinWidth="200" MaxWidth="700" Binding="{Binding Author}">
+                <DataGridTextColumn Header="Tác giả" Width="300" MinWidth="200" MaxWidth="700" 
+                                    Binding="{Binding DAUSACH, Converter={StaticResource DauSachToTacGiaStringConverter}}">
                     <DataGridTextColumn.ElementStyle>
                         <Style>
                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Category" Width="auto" MinWidth="100" MaxWidth="200" Binding="{Binding Category}"/>
-                <DataGridTextColumn Header="Quantity" Width="auto" MinWidth="100" MaxWidth="200" Binding="{Binding Quantity}"/>
-                <DataGridTextColumn Header="Price" Width="auto" MinWidth="100" MaxWidth="200" Binding="{Binding Price}"/>
-
+                <DataGridTextColumn Header="NXB" Width="auto" MinWidth="100" MaxWidth="700" 
+                                    Binding="{Binding NhaXuatBan}">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style>
+                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Thể loại" Width="auto" MinWidth="100" MaxWidth="200" 
+                                    Binding="{Binding DAUSACH.THELOAI.TenTheLoai}">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style>
+                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Số lượng" Width="auto" MinWidth="100" MaxWidth="200" 
+                                    Binding="{Binding SoLuong}"/>
+                <DataGridTextColumn Header="Giá" Width="auto" MinWidth="100" MaxWidth="200" 
+                                    Binding="{Binding DonGiaNhap}"/>
             </DataGrid.Columns>
 
         </DataGrid>

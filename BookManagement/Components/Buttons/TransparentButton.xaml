@@ -12,7 +12,7 @@
            BasedOn="{StaticResource MaterialDesignFlatButton}">
         <Setter Property="Foreground" Value="{StaticResource BlackColorBrush}"/>
         <Setter Property="TextBlock.FontFamily" Value="{StaticResource Regular}"/>
-        <Setter Property="TextBlock.FontSize" Value="{StaticResource FontSizeText}"/>
+        <Setter Property="TextBlock.FontSize" Value="{StaticResource FontSize14}"/>
         <Setter Property="Padding" Value="5"/>
         <Setter Property="Content" Value="Button"/>
         <Setter Property="materialDesign:ButtonAssist.CornerRadius" Value="{i:Binding Path=Height*0.5, RelativeSource={RelativeSource Mode=Self}}"/>

@@ -333,10 +333,15 @@
     <Compile Include="Utils\Converters\NumberAndUnitPriceToTotalPriceConverter.cs" />
     <Compile Include="Utils\Converters\StringToVisibilityConverter.cs" />
     <Compile Include="Utils\Converters\DateTimeToShortConverter.cs" />
+    <Compile Include="Utils\Converters\DebtConverter.cs" />
     <Compile Include="Utils\Converters\FalsesToTrueConverter.cs" />
+    <Compile Include="Utils\Converters\MultiValueConverter.cs" />
+    <Compile Include="Utils\Converters\SachToTacGiaStringConverter.cs" />
     <Compile Include="Utils\Converters\StatusToColorConverter.cs" />
     <Compile Include="Utils\Converters\StatusToTextConverter.cs" />
+    <Compile Include="Utils\Converters\StockConverter.cs" />
     <Compile Include="Utils\CreateViewModel.cs" />
+    <Compile Include="Utils\Helpers.cs" />
     <Compile Include="Utils\ImmediateCommand.cs" />
     <Compile Include="Utils\RelayCommand.cs" />
     <Compile Include="Utils\RelayCommandWithNoParameter.cs" />

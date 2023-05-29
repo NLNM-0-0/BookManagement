@@ -4,60 +4,99 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BookManagement"
+             xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
              mc:Ignorable="d" 
              d:DesignHeight="630" d:DesignWidth="520">
+    <UserControl.Resources>
+        <local:OrderToSubtotalConverter x:Key="OrderToSubtotalConverter"/>
+    </UserControl.Resources>
     <ScrollViewer>
         <DockPanel  Margin="24" LastChildFill="False">
-            <TextBlock Text="Bill Detail"
+            <TextBlock Text="Hoá đơn"
                    DockPanel.Dock="Top"
                    FontSize="{StaticResource FontSize18}"
                    FontWeight="Bold"
                    HorizontalAlignment="Center"
                    Foreground="{DynamicResource PrimaryHueDarkBrush}"/>
-            <Grid Margin="0 24 0 0" DockPanel.Dock="Top">
+            <Grid Margin="0 10 0 0" DockPanel.Dock="Top">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="3*"/>
                 </Grid.ColumnDefinitions>
-                <StackPanel Grid.Column="0">
-                    <TextBlock Text="Customer Name"
-                   DockPanel.Dock="Top"
-                   FontSize="{StaticResource FontSize16}"
+                <TextBlock Text="Tên khách hàng"
+                               Margin="0 10 0 0"
+                               Grid.Column="0"
+                               FontSize="{StaticResource FontSize16}"
                    />
-                    <TextBlock Text="Date"
-                   DockPanel.Dock="Top"
-                   Margin="0 10 0 0"
-                   FontSize="{StaticResource FontSize16}"
+                <TextBlock Text="{Binding KhachHang.TenKhachHang}"
+                               Margin="0 10 0 0"
+                               Grid.Column="1"
+                               FontSize="{StaticResource FontSize16}"
                    />
-                    <TextBlock Text="Bill code"
-                   Margin="0 10 0 0"
-                   DockPanel.Dock="Top"
-                   FontSize="{StaticResource FontSize16}"
+            </Grid>
+            <Grid Visibility="{c:Binding '(HoaDon.SoTienNo > 0)', FalseToVisibility=Collapsed}"
+                Margin="0 10 0 0" DockPanel.Dock="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="3*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Số điện thoại"
+                               Grid.Column="0"
+                               FontSize="{StaticResource FontSize16}"
                    />
-                </StackPanel>
-                <StackPanel Grid.Column="1">
-                    <TextBlock Text="Customer Name"
-                           FontWeight="SemiBold"
-                       HorizontalAlignment="Right"
-                   DockPanel.Dock="Top"
-                   FontSize="{StaticResource FontSize16}"
+                <TextBlock Text="{Binding KhachHang.DienThoai}"
+                               Grid.Column="1"
+                               FontSize="{StaticResource FontSize16}"
                    />
-                    <TextBlock Text="Date"
-                       HorizontalAlignment="Right"
-                   DockPanel.Dock="Top"
-                   Margin="0 10 0 0"
-                   FontSize="{StaticResource FontSize16}"
+            </Grid>
+            <Grid Visibility="{c:Binding '(HoaDon.SoTienNo > 0)', FalseToVisibility=Collapsed}"
+                Margin="0 10 0 0" DockPanel.Dock="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="3*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Địa chỉ"
+                               Grid.Column="0"
+                               FontSize="{StaticResource FontSize16}"
                    />
-                    <TextBlock Text="Bill code"
-                       HorizontalAlignment="Right"
-                   Margin="0 10 0 0"
-                   DockPanel.Dock="Top"
-                   FontSize="{StaticResource FontSize16}"
+                <TextBlock Text="{Binding KhachHang.DiaChi}"
+                           TextWrapping="Wrap"
+                               Grid.Column="1"
+                               FontSize="{StaticResource FontSize16}"
                    />
-                </StackPanel>
+            </Grid>
+            <Grid Margin="0 10 0 0" DockPanel.Dock="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="3*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Ngày mua"
+                               Grid.Column="0"
+                               FontSize="{StaticResource FontSize16}"
+                   />
+                <TextBlock Text="{Binding HoaDon.NgayLapHoaDon, Converter={x:Static local:DateTimeToShortConverter.Instance}}"
+                           TextWrapping="Wrap"
+                               Grid.Column="1"
+                               FontSize="{StaticResource FontSize16}"
+                   />
+            </Grid>
+            <Grid Margin="0 10 0 0" DockPanel.Dock="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="3*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Mã đơn hàng"
+                               Grid.Column="0"
+                               FontSize="{StaticResource FontSize16}"
+                   />
+                <TextBlock Text="{Binding HoaDon.MaHoaDon}"
+                           TextWrapping="Wrap"
+                               Grid.Column="1"
+                               FontSize="{StaticResource FontSize16}"
+                   />
             </Grid>
 
-            <DataGrid ItemsSource="{Binding BookList}" DockPanel.Dock="Top"
+            <DataGrid ItemsSource="{Binding ListBillDetail}" DockPanel.Dock="Top"
                   Margin="0 16 0 0"
                   VerticalScrollBarVisibility="Disabled"
                     AutoGenerateColumns="False"
@@ -65,17 +104,23 @@
                       CanUserReorderColumns="False" CanUserAddRows="False"
                       CanUserDeleteRows="False" IsReadOnly="True">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="No." MinWidth="30" MaxWidth="100" Width="auto" Binding="{Binding Id}"/>
-                    <DataGridTextColumn Header="Title" Width="*" MinWidth="100" MaxWidth="400" Binding="{Binding Title}">
+                    <DataGridTextColumn Header="No." MinWidth="30" MaxWidth="100" Width="auto" Binding="{Binding MaSach}"/>
+                    <DataGridTextColumn Header="Title" Width="*" MinWidth="100" MaxWidth="400" Binding="{Binding SACH.DAUSACH.TenSach}">
                         <DataGridTextColumn.ElementStyle>
                             <Style>
                                 <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="Quantity" Width="auto" MinWidth="40" MaxWidth="300" Binding="{Binding}"/>
-                    <DataGridTextColumn Header="Price" Width="auto" MinWidth="100" MaxWidth="300" Binding="{Binding}"/>
-                    <DataGridTextColumn Header="Subtotal" Width="auto" MinWidth="100" MaxWidth="300" Binding="{Binding}"/>
+                    <DataGridTextColumn Header="Quantity" Width="auto" MinWidth="40" MaxWidth="300" 
+                                        Binding="{Binding SoLuong}"/>
+                    <DataGridTextColumn Header="Price" Width="auto" MinWidth="100" MaxWidth="300" 
+                                        Binding="{Binding DonGia, Converter={x:Static local:DecimalToMoneyConveter.Instance}}"/>
+                    <DataGridTextColumn Header="Subtotal" Width="auto" MinWidth="100" MaxWidth="300">
+                        <DataGridTextColumn.Binding>
+                            <Binding Converter="{StaticResource OrderToSubtotalConverter}"/>
+                        </DataGridTextColumn.Binding>
+                    </DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
 
@@ -87,7 +132,7 @@
                 <StackPanel 
             Grid.Column="0" 
             DockPanel.Dock="Top">
-                    <TextBlock Text="Total"
+                    <TextBlock Text="Tổng tiền"
                    DockPanel.Dock="Top"
                    FontSize="{StaticResource FontSize16}"
                    />
@@ -96,7 +141,7 @@
                    Margin="0 10 0 0"
                    FontSize="{StaticResource FontSize16}"
                    />
-                    <TextBlock Text="Debt"
+                    <TextBlock Text="Số tiền nợ"
                    Margin="0 10 0 0"
                    DockPanel.Dock="Top"
                    FontSize="{StaticResource FontSize16}"
@@ -105,19 +150,19 @@
                 <StackPanel Margin="24 0 0 0"
             Grid.Column="1" 
             DockPanel.Dock="Top">
-                    <TextBlock Text="11780.000"
+                    <TextBlock Text="{Binding HoaDon.TongTien, Converter={x:Static local:DecimalToMoneyConveter.Instance}}"
                    DockPanel.Dock="Top"
                            HorizontalAlignment="Right"
                    FontSize="{StaticResource FontSize16}"
                    />
-                    <TextBlock Text="600.000"
+                    <TextBlock Text="0"
                    DockPanel.Dock="Top"
                            HorizontalAlignment="Right"
 
                    Margin="0 10 0 0"
                    FontSize="{StaticResource FontSize16}"
                    />
-                    <TextBlock Text="11180.000"
+                    <TextBlock Text="{Binding HoaDon.SoTienNo, Converter={x:Static local:DecimalToMoneyConveter.Instance}}"
                    Margin="0 10 0 0"
                            HorizontalAlignment="Right"
                    DockPanel.Dock="Top"
@@ -125,8 +170,7 @@
                    />
                 </StackPanel>
             </Grid>
-
         </DockPanel>
     </ScrollViewer>
-    
+
 </UserControl>
