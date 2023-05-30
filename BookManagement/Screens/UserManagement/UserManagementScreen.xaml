@@ -27,32 +27,6 @@
             <Setter Property="CommandParameter" 
                     Value="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
         </Style>
-        <Style x:Key="RadioTabButton" TargetType="{x:Type RadioButton}" BasedOn="{StaticResource MaterialDesignTabRadioButton}">
-            <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}"/>
-            <Setter Property="BorderBrush" Value="{StaticResource PrimaryHueMidBrush}"/>
-            <Setter Property="FontFamily" Value="{StaticResource Regular}"/>
-            <Setter Property="Height" Value="40"/>
-            <Setter Property="FontSize" Value="{StaticResource FontSize24}"/>
-            <Setter Property="Cursor" Value="Hand"/>
-        </Style>
-        <Style 
-            x:Key="RadioTabItem"
-            BasedOn="{StaticResource {x:Type TabItem}}" 
-            TargetType="TabItem">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type TabItem}">
-                        <RadioButton IsChecked="{Binding IsSelected, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
-                                     Style="{StaticResource RadioTabButton}"
-                                     Content="{TemplateBinding Header}"
-                                     FontSize="{StaticResource FontSize24}"
-                                     FontWeight="Regular"
-                                     Width="{TemplateBinding Width}"
-                                     />
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
     </UserControl.Resources>
     <TabControl Margin="40 0 40 20" 
                 x:Name="tabcontrol"
@@ -146,71 +120,114 @@
                         x:Name="datagrid" 
                         Grid.ColumnSpan="2"
                         ItemsSource="{Binding FilteredUsers, UpdateSourceTrigger=PropertyChanged}"
-                        MaxHeight="{Binding ElementName=grid, Path=ActualHeight}"
                         AutoGenerateColumns="False" 
-                        CanUserResizeColumns="False" 
                         CanUserReorderColumns="False" 
                         CanUserAddRows="False"
                         CanUserDeleteRows="False" 
                         IsReadOnly="True">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="ID" Width="100" Binding="{Binding MaNhanVien}">
+                            <DataGridTextColumn 
+                                Header="ID" 
+                                Width="100" 
+                                CellStyle="{StaticResource CenterCell}"
+                                HeaderStyle="{StaticResource CenterHeader}"
+                                Binding="{Binding MaNhanVien}">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style>
                                         <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
-                            <DataGridTextColumn Header="Tên" Width="200" Binding="{Binding TenNhanVien}">
+                            <DataGridTextColumn 
+                                Header="Tên" 
+                                Width="200" 
+                                CellStyle="{StaticResource LeftCell}"
+                                HeaderStyle="{StaticResource LeftHeader}"
+                                Binding="{Binding TenNhanVien}">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style>
                                         <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
-                            <DataGridTextColumn Header="Giới tính" Width="100" Binding="{Binding GioiTinh}">
+                            <DataGridTextColumn 
+                                Header="Giới tính" 
+                                Width="100" 
+                                CellStyle="{StaticResource CenterCell}"
+                                HeaderStyle="{StaticResource CenterHeader}"
+                                Binding="{Binding GioiTinh}">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style>
                                         <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
-                            <DataGridTextColumn Header="Ngày sinh" Width="100" Binding="{Binding NgaySinh, Converter={x:Static local:DateTimeToShortConverter.Instance}}">
+                            <DataGridTextColumn 
+                                Header="Ngày sinh" 
+                                Width="100" 
+                                CellStyle="{StaticResource CenterCell}"
+                                HeaderStyle="{StaticResource CenterHeader}"
+                                Binding="{Binding NgaySinh, Converter={x:Static local:DateTimeToShortConverter.Instance}}">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style>
                                         <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
-                            <DataGridTextColumn Header="SĐT" Width="150" Binding="{Binding DienThoai}">
+                            <DataGridTextColumn 
+                                Header="SĐT" 
+                                Width="150" 
+                                CellStyle="{StaticResource LeftCell}"
+                                HeaderStyle="{StaticResource LeftHeader}"
+                                Binding="{Binding DienThoai}">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style>
                                         <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
-                            <DataGridTextColumn Header="Địa chỉ" Width="150" Binding="{Binding DiaChi}">
+                            <DataGridTextColumn 
+                                Header="Địa chỉ" 
+                                Width="150" 
+                                CellStyle="{StaticResource LeftCell}"
+                                HeaderStyle="{StaticResource LeftHeader}"
+                                Binding="{Binding DiaChi}">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style>
                                         <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
-                            <DataGridTextColumn Header="Ngày vào làm" Width="150" Binding="{Binding NgayVaoLam, Converter={x:Static local:DateTimeToShortConverter.Instance}}">
+                            <DataGridTextColumn 
+                                Header="Ngày vào làm" 
+                                Width="150" 
+                                CellStyle="{StaticResource CenterCell}"
+                                HeaderStyle="{StaticResource CenterHeader}"
+                                Binding="{Binding NgayVaoLam, Converter={x:Static local:DateTimeToShortConverter.Instance}}">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style>
                                         <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
-                            <DataGridTextColumn Header="Username" Width="130" Binding="{Binding UserName}">
+                            <DataGridTextColumn 
+                                Header="Username"
+                                Width="130" 
+                                CellStyle="{StaticResource LeftCell}"
+                                HeaderStyle="{StaticResource LeftHeader}"
+                                Binding="{Binding UserName}">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style>
                                         <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
-                            <DataGridTextColumn Header="Trang thái" Width="130" Binding="{Binding isActive, Converter={x:Static local:StatusToTextConverter.Instance}}">
+                            <DataGridTextColumn 
+                                Header="Trang thái"
+                                Width="130" 
+                                CellStyle="{StaticResource CenterCell}"
+                                HeaderStyle="{StaticResource CenterHeader}"
+                                Binding="{Binding isActive, Converter={x:Static local:StatusToTextConverter.Instance}}">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style>
                                         <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
@@ -218,7 +235,11 @@
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
-                            <DataGridTemplateColumn Header="Mật khẩu" Width="100">
+                            <DataGridTemplateColumn
+                                Header="Mật khẩu" 
+                                Width="100"
+                                CellStyle="{StaticResource CenterCell}"
+                                HeaderStyle="{StaticResource CenterHeader}">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <Label>

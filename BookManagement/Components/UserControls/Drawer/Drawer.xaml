@@ -246,7 +246,7 @@
                                             Foreground="{DynamicResource PrimaryHueMidBrush}"/>
                         <TextBlock  x:Name="text" 
                                     Grid.Column="1"
-                                    Text="Theme"
+                                    Text="Chủ đề"
                                     Margin="25,0,0,0"
                                     VerticalAlignment="Center"
                                     FontSize="{StaticResource FontSize18}"

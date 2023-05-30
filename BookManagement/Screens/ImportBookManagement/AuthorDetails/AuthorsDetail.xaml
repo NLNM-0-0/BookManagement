@@ -11,26 +11,6 @@
              mc:Ignorable="d">
     <UserControl.Resources>
         <local:FalsesToTrueConverters x:Key="FalsesToTrueConverters"/>
-        <Style TargetType="{x:Type DataGridCell}" x:Key="LeftCell" BasedOn="{StaticResource MaterialDesignDataGridCell}">
-            <Setter Property="HorizontalContentAlignment" Value="Left"/>
-            <Setter Property="HorizontalAlignment" Value="Left"/>
-            <Setter Property="FontSize" Value="{StaticResource FontSize16}"/>
-        </Style>
-        <Style TargetType="{x:Type DataGridColumnHeader}" x:Key="LeftHeader" BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
-            <Setter Property="HorizontalContentAlignment" Value="Left"/>
-            <Setter Property="HorizontalAlignment" Value="Left"/>
-            <Setter Property="FontSize" Value="{StaticResource FontSize16}"/>
-        </Style>
-        <Style TargetType="{x:Type DataGridCell}" x:Key="CenterCell" BasedOn="{StaticResource MaterialDesignDataGridCell}">
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-            <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Setter Property="FontSize" Value="{StaticResource FontSize16}"/>
-        </Style>
-        <Style TargetType="{x:Type DataGridColumnHeader}" x:Key="CenterHeader" BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-            <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Setter Property="FontSize" Value="{StaticResource FontSize16}"/>
-        </Style>
     </UserControl.Resources>
     <Border 
         Background="{StaticResource WhiteColorBrush}" 

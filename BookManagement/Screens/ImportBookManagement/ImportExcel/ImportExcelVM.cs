@@ -5,16 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using MaterialDesignThemes.Wpf;
 using System.Drawing;
-using OfficeOpenXml.FormulaParsing.ExpressionGraph.FunctionCompilers;
-using System.Runtime.InteropServices.WindowsRuntime;
-using DocumentFormat.OpenXml.Bibliography;
 using System.Windows.Forms;
-using System.Collections.ObjectModel;
 
 namespace BookManagement
 {
@@ -108,11 +103,31 @@ namespace BookManagement
                             }
                             else
                             {
-                                await SaveImport();
-                                MainViewModel.IsLoading = false;
-                                DialogHost.CloseDialogCommand.Execute(null, null);
-                                ImportSuccess?.Invoke();
-                                return;
+                                bool isDataMatchRule = await CheckRule();
+                                if (!isDataMatchRule)
+                                {
+                                    var dl = new ConfirmDialog()
+                                    {
+                                        Header = "Oops",
+                                        ContentString = "Dữ liệu vừa được nhập vào không khớp với qui định hãy kiểm tra lại.",
+                                        CM = new RelayCommandWithNoParameter(() =>
+                                        {
+                                            DialogHost.CloseDialogCommand.Execute(null, null);
+                                            DialogHost.Show(PreviousItem, "Main");
+                                        })
+                                    };
+                                    MainViewModel.IsLoading = false;
+                                    await DialogHost.Show(dl, "Main");
+                                    return;
+                                }
+                                else
+                                {
+                                    await SaveImport();
+                                    MainViewModel.IsLoading = false;
+                                    DialogHost.CloseDialogCommand.Execute(null, null);
+                                    ImportSuccess?.Invoke();
+                                    return;
+                                }   
                             }    
                         }
                         else
@@ -144,6 +159,28 @@ namespace BookManagement
             bookHeaders = await bookHeaderRepo.GetAllAsync(p=>p.SACHes, p=>p.THELOAI, p=>p.TACGIAs);
             categories = await categoryRepo.GetAllAsync();
             authors = await authorRepo.GetAllAsync();
+        }
+        private async Task<bool> CheckRule()
+        {
+            int minImportBook = RuleStore.instance.getValue(AppEnum.LuongSachNhapItNhat);
+            int maxImportStock = RuleStore.instance.getValue(AppEnum.LuongTonToiDaKhiNhap);
+            for (int i = 0; i < importExcelObjects.Count; i++)
+            {
+                ImportExcelObject importExcelObject = importExcelObjects[i];
+                if(importExcelObject.Amount < minImportBook)
+                {
+                    return false;
+                }    
+                SACH book = await bookRepo.GetSingleAsync(p => p.DAUSACH.TenSach == importExcelObject.BookName && p.NhaXuatBan == importExcelObject.NXB);
+                if (book != null) 
+                {
+                    if(book.SoLuong >= maxImportStock) 
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
         private async Task SaveImport()
         {
@@ -393,6 +430,7 @@ namespace BookManagement
         }
         private async Task<bool> DowloadTemplate()
         {
+            //string dowloadPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             string userRoot = System.Environment.GetEnvironmentVariable("USERPROFILE");
             string downloadFolder = Path.Combine(userRoot, "Downloads");
 

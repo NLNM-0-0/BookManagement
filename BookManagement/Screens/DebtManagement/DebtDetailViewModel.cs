@@ -55,7 +55,7 @@ namespace BookManagement
         public ICommand SearchCommand { get; set; }
         public ICommand ResetCommand { get; set; }
         #endregion
-        public DebtDetailViewModel(string maKH = "kh001")
+        public DebtDetailViewModel(string maKH)
         {
             khRepo = new GenericDataRepository<KHACHHANG>();
             this.maKH = maKH;

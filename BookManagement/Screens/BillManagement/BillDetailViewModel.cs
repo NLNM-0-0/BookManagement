@@ -16,7 +16,7 @@ namespace BookManagement
         public HOADON HoaDon { get; set; }
         public ObservableCollection<CHITIETHOADON> ListBillDetail { get; set; }
         public KHACHHANG KhachHang { get; set; }
-        public BillDetailViewModel(string billId = "hd001")
+        public BillDetailViewModel(string billId)
         {
             billRepo = new GenericDataRepository<HOADON>();
             ctRepo = new GenericDataRepository<CHITIETHOADON>();

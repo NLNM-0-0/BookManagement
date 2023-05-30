@@ -13,7 +13,7 @@
             <DataTemplate 
                     x:Key="{x:Static CalendarItem.DayTitleTemplateResourceKey}">
                 <TextBlock 
-                        Foreground="{StaticResource BlackColorBrush}"
+                        Foreground="{DynamicResource PrimaryHueMidBrush}"
                         Opacity="0.5"
                         FontFamily="{StaticResource Bold}" 
                         FontSize="{StaticResource FontSize14}"
@@ -81,7 +81,7 @@
                                                 Height="15"
                                                 Width="15"
                                                 VerticalAlignment="Center"
-                                                Foreground="{StaticResource BlackColorBrush}"
+                                                Foreground="{DynamicResource PrimaryHueMidBrush}"
                                                 Opacity="0.7">
                                                 <fa:ImageAwesome Icon="ChevronLeft" 
                                                                  Height="{Binding ElementName=PreviousIcon, Path=ActualHeight}"
@@ -122,7 +122,7 @@
                                                 Height="15"
                                                 Width="15"
                                                 VerticalAlignment="Center"
-                                                Foreground="{StaticResource BlackColorBrush}"
+                                                Foreground="{DynamicResource PrimaryHueMidBrush}"
                                                 Opacity="0.7">
                                                 <fa:ImageAwesome Icon="ChevronRight" 
                                                                  Height="{Binding ElementName=NextIcon, Path=ActualHeight}"
@@ -367,7 +367,7 @@
         <Setter Property="FontFamily" Value="{StaticResource Medium}"/>
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
-        <Setter Property="materialDesign:CalendarAssist.SelectionColor" Value="{StaticResource BlackColorBrush}"/>
+        <Setter Property="materialDesign:CalendarAssist.SelectionColor" Value="{DynamicResource PrimaryHueMidBrush}"/>
         <Setter Property="materialDesign:CalendarAssist.SelectionForegroundColor" Value="{DynamicResource WhiteColorBrush}"/>
         <Setter Property="Margin" Value="0 2"/>
     </Style>
@@ -376,7 +376,7 @@
         <Setter Property="FontSize" Value="{StaticResource FontSize14}"/>
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
-        <Setter Property="materialDesign:CalendarAssist.SelectionColor" Value="{StaticResource BlackColorBrush}"/>
+        <Setter Property="materialDesign:CalendarAssist.SelectionColor" Value="{StaticResource PrimaryHueMidBrush}"/>
         <Setter Property="materialDesign:CalendarAssist.SelectionForegroundColor" Value="{DynamicResource WhiteColorBrush}"/>
     </Style>
 
@@ -387,7 +387,7 @@
         <Setter Property="Foreground" Value="{StaticResource BlackColorBrush}"/>
         <Setter Property="IsTodayHighlighted" Value="True"/>
         <Setter Property="SelectedDateFormat" Value="Short"/>
-        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Background" Value="{StaticResource WhiteColorBrush}"/>
         <Setter Property="Padding" Value="2"/>
         <Setter Property="BorderBrush" Value="{StaticResource BoxLineColorBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
@@ -457,7 +457,8 @@
                             Grid.ColumnSpan="2"
                             materialDesign:HintAssist.Hint="{TemplateBinding materialDesign:HintAssist.Hint}"
                             Width="{TemplateBinding Width}"
-                            Text="{TemplateBinding Text}"/>
+                            Text="{TemplateBinding Text}"
+                            Background="{TemplateBinding Background}"/>
                         <Button 
                             x:Name="PART_Button" 
                             Grid.Column="2" 
