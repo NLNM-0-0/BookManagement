@@ -4,97 +4,199 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BookManagement"
+             xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
+             xmlns:materialDesign ="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="500">
-    <ScrollViewer>
-        <DockPanel  Margin="24" LastChildFill="False">
-            <TextBlock Text="Customer Statement"
-                   DockPanel.Dock="Top"
-                   FontSize="{StaticResource FontSize18}"
-                   FontWeight="Bold"
-                   HorizontalAlignment="Center"
-                   Foreground="{DynamicResource PrimaryHueDarkBrush}"/>
-            <Grid Margin="0 24 0 0" DockPanel.Dock="Top">
+    <ScrollViewer PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
+        <DockPanel  Margin="40 0 40 24" LastChildFill="False">
+            <StackPanel Orientation="Horizontal"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        DockPanel.Dock="Top">
+                <TextBlock Text="{Binding KhachHang.TenKhachHang}"
+                           VerticalAlignment="Center"
+                       FontSize="{StaticResource FontSize24}"
+                       />
+                <TextBlock Text="-"
+                           Margin="15 0"
+                           VerticalAlignment="Center"
+                       FontSize="{StaticResource FontSize34}"
+                       HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding KhachHang.MaKhachHang}"
+                           FontSize="{StaticResource FontSize24}"
+                           VerticalAlignment="Center"
+                           />
+            </StackPanel>
+            <Grid Margin="0 10 0 0" DockPanel.Dock="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="3*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Số điện thoại"
+                               Margin="0 10 0 0"
+                               Grid.Column="0"
+                               FontSize="{StaticResource FontSize16}"
+                   />
+                <TextBlock Text="{Binding KhachHang.DienThoai}"
+                               Margin="0 10 0 0"
+                               Grid.Column="1"
+                               FontSize="{StaticResource FontSize16}"
+                   />
+            </Grid>
+            <Grid Margin="0 10 0 0" DockPanel.Dock="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="3*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Địa chỉ"
+                               Grid.Column="0"
+                               FontSize="{StaticResource FontSize16}"
+                   />
+                <TextBlock Text="{Binding KhachHang.DiaChi}"
+                           TextWrapping="Wrap"
+                               Grid.Column="1"
+                               FontSize="{StaticResource FontSize16}"
+                   />
+            </Grid>
+            <Grid Margin="0 10 0 0" DockPanel.Dock="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="3*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Tổng còn lại"
+                               Grid.Column="0"
+                               FontSize="{StaticResource FontSize16}"
+                   />
+                <TextBlock Text="{Binding KhachHang.TienNo, Converter={x:Static local:DecimalToMoneyConveter.Instance}}"
+                           TextWrapping="Wrap"
+                               Grid.Column="1"
+                               FontSize="{StaticResource FontSize16}"
+                   />
+            </Grid>
+            <Grid DockPanel.Dock="Top" Margin="0 10 0 0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
-                <StackPanel Grid.Column="0">
-                    <TextBlock Text="Customer Name"
-                   DockPanel.Dock="Top"
-                   FontSize="{StaticResource FontSize16}"
-                   />
-                    <TextBlock Text="Date"
-                   DockPanel.Dock="Top"
-                   Margin="0 10 0 0"
-                   FontSize="{StaticResource FontSize16}"
-                   />
-                    <TextBlock Text="Bill code"
-                   Margin="0 10 0 0"
-                   DockPanel.Dock="Top"
-                   FontSize="{StaticResource FontSize16}"
-                   />
-                    <TextBlock Text="Phone number"
-                   Margin="0 10 0 0"
-                   DockPanel.Dock="Top"
-                   FontSize="{StaticResource FontSize16}"
-                   />
-                    <TextBlock Text="Address"
-                   Margin="0 10 0 0"
-                   DockPanel.Dock="Top"
-                   FontSize="{StaticResource FontSize16}"
-                   />
-                </StackPanel>
-                <StackPanel Grid.Column="1">
-                    <TextBlock Text="Customer Name"
-                           FontWeight="SemiBold"
-                       HorizontalAlignment="Right"
-                   DockPanel.Dock="Top"
-                   FontSize="{StaticResource FontSize16}"
-                   />
-                    <TextBlock Text="Date"
-                       HorizontalAlignment="Right"
-                   DockPanel.Dock="Top"
-                   Margin="0 10 0 0"
-                   FontSize="{StaticResource FontSize16}"
-                   />
-                    <TextBlock Text="Bill code"
-                       HorizontalAlignment="Right"
-                   Margin="0 10 0 0"
-                   DockPanel.Dock="Top"
-                   FontSize="{StaticResource FontSize16}"
-                   />
-                    <TextBlock Text="Phone number"
-                   Margin="0 10 0 0"
-                               HorizontalAlignment="Right"
-                   DockPanel.Dock="Top"
-                   FontSize="{StaticResource FontSize16}"
-                   />
-                    <TextBlock Text="Address"
-                   Margin="0 10 0 0"
-                               HorizontalAlignment="Right"
-                   DockPanel.Dock="Top"
-                   FontSize="{StaticResource FontSize16}"
-                   />
-                </StackPanel>
+                <TextBox DockPanel.Dock="Top"
+                    Margin="0 0 5 0"
+                    Grid.Column="0"
+                    Text="{Binding SearchMaNV, UpdateSourceTrigger=PropertyChanged}"
+                    Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                    materialDesign:HintAssist.Hint="Mã nhân viên"/>
+                <TextBox    Margin="0 0 5 0"
+                            Grid.Column="1"
+                            Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                            MaxWidth="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Grid}, Path=ActualWidth}"
+                            materialDesign:HintAssist.Hint="Giá từ"
+                            materialDesign:TextFieldAssist.SuffixText=" VND"
+                            Width="auto">
+                    <TextBox.Text>
+                        <Binding
+                                    Path="MinPriceSearch"
+                                    UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <local:NumberTextBoxValidation
+                                        IsCanEmpty="True"
+                                        Min="0"/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+                <TextBox    Margin="0 0 5 0"
+                            Grid.Column="2"
+                            Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                            MaxWidth="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Grid}, Path=ActualWidth}"
+                            materialDesign:HintAssist.Hint="Giá đến"
+                            materialDesign:TextFieldAssist.SuffixText=" VND"
+                            Width="auto">
+                    <TextBox.Text>
+                        <Binding
+                                    Path="MaxPriceSearch"
+                                    UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <local:NumberTextBoxValidation
+                                        IsCanEmpty="True"
+                                        Min="0"/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+                <DatePicker Margin="0 0 5 0"
+                            Grid.Column="3"
+                            Style="{StaticResource OurDatePicker}"
+                            materialDesign:HintAssist.Hint="Ngày thu từ"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Stretch"
+                            Width="auto"
+                            Background="{StaticResource WhiteColorBrush}"
+                            FontSize="{StaticResource FontSize16}"
+                            SelectedDate="{Binding SearchFromDate, UpdateSourceTrigger=PropertyChanged}">
+                </DatePicker>
+                <DatePicker Margin="0 0 5 0"
+                            Grid.Column="4"
+                            Style="{StaticResource OurDatePicker}"
+                            materialDesign:HintAssist.Hint="Ngày thu đến"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Stretch"
+                            Width="auto"
+                            Background="{StaticResource WhiteColorBrush}"
+                            FontSize="{StaticResource FontSize16}"
+                            SelectedDate="{Binding SearchToDate, UpdateSourceTrigger=PropertyChanged}">
+                </DatePicker>
+                <Button Margin="0 0 5 0"
+                        x:Name="searchButton"
+                        Grid.Column="5"
+                        Content="Search"
+                        Command="{Binding SearchCommand}">
+                </Button>
+                <Button
+                        Grid.Column="6"
+                        Command="{Binding ResetCommand}"
+                        Style="{StaticResource WhiteButton}"
+                        Content="Reset" HorizontalAlignment="Right" Width="100">
+                </Button>
             </Grid>
-
-            <DataGrid ItemsSource="{Binding}" DockPanel.Dock="Top"
-                  Margin="0 16 0 0"
-                  VerticalScrollBarVisibility="Disabled"
-                    AutoGenerateColumns="False"
-                  ScrollViewer.CanContentScroll="False"
+            <DataGrid ItemsSource="{Binding ListPhieuThu}" DockPanel.Dock="Top"
+                      Margin="0 16 0 0"
+                      VerticalScrollBarVisibility="Disabled"
+                      AutoGenerateColumns="False"
+                      ScrollViewer.CanContentScroll="False"
                       CanUserReorderColumns="False" CanUserAddRows="False"
                       CanUserDeleteRows="False" IsReadOnly="True">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Bill Code" MinWidth="100" MaxWidth="500" Width="200" Binding="{Binding Id}">
+                    <DataGridTextColumn Header="Mã phiếu thu" MinWidth="100" MaxWidth="500" Width="200"
+                                        Binding="{Binding MaPhieuThu}">
                         <DataGridTextColumn.ElementStyle>
                             <Style>
                                 <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="Debit" Width="*" MinWidth="100" MaxWidth="400" Binding="{Binding Title}">
+                    <DataGridTextColumn Header="Mã nhân viên" MinWidth="100" MaxWidth="500" Width="200" 
+                                        Binding="{Binding MaNhanVien}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style>
+                                <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Số tiền thu" Width="*" MinWidth="100" MaxWidth="600"
+                                        Binding="{Binding SoTienThu,  Converter={x:Static local:DecimalToMoneyConveter.Instance}}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style>
+                                <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Ngày thu" Width="*" MinWidth="100" MaxWidth="600" 
+                                        Binding="{Binding NgayThu,  Converter={x:Static local:DateTimeToShortConverter.Instance}}">
                         <DataGridTextColumn.ElementStyle>
                             <Style>
                                 <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
@@ -103,55 +205,6 @@
                     </DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
-            <DataGrid ItemsSource="{Binding}" DockPanel.Dock="Top"
-                  Margin="0 16 0 0"
-                  VerticalScrollBarVisibility="Disabled"
-                    AutoGenerateColumns="False"
-                  ScrollViewer.CanContentScroll="False"
-                      CanUserReorderColumns="False" CanUserAddRows="False"
-                      CanUserDeleteRows="False" IsReadOnly="True">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Date" MinWidth="100" MaxWidth="500" Width="200" Binding="{Binding Id}">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style>
-                                <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Header="Pay" Width="*" MinWidth="100" MaxWidth="400" Binding="{Binding Title}">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style>
-                                <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-                </DataGrid.Columns>
-            </DataGrid>
-            <Grid DockPanel.Dock="Top" HorizontalAlignment="Right" Margin="0 24 0 0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <StackPanel 
-            Grid.Column="0" 
-            DockPanel.Dock="Top">
-                    <TextBlock Text="Total"
-                   DockPanel.Dock="Top"
-                   FontSize="{StaticResource FontSize16}"
-                   />
-                </StackPanel>
-                <StackPanel Margin="24 0 0 0"
-            Grid.Column="1" 
-            DockPanel.Dock="Top">
-                    <TextBlock Text="11780.000"
-                   DockPanel.Dock="Top"
-                           HorizontalAlignment="Right"
-                   FontSize="{StaticResource FontSize16}"
-                   />
-                </StackPanel>
-            </Grid>
-
         </DockPanel>
     </ScrollViewer>
-
 </UserControl>
