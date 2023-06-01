@@ -153,14 +153,14 @@
                 <Button Margin="0 0 5 0"
                         x:Name="searchButton"
                         Grid.Column="5"
-                        Content="Search"
+                        Content="Tìm"
                         Command="{Binding SearchCommand}">
                 </Button>
                 <Button
                         Grid.Column="6"
                         Command="{Binding ResetCommand}"
                         Style="{StaticResource WhiteButton}"
-                        Content="Reset" HorizontalAlignment="Right" Width="100">
+                        Content="Khôi phục" HorizontalAlignment="Right" Width="100">
                 </Button>
             </Grid>
             <DataGrid ItemsSource="{Binding ListPhieuThu}" DockPanel.Dock="Top"
@@ -171,7 +171,10 @@
                       CanUserReorderColumns="False" CanUserAddRows="False"
                       CanUserDeleteRows="False" IsReadOnly="True">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Mã phiếu thu" MinWidth="100" MaxWidth="500" Width="200"
+                    <DataGridTextColumn Header="Mã phiếu thu" 
+                                        HeaderStyle="{StaticResource LeftHeader}"
+                                        CellStyle="{StaticResource LeftCell}"
+                                        MinWidth="100" MaxWidth="500" Width="200"
                                         Binding="{Binding MaPhieuThu}">
                         <DataGridTextColumn.ElementStyle>
                             <Style>
@@ -179,7 +182,10 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="Mã nhân viên" MinWidth="100" MaxWidth="500" Width="200" 
+                    <DataGridTextColumn Header="Mã nhân viên" 
+                                        HeaderStyle="{StaticResource LeftHeader}"
+                                        CellStyle="{StaticResource LeftCell}"
+                                        MinWidth="100" MaxWidth="500" Width="200" 
                                         Binding="{Binding MaNhanVien}">
                         <DataGridTextColumn.ElementStyle>
                             <Style>
@@ -187,7 +193,10 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="Số tiền thu" Width="*" MinWidth="100" MaxWidth="600"
+                    <DataGridTextColumn Header="Số tiền thu" 
+                                        HeaderStyle="{StaticResource LeftHeader}"
+                                        CellStyle="{StaticResource LeftCell}"
+                                        Width="*" MinWidth="100" MaxWidth="600"
                                         Binding="{Binding SoTienThu,  Converter={x:Static local:DecimalToMoneyConveter.Instance}}">
                         <DataGridTextColumn.ElementStyle>
                             <Style>
@@ -195,7 +204,10 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="Ngày thu" Width="*" MinWidth="100" MaxWidth="600" 
+                    <DataGridTextColumn Header="Ngày thu" 
+                                        HeaderStyle="{StaticResource LeftHeader}"
+                                        CellStyle="{StaticResource LeftCell}"
+                                        Width="*" MinWidth="100" MaxWidth="600" 
                                         Binding="{Binding NgayThu,  Converter={x:Static local:DateTimeToShortConverter.Instance}}">
                         <DataGridTextColumn.ElementStyle>
                             <Style>
@@ -203,6 +215,27 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
+                    <DataGridTemplateColumn 
+                        Header="In" 
+                        Width="100"
+                        MinWidth="50"
+                        HeaderStyle="{StaticResource CenterHeader}"
+                        CellStyle="{StaticResource CenterCell}">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Label>
+                                    <Hyperlink
+                                        Foreground="#4B8CDE"
+                                        Command="{Binding RelativeSource={RelativeSource AncestorType=local:DebtDetail}, Path=DataContext.PrintPhieuThuCommand}"
+                                        CommandParameter="{Binding}">
+                                        <TextBlock
+                                            Text="In">
+                                        </TextBlock>
+                                    </Hyperlink>
+                                </Label>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
         </DockPanel>

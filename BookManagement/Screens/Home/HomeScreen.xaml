@@ -71,9 +71,15 @@
                       CanUserReorderColumns="False" CanUserAddRows="False"
                       CanUserDeleteRows="False" IsReadOnly="True" Margin="0,83,0,0" Grid.RowSpan="2">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Mã sách" MinWidth="100" MaxWidth="400" Width="auto"
+                            <DataGridTextColumn Header="Mã sách" 
+                                                HeaderStyle="{StaticResource LeftHeader}"
+                                                CellStyle="{StaticResource LeftCell}"
+                                                MinWidth="100" MaxWidth="400" Width="auto"
                                                 Binding="{Binding MaSach}"/>
-                            <DataGridTextColumn Header="Tên sách" Width="*" MinWidth="200" MaxWidth="700" 
+                            <DataGridTextColumn Header="Tên sách" 
+                                                HeaderStyle="{StaticResource LeftHeader}"
+                                                CellStyle="{StaticResource LeftCell}"
+                                                Width="*" MinWidth="200" MaxWidth="700" 
                                                 Binding="{Binding SACH.DAUSACH.TenSach}">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style>
@@ -81,17 +87,29 @@
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
-                            <DataGridTextColumn Header="Tồn đầu" Width="auto" MinWidth="200" MaxWidth="700" 
+                            <DataGridTextColumn Header="Tồn đầu" 
+                                                HeaderStyle="{StaticResource LeftHeader}"
+                                                CellStyle="{StaticResource LeftCell}"
+                                                Width="auto" MinWidth="200" MaxWidth="700" 
                                                 Binding="{Binding TonDau}"/>
-                            <DataGridTextColumn Header="Nhập" Width="auto" MinWidth="200" MaxWidth="700" 
+                            <DataGridTextColumn Header="Nhập" 
+                                                HeaderStyle="{StaticResource LeftHeader}"
+                                                CellStyle="{StaticResource LeftCell}"
+                                                Width="auto" MinWidth="200" MaxWidth="700" 
                                                 Binding="{Binding PhatSinh}"/>
-                            <DataGridTextColumn Header="Xuất" Width="auto" MinWidth="200" MaxWidth="700" 
+                            <DataGridTextColumn Header="Xuất" 
+                                                HeaderStyle="{StaticResource LeftHeader}"
+                                                CellStyle="{StaticResource LeftCell}"
+                                                Width="auto" MinWidth="200" MaxWidth="700" 
                                                 >
                                 <DataGridTextColumn.Binding>
                                     <Binding Converter="{StaticResource StockConverter}"/>
                                 </DataGridTextColumn.Binding>
                             </DataGridTextColumn>
-                            <DataGridTextColumn Header="Tồn cuối" Width="auto" MinWidth="200" MaxWidth="700" 
+                            <DataGridTextColumn Header="Tồn cuối" 
+                                                HeaderStyle="{StaticResource LeftHeader}"
+                                                CellStyle="{StaticResource LeftCell}"
+                                                Width="auto" MinWidth="200" MaxWidth="700" 
                                                 Binding="{Binding TonCuoi}"/>
                         </DataGrid.Columns>
                     </DataGrid>
@@ -146,9 +164,15 @@
                       CanUserReorderColumns="False" CanUserAddRows="False"
                       CanUserDeleteRows="False" IsReadOnly="True">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Mã KH" MinWidth="100" MaxWidth="400" Width="auto" 
+                            <DataGridTextColumn Header="Mã KH" 
+                                                HeaderStyle="{StaticResource LeftHeader}"
+                                                CellStyle="{StaticResource LeftCell}"
+                                                MinWidth="100" MaxWidth="400" Width="auto" 
                                                 Binding="{Binding MaKhachHang}"/>
-                            <DataGridTextColumn Header="Tên khách hàng" Width="*" MinWidth="200" MaxWidth="700" 
+                            <DataGridTextColumn Header="Tên khách hàng" 
+                                                HeaderStyle="{StaticResource LeftHeader}"
+                                                CellStyle="{StaticResource LeftCell}"
+                                                Width="*" MinWidth="200" MaxWidth="700" 
                                                 Binding="{Binding KHACHHANG.TenKhachHang}">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style>
@@ -156,7 +180,10 @@
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
-                            <DataGridTextColumn Header="Nợ đầu" Width="auto" MinWidth="200" MaxWidth="700" 
+                            <DataGridTextColumn Header="Nợ đầu"
+                                                HeaderStyle="{StaticResource LeftHeader}"
+                                                CellStyle="{StaticResource LeftCell}"
+                                                Width="auto" MinWidth="200" MaxWidth="700" 
                                                 Binding="{Binding NoDau, Converter={x:Static local:DecimalToMoneyConveter.Instance}}">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style>
@@ -164,15 +191,24 @@
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
-                            <DataGridTextColumn Header="Phát sinh" Width="auto" MinWidth="200" MaxWidth="600" 
+                            <DataGridTextColumn Header="Phát sinh" 
+                                                HeaderStyle="{StaticResource LeftHeader}"
+                                                CellStyle="{StaticResource LeftCell}"
+                                                Width="auto" MinWidth="200" MaxWidth="600" 
                                                 Binding="{Binding PhatSinh, Converter={x:Static local:DecimalToMoneyConveter.Instance}}"/>
-                            <DataGridTextColumn Header="Lượng thu" Width="auto" MinWidth="200" MaxWidth="600" 
+                            <DataGridTextColumn Header="Lượng thu" 
+                                                HeaderStyle="{StaticResource LeftHeader}"
+                                                CellStyle="{StaticResource LeftCell}"
+                                                Width="auto" MinWidth="200" MaxWidth="600" 
                                                 >
                                 <DataGridTextColumn.Binding>
                                     <Binding Converter="{StaticResource DebtConverter}"/>
                                 </DataGridTextColumn.Binding>
                             </DataGridTextColumn>
-                            <DataGridTextColumn Header="Nợ cuối" Width="auto" MinWidth="200" MaxWidth="600" 
+                            <DataGridTextColumn Header="Nợ cuối" 
+                                                HeaderStyle="{StaticResource LeftHeader}"
+                                                CellStyle="{StaticResource LeftCell}"
+                                                Width="auto" MinWidth="200" MaxWidth="600" 
                                                 Binding="{Binding NoCuoi, Converter={x:Static local:DecimalToMoneyConveter.Instance}}"/>
                         </DataGrid.Columns>
                     </DataGrid>

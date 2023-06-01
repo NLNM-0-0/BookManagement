@@ -1,6 +1,7 @@
 ﻿
 
 using BookManagement.Models;
+using DocumentFormat.OpenXml.Wordprocessing;
 using MaterialDesignThemes.Wpf;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,8 @@ namespace BookManagement
     {
         #region Properties
         private GenericDataRepository<KHACHHANG> khRepo;
+        private GenericDataRepository<PHIEUTHUNO> ptRepo;
+
         public ObservableCollection<PHIEUTHUNO> ListPhieuThu { get; set; }
         private List<PHIEUTHUNO> allPhieuThu;
         public KHACHHANG KhachHang { get; set; }
@@ -51,13 +54,15 @@ namespace BookManagement
 
         #endregion
 
-        #region
+        #region Commands
         public ICommand SearchCommand { get; set; }
         public ICommand ResetCommand { get; set; }
+        public ICommand PrintPhieuThuCommand { get; set; }
         #endregion
         public DebtDetailViewModel(string maKH)
         {
             khRepo = new GenericDataRepository<KHACHHANG>();
+            ptRepo = new GenericDataRepository<PHIEUTHUNO>();
             this.maKH = maKH;
             Task.Run(async () =>
             {
@@ -71,6 +76,31 @@ namespace BookManagement
 
             SearchCommand = new RelayCommandWithNoParameter(async () => await SearchAsync());
             ResetCommand = new RelayCommandWithNoParameter(async () => await ResetSearch());
+            PrintPhieuThuCommand= new RelayCommand<object>((p) =>
+            {
+                return p != null;
+            }, async (p) =>
+            {
+                var phieuThu = p as PHIEUTHUNO;
+                if (phieuThu != null)
+                {
+                    DebtCollectPdf pdf = new DebtCollectPdf();
+                    pdf.DataContext = new DebtCollectPdfVM(phieuThu);
+                    try
+                    {
+                        pdf.Print();
+                    }
+                    catch
+                    {
+                        var dl = new ConfirmDialog()
+                        {
+                            Header = "Oops",
+                            ContentString = "Đã có lỗi xảy ra. Xin hãy kiểm tra lại bạn đã đóng file hay chưa."
+                        };
+                        await DialogHost.Show(dl, "Main");
+                    }
+                }         
+            });
         }
 
         private async Task ResetSearch()
@@ -143,7 +173,7 @@ namespace BookManagement
         private async Task Load()
         {
             KhachHang = await khRepo.GetSingleAsync(k => k.MaKhachHang == maKH, k => k.PHIEUTHUNOes);
-            allPhieuThu = new List<PHIEUTHUNO>(KhachHang.PHIEUTHUNOes);
+            allPhieuThu = new List<PHIEUTHUNO>(await ptRepo.GetListAsync(p=>p.MaKhachHang==maKH, p=>p.NHANVIEN));
             ListPhieuThu = new ObservableCollection<PHIEUTHUNO>(allPhieuThu);
         }
     }
