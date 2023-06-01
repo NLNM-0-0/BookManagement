@@ -18,6 +18,13 @@ namespace BookManagement
 {
     public class ImportBookManagementScreenVM : BaseViewModel
     {
+        #region Access property
+        public bool IsAllowImportBook =>
+            AccountStore.instance.CurrentAccount.NHOMNGUOIDUNG.CHUCNANGs.Any(p => p.MaChucNang == AppEnum.LapPhieuNhapSach);
+        public bool IsAllowSearchImport =>
+            AccountStore.instance.CurrentAccount.NHOMNGUOIDUNG.CHUCNANGs.Any(p => p.MaChucNang == AppEnum.TraCuuPhieuNhapSach);
+        #endregion
+
         #region GenericDataRepository
         GenericDataRepository<PHIEUNHAPSACH> importRepo = new GenericDataRepository<PHIEUNHAPSACH>();
         #endregion
@@ -66,7 +73,15 @@ namespace BookManagement
             Task.Run(async() =>
             {
                 MainViewModel.IsLoading = true;
-                await Load();
+                if(IsAllowSearchImport)
+                {
+                    await Load();
+                }    
+                else
+                {
+                    AllImports = new ObservableCollection<PHIEUNHAPSACH> { };
+                    FilterImports = new ObservableCollection<PHIEUNHAPSACH> { };
+                }    
             }).ContinueWith(task =>
             {
                 SearchCommand = new RelayCommandWithNoParameter(() =>
@@ -82,9 +97,7 @@ namespace BookManagement
                     SearchMinPrice = "";
                     SearchMaxPrice = "";
                     SearchStaffName = "";
-                    MainViewModel.SetLoading(true);
-                    Search();
-                    MainViewModel.SetLoading(false);
+                    FilterImports = new ObservableCollection<PHIEUNHAPSACH>(AllImports);
                 });
                 ShowImportCommand = new RelayCommand<PHIEUNHAPSACH>(p => true, p =>
                 {

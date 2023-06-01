@@ -6,9 +6,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Data;
+using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Markup;
 using System.Windows.Media;
 
 namespace BookManagement
@@ -27,6 +30,13 @@ namespace BookManagement
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("vi-VN"); 
+            Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("vi-VN"); ;
+            FrameworkElement.LanguageProperty.OverrideMetadata(
+              typeof(FrameworkElement),
+              new FrameworkPropertyMetadata(
+                    XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)));
+
             base.OnStartup(e);
 
             string primaryColor = ConfigurationManager.AppSettings["PrimaryColor"];

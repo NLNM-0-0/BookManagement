@@ -258,6 +258,11 @@
     <Compile Include="Screens\BillManagement\BillDetail.xaml.cs">
       <DependentUpon>BillDetail.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Screens\BillManagement\BillDetailViewModel.cs" />
+    <Compile Include="Screens\BillManagement\BillInfoPdf\BillInfoPdf.xaml.cs">
+      <DependentUpon>BillInfoPdf.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\BillManagement\BillInfoPdf\BillInforPdfViewModel.cs" />
     <Compile Include="Screens\BillManagement\BillManagementScreen.xaml.cs">
       <DependentUpon>BillManagementScreen.xaml</DependentUpon>
     </Compile>
@@ -266,9 +271,18 @@
       <DependentUpon>BookManagementScreen.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\BookManagement\BookManagementScreenVM.cs" />
+    <Compile Include="Screens\DebtManagement\DebtCollectPdf\DebtCollectPdf.xaml.cs">
+      <DependentUpon>DebtCollectPdf.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\DebtManagement\DebtCollectPdf\DebtCollectPdfVM.cs" />
+    <Compile Include="Screens\DebtManagement\DebtCollect\DebtCollect.xaml.cs">
+      <DependentUpon>DebtCollect.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\DebtManagement\DebtCollect\DebtCollectVM.cs" />
     <Compile Include="Screens\DebtManagement\DebtDetail.xaml.cs">
       <DependentUpon>DebtDetail.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Screens\DebtManagement\DebtDetailViewModel.cs" />
     <Compile Include="Screens\DebtManagement\DebtManagementScreen.xaml.cs">
       <DependentUpon>DebtManagementScreen.xaml</DependentUpon>
     </Compile>
@@ -329,8 +343,10 @@
     <Compile Include="Utils\BaseViewModel.cs" />
     <Compile Include="Utils\Converters\AuthorsToTextConverter.cs" />
     <Compile Include="Utils\Converters\DecimalToMoneyConverter.cs" />
+    <Compile Include="Utils\Converters\MultiDecimalToMoneyConverter.cs" />
     <Compile Include="Utils\Converters\MultiValueConverter.cs" />
     <Compile Include="Utils\Converters\NumberAndUnitPriceToTotalPriceConverter.cs" />
+    <Compile Include="Utils\Converters\OrderToSubtotalConverter.cs" />
     <Compile Include="Utils\Converters\StringToVisibilityConverter.cs" />
     <Compile Include="Utils\Converters\DateTimeToShortConverter.cs" />
     <Compile Include="Utils\Converters\DebtConverter.cs" />
@@ -345,7 +361,6 @@
     <Compile Include="Utils\ImmediateCommand.cs" />
     <Compile Include="Utils\RelayCommand.cs" />
     <Compile Include="Utils\RelayCommandWithNoParameter.cs" />
-    <Compile Include="Utils\ValidationRule\EmailValidateRule.cs" />
     <Compile Include="Utils\ValidationRule\NotEmptyValidation.cs" />
     <Compile Include="Utils\ValidationRule\NumberTextBoxValidation.cs" />
     <Compile Include="Utils\ValidationRule\PasswordValidateRule.cs" />
@@ -380,6 +395,18 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Components\DataGrid\CellStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\DataGrid\DataGrid.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\DataGrid\HeaderStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Components\OurDatePicker.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -387,6 +414,10 @@
     <Page Include="Components\Scroll.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Components\TabControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Components\TextBoxes\PasswordBox.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -453,6 +484,18 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Screens\BillManagement\BillDetail.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\BillManagement\BillInfoPdf\BillInfoPdf.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\DebtManagement\DebtCollectPdf\DebtCollectPdf.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\DebtManagement\DebtCollect\DebtCollect.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

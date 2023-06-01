@@ -128,22 +128,22 @@ namespace BookManagement {
             if(NavigationStore.instance.CurrentViewModel == null) return;
             Type type = NavigationStore.instance.CurrentViewModel.GetType();
             switch(type.Name) {
-                case "HomeScreenVM":
+                case "SaleBookScreenVM":
                     SelectedIndex = 0;
                     break;
-                case "SaleBookScreenVM":
+                case "BookManagementScreenVM":
                     SelectedIndex = 1;
                     break;
-                case "BookManagementScreenVM":
+                case "ImportBookManagementScreenVM":
                     SelectedIndex = 2;
                     break;
-                case "ImportBookManagementScreenVM":
+                case "BillManagementScreenVM":
                     SelectedIndex = 3;
                     break;
-                case "BillManagementScreenVM":
+                case "DebtManagementScreenVM":
                     SelectedIndex = 4;
                     break;
-                case "DebtManagementScreenVM":
+                case "HomeScreenVM":
                     SelectedIndex = 5;
                     break;
                 case "SettingScreenVM":
@@ -171,27 +171,28 @@ namespace BookManagement {
         {
             if (SelectedIndex == 0)
             {
-                ChangeIndex(NavigateProvider.HomeScreen());
+                ChangeIndex(NavigateProvider.SaleBookScreen());
+                
             }
             else if (SelectedIndex == 1)
             {
-                ChangeIndex(NavigateProvider.SaleBookScreen());
+                ChangeIndex(NavigateProvider.BookManagementScreen());
             }
             else if (SelectedIndex == 2)
             {
-                ChangeIndex(NavigateProvider.BookManagementScreen());
+                ChangeIndex(NavigateProvider.ImportBookManagementScreen());
             }
             else if (SelectedIndex == 3)
             {
-                ChangeIndex(NavigateProvider.ImportBookManagementScreen());
+                ChangeIndex(NavigateProvider.BillManagementScreen());
             }
             else if (SelectedIndex == 4)
             {
-                ChangeIndex(NavigateProvider.BillManagementScreen());
+                ChangeIndex(NavigateProvider.DebtManagementScreen());
             }
             else if (SelectedIndex == 5)
             {
-                ChangeIndex(NavigateProvider.DebtManagementScreen());
+                ChangeIndex(NavigateProvider.HomeScreen());
             }
             else if (SelectedIndex == 6)
             {
@@ -245,25 +246,25 @@ namespace BookManagement {
             else
             {
                 List<CHUCNANG> accessList = CurrentUser.NHOMNGUOIDUNG.CHUCNANGs.ToList();
-                buttonItems.Add(new ButtonItem("Home", "Home", 0, 
-                    isExistAccess(accessList, AppEnum.LapBaoCaoThang)));
-                buttonItems.Add(new ButtonItem("CreditCardSettings", "Sale", 1, 
+                buttonItems.Add(new ButtonItem("CreditCardSettings", "Bán sách", 0, 
                     isExistAccess(accessList, AppEnum.LapHoaDonBanSach)));
-                buttonItems.Add(new ButtonItem("Book", "Book", 2, 
+                buttonItems.Add(new ButtonItem("Book", "Sách", 1, 
                     isExistAccess(accessList, AppEnum.TraCuuSach)));
-                buttonItems.Add(new ButtonItem("Import", "Import", 3, 
+                buttonItems.Add(new ButtonItem("Import", "Nhập sách", 2, 
                     isExistAccess(accessList, AppEnum.LapPhieuNhapSach) ||
                       isExistAccess(accessList, AppEnum.TraCuuPhieuNhapSach)));
-                buttonItems.Add(new ButtonItem("PageLayoutFooter", "Bill", 4, 
+                buttonItems.Add(new ButtonItem("PageLayoutFooter", "Hóa đơn", 3, 
                     isExistAccess(accessList, AppEnum.TraCuuHoaDonBanSach)));
-                buttonItems.Add(new ButtonItem("CashRefund", "Debt", 5, 
+                buttonItems.Add(new ButtonItem("CashRefund", "Khách hàng", 4, 
                     isExistAccess(accessList, AppEnum.LapPhieuThuTien) || 
                     isExistAccess(accessList, AppEnum.TraCuuPhieuThuTien) || 
                     isExistAccess(accessList, AppEnum.LuuThongTinKhachHang)));
-                buttonItems.Add(new ButtonItem("Cog", "Setting", 6, 
+                buttonItems.Add(new ButtonItem("CalendarText", "Báo cáo", 5,
+                    isExistAccess(accessList, AppEnum.LapBaoCaoThang)));
+                buttonItems.Add(new ButtonItem("Cog", "Cài đặt", 6, 
                     isExistAccess(accessList, AppEnum.ThayDoiQuiDinh) || 
                     isExistAccess(accessList, AppEnum.PhanQuyen)));
-                buttonItems.Add(new ButtonItem("Account", "Setting", 7, 
+                buttonItems.Add(new ButtonItem("Account", "Tài khoản", 7, 
                     isExistAccess(accessList, AppEnum.ThayDoiMatKhau) ||
                     isExistAccess(accessList, AppEnum.TraCuuNhanVien)));
                 buttonItems.Add(new ButtonItem("Exclamation", "NoAccess", 8, false));

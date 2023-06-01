@@ -19,7 +19,7 @@ namespace BookManagement
                 isNotCheckFirstTime = value;
             }
         }
-        private string errorMessage = "Field is required.";
+        private string errorMessage = "Trường này không thể để trống";
         public string ErrorMessage
         {
             get => errorMessage;

@@ -28,9 +28,11 @@ namespace BookManagement {
             services.AddTransient<SaleBookScreenVM>();
             services.AddTransient<BookManagementScreenVM>();
             services.AddTransient<BillManagementScreenVM>();
+            services.AddTransient<BillDetailViewModel>();
             services.AddTransient<ImportBookManagementScreenVM>();
             services.AddTransient<ImportBookPageVM>();
             services.AddTransient<DebtManagementScreenVM>();
+            services.AddTransient<DebtDetailViewModel>();
             services.AddTransient<SettingScreenVM>();
             services.AddTransient<UserManagementScreenVM>();
             services.AddTransient<NoAccessScreenVM>();

@@ -27,20 +27,20 @@ namespace BookManagement {
             var str = value as string;
             if(str == null || str.Length == 0) {
                 if(!IsFirstTime)
-                    return new ValidationResult(false, "This field cannot be left blank.");
+                    return new ValidationResult(false, "Trường này không thể để trống");
                 else {
                     IsFirstTime = false;
                     return new ValidationResult(true, null);
                 }
             }
             if(str.Length < 5 || str.Length > 15) {
-                return new ValidationResult(false, "Phone number is in the wrong format!");
+                return new ValidationResult(false, "Số điện thoại đang ở sai định dạng");
             }
 
             if(ValidateRegex.Phone.IsMatch(str)) {
                 return new ValidationResult(true, null);
             }
-            else return new ValidationResult(false, "Phone number is in the wrong format!");
+            else return new ValidationResult(false, "Số điện thoại đang ở sai định dạng");
         }
     }
 }

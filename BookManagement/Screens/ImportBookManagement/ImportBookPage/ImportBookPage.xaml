@@ -12,36 +12,6 @@
              Background="{StaticResource WhiteColorBrush}">
     <UserControl.Resources>
         <local:FalsesToTrueConverters x:Key="FalsesToTrueConverters"/>
-        <Style TargetType="{x:Type DataGridCell}" x:Key="LeftCell" BasedOn="{StaticResource MaterialDesignDataGridCell}">
-            <Setter Property="HorizontalContentAlignment" Value="Left"/>
-            <Setter Property="HorizontalAlignment" Value="Left"/>
-            <Setter Property="FontSize" Value="{StaticResource FontSize16}"/>
-        </Style>
-        <Style TargetType="{x:Type DataGridColumnHeader}" x:Key="LeftHeader" BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
-            <Setter Property="HorizontalContentAlignment" Value="Left"/>
-            <Setter Property="HorizontalAlignment" Value="Left"/>
-            <Setter Property="FontSize" Value="{StaticResource FontSize16}"/>
-        </Style>
-        <Style TargetType="{x:Type DataGridCell}" x:Key="RightCell" BasedOn="{StaticResource MaterialDesignDataGridCell}">
-            <Setter Property="HorizontalContentAlignment" Value="Right"/>
-            <Setter Property="HorizontalAlignment" Value="Right"/>
-            <Setter Property="FontSize" Value="{StaticResource FontSize16}"/>
-        </Style>
-        <Style TargetType="{x:Type DataGridColumnHeader}" x:Key="RightHeader" BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
-            <Setter Property="HorizontalContentAlignment" Value="Right"/>
-            <Setter Property="HorizontalAlignment" Value="Right"/>
-            <Setter Property="FontSize" Value="{StaticResource FontSize16}"/>
-        </Style>
-        <Style TargetType="{x:Type DataGridCell}" x:Key="CenterCell" BasedOn="{StaticResource MaterialDesignDataGridCell}">
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-            <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Setter Property="FontSize" Value="{StaticResource FontSize16}"/>
-        </Style>
-        <Style TargetType="{x:Type DataGridColumnHeader}" x:Key="CenterHeader" BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-            <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Setter Property="FontSize" Value="{StaticResource FontSize16}"/>
-        </Style>
         <Style TargetType="{x:Type Button}" 
            x:Key="TransparentButton" 
            BasedOn="{StaticResource MaterialDesignFlatButton}">
@@ -158,8 +128,9 @@
                     HorizontalAlignment="Stretch"
                     FontSize="{StaticResource FontSize16}"
                     SelectedDate="{Binding SelectedDate, UpdateSourceTrigger=PropertyChanged}"
-                    IsEnabled="{c:Binding 'IsNew', UpdateSourceTrigger=PropertyChanged}"
-                    Width="auto">
+                    IsEnabled="False"
+                    Width="auto"
+                    Background="{StaticResource WhiteColorBrush}">
                 </DatePicker>
             </Grid>
             <StackPanel

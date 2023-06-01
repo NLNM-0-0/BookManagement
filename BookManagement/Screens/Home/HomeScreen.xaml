@@ -11,30 +11,6 @@
       mc:Ignorable="d" 
       d:DesignHeight="900" d:DesignWidth="800">
     <UserControl.Resources>
-        <Style x:Key="RadioTabButton" TargetType="{x:Type RadioButton}" BasedOn="{StaticResource MaterialDesignTabRadioButton}">
-            <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}"/>
-            <Setter Property="BorderBrush" Value="{StaticResource PrimaryHueMidBrush}"/>
-            <Setter Property="FontFamily" Value="{StaticResource Regular}"/>
-            <Setter Property="Height" Value="40"/>
-            <Setter Property="FontSize" Value="{StaticResource FontSize24}"/>
-            <Setter Property="Cursor" Value="Hand"/>
-        </Style>
-        <Style BasedOn="{StaticResource {x:Type TabItem}}" TargetType="TabItem" x:Key="RadioTabItem">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type TabItem}">
-                        <RadioButton IsChecked="{Binding IsSelected, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
-                                     Style="{StaticResource RadioTabButton}"
-                                     Content="{TemplateBinding Header}"
-                                     FontSize="{StaticResource FontSize24}"
-                                     FontWeight="Regular"
-                                     Width="{TemplateBinding Width}"
-                                     />
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
         <local:StockConverter x:Key="StockConverter"/>
         <local:DebtConverter x:Key="DebtConverter"/>
     </UserControl.Resources>
@@ -91,7 +67,6 @@
 
                     <DataGrid ItemsSource="{Binding StockReports}"
                               SelectionChanged="DataGrid_SelectionChanged"
-                    MaxHeight="{Binding ElementName=grid, Path=ActualHeight}"
                     AutoGenerateColumns="False" Grid.ColumnSpan="2"
                       CanUserReorderColumns="False" CanUserAddRows="False"
                       CanUserDeleteRows="False" IsReadOnly="True" Margin="0,83,0,0" Grid.RowSpan="2">
@@ -167,7 +142,6 @@
                     </DockPanel>
                     <DataGrid ItemsSource="{Binding DebtReports}" Grid.Row="1"
                               SelectionChanged="DataGrid_SelectionChanged"
-                    MaxHeight="{Binding ElementName=grid, Path=ActualHeight}"
                     AutoGenerateColumns="False" Grid.ColumnSpan="2"
                       CanUserReorderColumns="False" CanUserAddRows="False"
                       CanUserDeleteRows="False" IsReadOnly="True">

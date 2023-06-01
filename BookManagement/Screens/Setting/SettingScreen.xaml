@@ -27,32 +27,6 @@
             <Setter Property="CommandParameter" 
                     Value="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
         </Style>
-        <Style x:Key="RadioTabButton" TargetType="{x:Type RadioButton}" BasedOn="{StaticResource MaterialDesignTabRadioButton}">
-            <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidBrush}"/>
-            <Setter Property="BorderBrush" Value="{StaticResource PrimaryHueMidBrush}"/>
-            <Setter Property="FontFamily" Value="{StaticResource Regular}"/>
-            <Setter Property="Height" Value="40"/>
-            <Setter Property="FontSize" Value="{StaticResource FontSize24}"/>
-            <Setter Property="Cursor" Value="Hand"/>
-        </Style>
-        <Style 
-            x:Key="RadioTabItem"
-            BasedOn="{StaticResource {x:Type TabItem}}" 
-            TargetType="TabItem">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type TabItem}">
-                        <RadioButton IsChecked="{Binding IsSelected, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
-                                     Style="{StaticResource RadioTabButton}"
-                                     Content="{TemplateBinding Header}"
-                                     FontSize="{StaticResource FontSize24}"
-                                     FontWeight="Regular"
-                                     Width="{TemplateBinding Width}"
-                                     />
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
     </UserControl.Resources>
     <TabControl Margin="40 0 40 20" 
                 x:Name="tabcontrol"
@@ -241,8 +215,6 @@
                                         FontSize="{StaticResource FontSize16}"
                                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
                                         material:HintAssist.Hint=""
-                                        material:TextFieldAssist.HasTrailingIcon="True"
-                                        material:TextFieldAssist.TrailingIcon="Percent"
                                         material:HintAssist.IsFloating="False">
                                         <TextBox.Text>
                                             <Binding

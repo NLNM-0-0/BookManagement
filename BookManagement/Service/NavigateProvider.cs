@@ -57,6 +57,11 @@ namespace BookManagement {
             return new NavigationService<BillManagementScreenVM>(
                 serviceProvider.GetRequiredService<BillManagementScreenVM>);
         }
+        static public INavigationService BillDetailScreen()
+        {
+            return new ParamNavigationService<BillDetailViewModel>(
+                (p) => new BillDetailViewModel(p as string));
+        }
         static public INavigationService BookManagementScreen()
         {
             return new NavigationService<BookManagementScreenVM>(
@@ -66,6 +71,11 @@ namespace BookManagement {
         {
             return new NavigationService<DebtManagementScreenVM>(
                 serviceProvider.GetRequiredService<DebtManagementScreenVM>);
+        }
+        static public INavigationService DeptDetailScreen()
+        {
+            return new ParamNavigationService<DebtDetailViewModel>(
+                (p) => new DebtDetailViewModel(p as string));
         }
         static public INavigationService HomeScreen()
         {
@@ -97,10 +107,6 @@ namespace BookManagement {
             return new NavigationService<NoAccessScreenVM>(
                 serviceProvider.GetRequiredService<NoAccessScreenVM>);
         }
-        /*static public INavigationService ProductDetailScreen()
-        {
-            return new ParamNavigationService<ProductDetailViewModel>(
-                (p) => new ProductDetailViewModel(p as Models.Product));
-        }*/
+        
     }
 }

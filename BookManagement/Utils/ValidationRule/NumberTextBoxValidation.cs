@@ -24,7 +24,7 @@ namespace BookManagement
             IntergerType,
             DoubleType
         }
-        private string errorNumberMessage = "Please enter a number.";
+        private string errorNumberMessage = "Vui lòng nhập số";
         public string ErrorNumerMessage
         {
             set => errorNumberMessage = value;
@@ -37,7 +37,7 @@ namespace BookManagement
             {
                 if (String.IsNullOrEmpty(errorMinMaxMessage))
                 {
-                    errorMinMaxMessage = $"Enter number between {Min} and {Max}";
+                    errorMinMaxMessage = $"Vui lòng nhập số giữa {Min} và {Max}";
                 }
                 return errorMinMaxMessage;
             }
@@ -101,7 +101,7 @@ namespace BookManagement
                     {
                         if (type == NumberType.IntergerType)
                         {
-                            if (resultString.Any(c => c < '0' || c > '9'))
+                            if (resultString.Any(c => (c < '0' || c > '9') && c!='-'))
                             {
                                 return new ValidationResult(false, ErrorMinMaxMessage);
                             }

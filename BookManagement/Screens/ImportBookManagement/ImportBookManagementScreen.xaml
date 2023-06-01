@@ -13,36 +13,6 @@
       Background="{StaticResource WhiteColorBrush}">
     <UserControl.Resources>
         <local:FalsesToTrueConverters x:Key="FalsesToTrueConverters"/>
-        <Style TargetType="{x:Type DataGridCell}" x:Key="LeftCell" BasedOn="{StaticResource MaterialDesignDataGridCell}">
-            <Setter Property="HorizontalContentAlignment" Value="Left"/>
-            <Setter Property="HorizontalAlignment" Value="Left"/>
-            <Setter Property="FontSize" Value="{StaticResource FontSize16}"/>
-        </Style>
-        <Style TargetType="{x:Type DataGridColumnHeader}" x:Key="LeftHeader" BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
-            <Setter Property="HorizontalContentAlignment" Value="Left"/>
-            <Setter Property="HorizontalAlignment" Value="Left"/>
-            <Setter Property="FontSize" Value="{StaticResource FontSize16}"/>
-        </Style>
-        <Style TargetType="{x:Type DataGridCell}" x:Key="RightCell" BasedOn="{StaticResource MaterialDesignDataGridCell}">
-            <Setter Property="HorizontalContentAlignment" Value="Right"/>
-            <Setter Property="HorizontalAlignment" Value="Right"/>
-            <Setter Property="FontSize" Value="{StaticResource FontSize16}"/>
-        </Style>
-        <Style TargetType="{x:Type DataGridColumnHeader}" x:Key="RightHeader" BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
-            <Setter Property="HorizontalContentAlignment" Value="Right"/>
-            <Setter Property="HorizontalAlignment" Value="Right"/>
-            <Setter Property="FontSize" Value="{StaticResource FontSize16}"/>
-        </Style>
-        <Style TargetType="{x:Type DataGridCell}" x:Key="CenterCell" BasedOn="{StaticResource MaterialDesignDataGridCell}">
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-            <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Setter Property="FontSize" Value="{StaticResource FontSize16}"/>
-        </Style>
-        <Style TargetType="{x:Type DataGridColumnHeader}" x:Key="CenterHeader" BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-            <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Setter Property="FontSize" Value="{StaticResource FontSize16}"/>
-        </Style>
         <Style 
             TargetType="{x:Type Button}" 
             x:Key="WhiteButton" 
@@ -106,6 +76,7 @@
             <RowDefinition Height="30"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="30"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
@@ -124,7 +95,8 @@
                 HorizontalAlignment="Center"
                 FontSize="{StaticResource FontSize34}"/>
             <Grid
-                Grid.Column="1">
+                Grid.Column="1"
+                Visibility="{c:Binding 'IsAllowImportBook', UpdateSourceTrigger=PropertyChanged, FalseToVisibility=Collapsed}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="30"/>
@@ -219,13 +191,13 @@
                         Grid.Row="2"
                         VerticalAlignment="Stretch">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="3*"/>
                             <ColumnDefinition Width="15"/>
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition Width="15"/>
-                            <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="30"/>
                             <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition Width="2*"/>
                         </Grid.ColumnDefinitions>
                         <TextBox 
                             x:Name="minPriceTextBox"
@@ -294,7 +266,7 @@
                         x:Name="searchButton"
                         Grid.Column="2"
                         Grid.Row="0"
-                        Content="Search"
+                        Content="Tìm"
                         FontSize="{StaticResource FontSize16}"
                         Command="{Binding SearchCommand, UpdateSourceTrigger=PropertyChanged}">
                         <Button.IsEnabled>
@@ -309,14 +281,21 @@
                         Grid.Row="2"
                         FontSize="{StaticResource FontSize16}"
                         Style="{StaticResource WhiteButton}"
-                        Content="Reset"
+                        Content="Khôi phục"
                         Command="{Binding ResetCommand,UpdateSourceTrigger=PropertyChanged}">
                     </Button>
                 </Grid>
             </Grid>
         </Border>
-        <DataGrid
+        <TextBlock
             Grid.Row="5"
+            Text="* Bạn hiện không có quyền tra cứu phiếu nhập sách. Hãy liên hệ với người có quyền hành để được giải quyết."
+            FontSize="{StaticResource FontSize16}"
+            Foreground="{StaticResource ErrorColorBrush}"
+            Margin="50 0 0 30"
+            Visibility="{c:Binding '!IsAllowSearchImport', UpdateSourceTrigger=PropertyChanged, FalseToVisibility=Collapsed}"/>
+        <DataGrid
+            Grid.Row="6"
             ItemsSource="{Binding FilterImports}" 
             AutoGenerateColumns="False"
             CanUserReorderColumns="False" 
@@ -417,4 +396,16 @@
 
         </DataGrid>
     </Grid>
+    <UserControl.InputBindings>
+        <KeyBinding
+            Key="Enter"
+            Command="{Binding SearchCommand}">
+            <KeyBinding.CommandParameter>
+                <MultiBinding Converter="{StaticResource FalsesToTrueConverters}">
+                    <Binding ElementName="maxPriceTextBox" Path="(Validation.HasError)"/>
+                    <Binding ElementName="minPriceTextBox" Path="(Validation.HasError)"/>
+                </MultiBinding>
+            </KeyBinding.CommandParameter>
+        </KeyBinding>
+    </UserControl.InputBindings>
 </UserControl>

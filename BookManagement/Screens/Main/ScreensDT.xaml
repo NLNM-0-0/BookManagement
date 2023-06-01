@@ -14,8 +14,14 @@
     <DataTemplate DataType="{x:Type local:BillManagementScreenVM}">
         <local:BillManagementScreen/>
     </DataTemplate>
+    <DataTemplate DataType="{x:Type local:BillDetailViewModel}">
+        <local:BillDetail/>
+    </DataTemplate>
     <DataTemplate DataType="{x:Type local:DebtManagementScreenVM}">
         <local:DebtManagementScreen/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type local:DebtDetailViewModel}">
+        <local:DebtDetail/>
     </DataTemplate>
     <DataTemplate DataType="{x:Type local:ImportBookManagementScreenVM}">
         <local:ImportBookManagementScreen/>

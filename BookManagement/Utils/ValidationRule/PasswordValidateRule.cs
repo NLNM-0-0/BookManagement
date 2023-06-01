@@ -21,7 +21,7 @@ namespace BookManagement {
             var str = value as string;
             if(string.IsNullOrEmpty(str)) {
                 if(!IsFirstTime)
-                    return new ValidationResult(false, "This field cannot be left blank.");
+                    return new ValidationResult(false, "Trường này không thể để trống");
                 else {
                     if(CanRefresh)
                         IsFirstTime = false;
@@ -29,14 +29,14 @@ namespace BookManagement {
                 }
             }
             if(str.Length < 6) {
-                return new ValidationResult(false, "*Password length needs to be more than 6 characters.");
+                return new ValidationResult(false, "*Mật khẩu có độ dài lớn hơn 6 kí tự");
             }
             if(CheckPrevPass) {
                 if(str == Wrapper.PrevPassword) return new ValidationResult(true, null);
-                else return new ValidationResult(false, "Not the same as Password");
+                else return new ValidationResult(false, "Mật khẩu không khớp xin hãy nhập lại");
             }
 
-            return new ValidationResult(true, "Fuck");
+            return new ValidationResult(true, "None");
         }
     }
 }
