@@ -3,11 +3,137 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:fa="http://schemas.fontawesome.io/icons/"
       xmlns:local="clr-namespace:BookManagement"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800">
+      xmlns:materialDesign = "http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
+      d:DesignHeight="900" d:DesignWidth="1440">
+    <UserControl.Resources>
+        <local:BindingProxy x:Key="proxy" Data="{Binding}"/>
+        <local:FalsesToTrueConverters x:Key="FalsesToTrueConverters"/>
+        <Style x:Key="buttonColor" TargetType="{x:Type Button}" BasedOn="{StaticResource MaterialDesignRaisedLightButton}">
+            <Setter Property="materialDesign:ButtonAssist.CornerRadius" Value="25"/>
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="Width" Value="50"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="VerticalContentAlignment" Value="Top"/>
+            <Setter Property="materialDesign:ElevationAssist.Elevation" Value="Dp0"/>
+            <Setter Property="Padding" Value="8"/>
+            <Setter Property="Foreground" Value="{StaticResource WhiteColorBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BoxLineColorBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Command" Value="{Binding OnChangePrimaryColor}"/>
+            <Setter Property="CommandParameter" 
+                    Value="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
+        </Style>
+    </UserControl.Resources>
+    <Grid Background="White">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="3.5*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0">
+            <TextBlock Text="BUKU'S BOOKS"
+                       Margin="10"
+                       FontSize="{StaticResource FontSize24}"
+                       FontWeight="Bold">
+                
+            </TextBlock>
+            <TextBlock Text="Categories"
+                       FontWeight="Bold"
+                       Margin="20"
+                       FontSize="{StaticResource FontSize16}">
 
-    <Grid>
-        
+            </TextBlock>
+            
+        </StackPanel>
+        <StackPanel Grid.Column="1">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+
+                <local:SearchBar Width="600" SearchText="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
+                <ComboBox 
+                                Margin="15 0" 
+                                Width="100"
+                                FontSize="{StaticResource FontSize16}"
+                                SelectedItem="{Binding SearchBy}"
+                                ItemsSource="{Binding SearchByOptions}"
+                                Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                                materialDesign:HintAssist.Hint="Search by">
+                   
+                </ComboBox>
+            </StackPanel>
+            <Grid Margin="20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <local:BookItem Grid.Column="0"></local:BookItem>
+                    <local:BookItem Grid.Column="1"></local:BookItem>
+                    <local:BookItem Grid.Column="2"></local:BookItem>
+                </Grid>
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <TextBlock
+                           Text="My Order"
+                           FontWeight="Bold"
+                           Margin="0 0 0 20"
+                           Grid.Row="0"
+                           FontSize="{StaticResource FontSize18}">
+                    </TextBlock>
+                    <StackPanel Grid.Row="1">
+
+                        <local:OrderUC></local:OrderUC>
+                        <local:OrderUC/>
+                        <local:OrderUC/>
+                    </StackPanel>
+                    <Border Grid.Row="2"
+                            BorderThickness="1">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="1.5*"/>
+                                <ColumnDefinition Width="1.5*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0"
+                                       Text="Total"
+                                       Margin="5 0 0 0"
+                                       FontSize="{StaticResource FontSize14}">
+                                
+                            </TextBlock>
+                            <TextBlock Grid.Column="1"
+                                       Margin="5 0 0 0"
+                                       Text="NO"
+                                       FontSize="{StaticResource FontSize14}">
+
+                            </TextBlock>
+                            <Button Content="Cancel"
+                                    Style="{StaticResource ButtonRectangle}"
+                                    Grid.Column="2">
+                                
+                            </Button>
+                            <Button Content="Purchase"
+                                    Style="{StaticResource ButtonRectangle}"
+                                    Grid.Column="3">
+
+                            </Button>
+                        </Grid>
+                    </Border>
+                </Grid>
+                
+                
+            </Grid>
+        </StackPanel>
     </Grid>
 </UserControl>
