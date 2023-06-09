@@ -129,7 +129,8 @@ namespace BookManagement
         private async Task Load()
         {
             BookList = new List<SACH>(
-                await sachRepo.GetListAsync(s => s.SoLuong > 0, s => s.DAUSACH, s=>s.DAUSACH.TACGIAs, s=>s.DAUSACH.THELOAI));
+                await sachRepo.GetListAsync(s => s.SoLuong > 0, s => s.DAUSACH, s=>s.DAUSACH.TACGIAs, s=>s.DAUSACH.THELOAI))
+                .OrderBy(p=>p.DAUSACH.TenSach).ThenBy(p=>p.NhaXuatBan).ToList();
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
@@ -211,7 +212,7 @@ namespace BookManagement
             var isContain = true;
 
             if(s.SoLuong>=minQuantity&&s.SoLuong<=maxQuantity
-                && (double)s.DonGiaNhap >= minPrice && (double)s.DonGiaNhap <= maxPrice)
+                && (double)s.DonGiaNhapMoiNhat >= minPrice && (double)s.DonGiaNhapMoiNhat <= maxPrice)
             {
                 isContain = true;
             }

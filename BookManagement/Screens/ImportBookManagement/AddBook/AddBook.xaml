@@ -212,7 +212,7 @@
                             UpdateSourceTrigger="PropertyChanged">
                             <Binding.ValidationRules>
                                 <local:NumberTextBoxValidation
-                                    Min="0"
+                                    Min="1"
                                     ValidatesOnTargetUpdated="True"
                                     IsNotCheckFirstTime="False"/>
                             </Binding.ValidationRules>
@@ -225,7 +225,6 @@
                     Style="{StaticResource MaterialDesignOutlinedTextBox}"
                     materialDesign:HintAssist.Hint="Đơn giá"
                     Width="auto"
-                    IsEnabled="{Binding IsCanChangePrice, UpdateSourceTrigger=PropertyChanged}"
                     VerticalAlignment="Center"
                     FontSize="{StaticResource FontSize16}"
                     materialDesign:TextFieldAssist.SuffixText=" VND">

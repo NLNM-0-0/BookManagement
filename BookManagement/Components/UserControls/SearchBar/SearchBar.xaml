@@ -112,7 +112,7 @@
                 <Grid  Grid.Column="1">
                     <TextBox VerticalContentAlignment="Center" Style="{StaticResource SearchBox}"
                         x:Name="Search"
-                         Tag="Search"
+                         Tag="Tìm kiếm"
                              FontSize="{StaticResource FontSize16}"
                          Text="{
                             Binding SearchText, 

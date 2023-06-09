@@ -131,4 +131,10 @@
             </Grid>
         </StackPanel>
     </Border>
+    <UserControl.InputBindings>
+        <KeyBinding
+            Key="Enter"
+            Command="{Binding CollectCommand,UpdateSourceTrigger=PropertyChanged}"
+            CommandParameter=""/>
+    </UserControl.InputBindings>
 </UserControl>

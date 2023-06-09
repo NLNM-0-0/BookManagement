@@ -71,16 +71,16 @@
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="20"/>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="20"/>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="20"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
         <Grid 
-            Margin="50 0" 
+            Margin="40 0" 
             Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -95,7 +95,7 @@
                 FontSize="{StaticResource FontSize34}"/>
         </Grid>
         <Border Background="{StaticResource BackgroundColorBrush}"
-                Padding="50 30"
+                Padding="40 30"
                 Grid.Row="3">
             <Grid>
                 <Grid>
@@ -249,7 +249,7 @@
             Background="{StaticResource WhiteColorBrush}"
             HorizontalScrollBarVisibility="Auto" 
             ScrollViewer.CanContentScroll="True"
-            Margin="50 0">
+            Margin="40 0">
             <DataGrid
                 ItemsSource="{Binding FilterBills, UpdateSourceTrigger=PropertyChanged}" 
                 AutoGenerateColumns="False"
@@ -260,7 +260,9 @@
                 <DataGrid.Columns>
                     <DataGridTextColumn 
                         Header="ID" 
-                        Width="150" 
+                        Width="150"
+                        MinWidth="150"
+                        MaxWidth="150"
                         Binding="{Binding MaHoaDon}"
                         HeaderStyle="{StaticResource CenterHeader}"
                         CellStyle="{StaticResource CenterCell}">
@@ -272,7 +274,9 @@
                     </DataGridTextColumn>
                     <DataGridTextColumn 
                         Header="Tên khách hàng" 
-                        Width="200" 
+                        Width="auto"
+                        MinWidth="250"
+                        MaxWidth="700"
                         Binding="{Binding KHACHHANG.TenKhachHang}"
                         HeaderStyle="{StaticResource LeftHeader}"
                         CellStyle="{StaticResource LeftCell}">
@@ -283,8 +287,10 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
                     <DataGridTextColumn 
-                        Header="Tên nhân viên" 
-                        Width="200" 
+                        Header="Tên nhân viên"
+                        Width="auto"
+                        MinWidth="200" 
+                        MaxWidth="700"
                         Binding="{Binding NHANVIEN.TenNhanVien}"
                         HeaderStyle="{StaticResource LeftHeader}"
                         CellStyle="{StaticResource LeftCell}">
@@ -295,8 +301,10 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
                     <DataGridTextColumn 
-                        Header="Ngày lập" 
-                        Width="150" 
+                        Header="Ngày lập"
+                        Width="150"
+                        MinWidth="120"
+                        MaxWidth="150" 
                         HeaderStyle="{StaticResource CenterHeader}"
                         CellStyle="{StaticResource CenterCell}"
                         Binding="{Binding NgayLapHoaDon, Converter={x:Static local:DateTimeToShortConverter.Instance}}">
@@ -308,7 +316,9 @@
                     </DataGridTextColumn>
                     <DataGridTextColumn 
                         Header="Tổng tiền" 
-                        Width="150" 
+                        Width="auto"
+                        MinWidth="180"
+                        MaxWidth="400"
                         CellStyle="{StaticResource RightCell}"
                         HeaderStyle="{StaticResource RightHeader}"
                         Binding="{Binding TongTien, Converter={x:Static local:DecimalToMoneyConveter.Instance}}">
@@ -320,7 +330,9 @@
                     </DataGridTextColumn>
                     <DataGridTextColumn 
                         Header="Tiền nợ" 
-                        Width="150" 
+                        Width="auto"
+                        MinWidth="180"
+                        MaxWidth="400" 
                         CellStyle="{StaticResource RightCell}"
                         HeaderStyle="{StaticResource RightHeader}"
                         Binding="{Binding SoTienNo, Converter={x:Static local:DecimalToMoneyConveter.Instance}}">

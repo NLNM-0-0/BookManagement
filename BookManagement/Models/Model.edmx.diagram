@@ -5,24 +5,24 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="b444132428094ef9bd56ea7783265d30" Name="Diagram1">
-        <EntityTypeShape EntityType="WPFBookManagementModel.BAOCAOCONGNO" Width="1.5" PointX="3" PointY="22.25" />
-        <EntityTypeShape EntityType="WPFBookManagementModel.BAOCAOTON" Width="1.5" PointX="5.25" PointY="1.5" />
-        <EntityTypeShape EntityType="WPFBookManagementModel.CHITIETBAOCAOCONGNO" Width="1.5" PointX="5.25" PointY="20.875" />
-        <EntityTypeShape EntityType="WPFBookManagementModel.CHITIETBAOCAOTON" Width="1.5" PointX="7.5" PointY="4.125" />
-        <EntityTypeShape EntityType="WPFBookManagementModel.CHITIETHOADON" Width="1.5" PointX="7.5" PointY="1.25" />
+        <EntityTypeShape EntityType="WPFBookManagementModel.BAOCAOCONGNO" Width="1.5" PointX="3" PointY="23" />
+        <EntityTypeShape EntityType="WPFBookManagementModel.BAOCAOTON" Width="1.5" PointX="5.25" PointY="1.625" />
+        <EntityTypeShape EntityType="WPFBookManagementModel.CHITIETBAOCAOCONGNO" Width="1.5" PointX="5.25" PointY="20.625" />
+        <EntityTypeShape EntityType="WPFBookManagementModel.CHITIETBAOCAOTON" Width="1.5" PointX="7.5" PointY="1.25" />
+        <EntityTypeShape EntityType="WPFBookManagementModel.CHITIETHOADON" Width="1.5" PointX="7.5" PointY="4.375" />
         <EntityTypeShape EntityType="WPFBookManagementModel.CHITIETPHIEUNHAP" Width="1.5" PointX="7.5" PointY="7.375" />
-        <EntityTypeShape EntityType="WPFBookManagementModel.CHUCNANG" Width="1.5" PointX="1.5" PointY="15" />
+        <EntityTypeShape EntityType="WPFBookManagementModel.CHUCNANG" Width="1.5" PointX="1.5" PointY="15.75" />
         <EntityTypeShape EntityType="WPFBookManagementModel.DAUSACH" Width="1.5" PointX="3" PointY="5.5" />
-        <EntityTypeShape EntityType="WPFBookManagementModel.HOADON" Width="1.5" PointX="5.25" PointY="12.375" />
-        <EntityTypeShape EntityType="WPFBookManagementModel.KHACHHANG" Width="1.5" PointX="3" PointY="17.5" />
-        <EntityTypeShape EntityType="WPFBookManagementModel.NHANVIEN" Width="1.5" PointX="3" PointY="9.875" />
-        <EntityTypeShape EntityType="WPFBookManagementModel.NHOMNGUOIDUNG" Width="1.5" PointX="0.75" PointY="10.875" />
-        <EntityTypeShape EntityType="WPFBookManagementModel.PHIEUNHAPSACH" Width="1.5" PointX="5.25" PointY="17.25" />
-        <EntityTypeShape EntityType="WPFBookManagementModel.PHIEUTHUNO" Width="1.5" PointX="8.25" PointY="14.125" />
-        <EntityTypeShape EntityType="WPFBookManagementModel.SACH" Width="1.5" PointX="5.25" PointY="4" />
-        <EntityTypeShape EntityType="WPFBookManagementModel.TACGIA" Width="1.5" PointX="5.25" PointY="7.5" />
+        <EntityTypeShape EntityType="WPFBookManagementModel.HOADON" Width="1.5" PointX="5.25" PointY="13.125" />
+        <EntityTypeShape EntityType="WPFBookManagementModel.KHACHHANG" Width="1.5" PointX="3" PointY="18.25" />
+        <EntityTypeShape EntityType="WPFBookManagementModel.NHANVIEN" Width="1.5" PointX="3" PointY="10.625" />
+        <EntityTypeShape EntityType="WPFBookManagementModel.NHOMNGUOIDUNG" Width="1.5" PointX="0.75" PointY="11.625" />
+        <EntityTypeShape EntityType="WPFBookManagementModel.PHIEUNHAPSACH" Width="1.5" PointX="5.25" PointY="17.375" />
+        <EntityTypeShape EntityType="WPFBookManagementModel.PHIEUTHUNO" Width="1.5" PointX="8.25" PointY="14.75" />
+        <EntityTypeShape EntityType="WPFBookManagementModel.SACH" Width="1.5" PointX="5.25" PointY="4.125" />
+        <EntityTypeShape EntityType="WPFBookManagementModel.TACGIA" Width="1.5" PointX="5.25" PointY="7.625" />
         <EntityTypeShape EntityType="WPFBookManagementModel.THAMSO" Width="1.5" PointX="0.75" PointY="0.75" />
-        <EntityTypeShape EntityType="WPFBookManagementModel.THELOAI" Width="1.5" PointX="0.75" PointY="5.75" />
+        <EntityTypeShape EntityType="WPFBookManagementModel.THELOAI" Width="1.5" PointX="0.75" PointY="5.875" />
         <AssociationConnector Association="WPFBookManagementModel.FK__CHITIETBA__MaBao__6EF57B66" />
         <AssociationConnector Association="WPFBookManagementModel.FK__CHITIETBA__MaBao__693CA210" />
         <AssociationConnector Association="WPFBookManagementModel.FK__CHITIETBA__MaKha__6FE99F9F" />

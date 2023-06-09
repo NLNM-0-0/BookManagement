@@ -33,7 +33,7 @@ namespace BookManagement {
             Password = "";
 
             OnLogin = new RelayCommand<object>(p => {
-                return UserName != "";
+                return !string.IsNullOrEmpty(UserName) && !string.IsNullOrEmpty(Password);
             }, async p => {
                 if(await Login()) {
                     NavigateProvider.LoginScreenHandle(false);
@@ -62,7 +62,7 @@ namespace BookManagement {
                     var confirmDialog = new ConfirmDialog()
                     {
                         Header = "Whoops",
-                        ContentString = "This account is not active anymore."
+                        ContentString = "Tài khoản này khôn còn hoạt động được nữa."
                     };
                     await DialogHost.Show(confirmDialog, "Login");
                     return false;
@@ -78,7 +78,7 @@ namespace BookManagement {
             
             var dl = new ConfirmDialog() {
                 Header = "Whoops",
-                ContentString = "Username or password is wrong. Try again!"
+                ContentString = "Tên đăng nhập hoặc mật khẩu sai. Xin hãy thử lại!"
             };
             await DialogHost.Show(dl, "Login");
             return false;

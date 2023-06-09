@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace BookManagement
 {
@@ -15,7 +16,25 @@ namespace BookManagement
         private string billId;
         public HOADON HoaDon { get; set; }
         public ObservableCollection<CHITIETHOADON> ListBillDetail { get; set; }
-        public KHACHHANG KhachHang { get; set; }
+        private KHACHHANG khachHang;
+        public KHACHHANG KhachHang
+        {
+            get => khachHang;
+            set { 
+                khachHang = value; 
+                OnPropertyChanged(); 
+            }
+        }
+        private decimal paid;
+        public decimal Paid
+        {
+            get => paid;
+            set
+            {
+                paid = value;
+                OnPropertyChanged();
+            }
+        }
         public BillDetailViewModel(string billId)
         {
             billRepo = new GenericDataRepository<HOADON>();
@@ -36,12 +55,16 @@ namespace BookManagement
         {
             HoaDon = await billRepo.GetSingleAsync(b => b.MaHoaDon.Equals(billId), b => b.KHACHHANG);
             List<CHITIETHOADON> list = new List<CHITIETHOADON>(
-                await ctRepo.GetListAsync(c => c.MaHoaDon == billId, c => c.SACH, c => c.SACH.DAUSACH));
+                await ctRepo.GetListAsync(
+                    c => c.MaHoaDon == billId, 
+                    c => c.SACH, 
+                    c => c.SACH.DAUSACH));
 
             ListBillDetail = new ObservableCollection<CHITIETHOADON>(list);
 
             KhachHang = HoaDon.KHACHHANG;
 
+            Paid = HoaDon.TongTien - HoaDon.SoTienNo;
         }
     }
 }

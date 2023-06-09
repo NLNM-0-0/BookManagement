@@ -10,6 +10,8 @@ using System.Windows.Input;
 using MaterialDesignThemes.Wpf;
 using System.Drawing;
 using System.Windows.Forms;
+using System.IO.Packaging;
+using System.Reflection;
 
 namespace BookManagement
 {
@@ -46,28 +48,7 @@ namespace BookManagement
                 await Load();
                 DowloadTemplateCommand = new RelayCommandWithNoParameter(async () =>
                 {
-                    MainViewModel.IsLoading = true;
-                    bool result = await DowloadTemplate();
-                    if (result)
-                    {
-                        MainViewModel.SetLoading(false);
-                    }
-                    else
-                    {
-                        PreviousItem = MainViewModel.UpdateDialog("Main");
-                        var dl = new ConfirmDialog()
-                        {
-                            ContentString = "File đang được sử dụng. Xin hãy đóng file rùi thử lại!",
-                            Header = "Oops",
-                            CM = new RelayCommandWithNoParameter(() =>
-                            {
-                                DialogHost.CloseDialogCommand.Execute(null, null);
-                                DialogHost.Show(PreviousItem, "Main");
-                            })
-                        };
-                        MainViewModel.IsLoading = false;
-                        await DialogHost.Show(dl, "Main");
-                    }
+                    await DowloadTemplate();
                 });
                 UploadExcelCommand = new RelayCommandWithNoParameter(async () =>
                 {
@@ -89,13 +70,8 @@ namespace BookManagement
                             {
                                 var dl = new ConfirmDialog()
                                 {
-                                    Header = "Oops",
+                                    Header = "Lỗi",
                                     ContentString = "File bạn vừa nhập không đúng dạng dữ liệu tiêu chuẩn. Xin hãy sửa lại.",
-                                    CM = new RelayCommandWithNoParameter(() =>
-                                    {
-                                        DialogHost.CloseDialogCommand.Execute(null, null);
-                                        DialogHost.Show(PreviousItem, "Main");
-                                    })
                                 };
                                 MainViewModel.IsLoading = false;
                                 await DialogHost.Show(dl, "Main");
@@ -108,13 +84,8 @@ namespace BookManagement
                                 {
                                     var dl = new ConfirmDialog()
                                     {
-                                        Header = "Oops",
+                                        Header = "Lỗi",
                                         ContentString = "Dữ liệu vừa được nhập vào không khớp với qui định hãy kiểm tra lại.",
-                                        CM = new RelayCommandWithNoParameter(() =>
-                                        {
-                                            DialogHost.CloseDialogCommand.Execute(null, null);
-                                            DialogHost.Show(PreviousItem, "Main");
-                                        })
                                     };
                                     MainViewModel.IsLoading = false;
                                     await DialogHost.Show(dl, "Main");
@@ -122,26 +93,35 @@ namespace BookManagement
                                 }
                                 else
                                 {
-                                    await SaveImport();
-                                    MainViewModel.IsLoading = false;
-                                    DialogHost.CloseDialogCommand.Execute(null, null);
-                                    ImportSuccess?.Invoke();
-                                    return;
+                                    bool isDataSuitable = CheckData();
+                                    if(isDataSuitable)
+                                    {
+                                        await SaveImport();
+                                        MainViewModel.IsLoading = false;
+                                        DialogHost.CloseDialogCommand.Execute(null, null);
+                                        ImportSuccess?.Invoke();
+                                        return;
+                                    }    
+                                    else
+                                    {
+                                        var dl = new ConfirmDialog()
+                                        {
+                                            Header = "Lỗi",
+                                            ContentString = "Dữ liệu vừa được nhập vào không khớp với những qui định được nêu trên. Xin hãy tải lại bản mẫu và xem lại qui định phía trên file.",
+                                        };
+                                        MainViewModel.IsLoading = false;
+                                        await DialogHost.Show(dl, "Main");
+                                        return;
+                                    }    
                                 }   
                             }    
                         }
                         else
                         {
-                            
                             var dl = new ConfirmDialog()
                             {
-                                Header = "Oops",
-                                ContentString = "Hãy chọn file excel.",
-                                CM = new RelayCommandWithNoParameter(() =>
-                                {
-                                    DialogHost.CloseDialogCommand.Execute(null, null);
-                                    DialogHost.Show(PreviousItem, "Main");
-                                })
+                                Header = "Lỗi",
+                                ContentString = "Hãy chọn file excel."
                             };
                             MainViewModel.IsLoading = false;
                             await DialogHost.Show(dl, "Main");
@@ -179,6 +159,33 @@ namespace BookManagement
                         return false;
                     }
                 }
+            }
+            return true;
+        }
+        private bool CheckData()
+        {
+            for (int i = 0; i < importExcelObjects.Count; i++)
+            {
+                ImportExcelObject firstImportExcelObject = importExcelObjects[i];
+                for(int j = i + 1; j < importExcelObjects.Count; j++)
+                {
+                    ImportExcelObject secondImportExcelObect = importExcelObjects[j];
+                    if(firstImportExcelObject.BookName == secondImportExcelObect.BookName)
+                    {
+                        if(firstImportExcelObject.NXB == secondImportExcelObect.NXB)
+                        {
+                            return false;
+                        }    
+                        if(firstImportExcelObject.TheLoai != secondImportExcelObect.TheLoai)
+                        {
+                            return false;
+                        }    
+                        if(firstImportExcelObject.Authors.Except(secondImportExcelObect.Authors).ToList().Count != 0)
+                        {
+                            return false;
+                        }    
+                    }    
+                }    
             }
             return true;
         }
@@ -250,7 +257,7 @@ namespace BookManagement
 
                     book.MaDauSach = bookHeader.MaDauSach;
                     book.MaSach = await GenerateId.Gen(typeof(SACH), "MaSach");
-                    book.DonGiaNhap = importExcelObject.UnitPrice;
+                    book.DonGiaNhapMoiNhat = importExcelObject.UnitPrice;
                     book.SoLuong = importExcelObject.Amount;
                     book.NhaXuatBan = importExcelObject.NXB;
                     await bookRepo.Add(book);
@@ -258,11 +265,32 @@ namespace BookManagement
                 else
                 {
                     book.SoLuong += importExcelObject.Amount;
+                    book.DonGiaNhapMoiNhat = importExcelObject.UnitPrice;
                     await bookRepo.Update(book);
                 }
-                await ImportDetailAPI.Add(book.MaSach, import.MaPhieuNhap, importExcelObject.Amount);
+                await ImportDetailAPI.Add(book.MaSach, import.MaPhieuNhap, importExcelObject.Amount, importExcelObject.UnitPrice);
             }
         }
+        private bool IsFileLocked(FileInfo file)
+        {
+            try
+            {
+                if (!file.Exists)
+                {
+                    return false;
+                }
+                using (FileStream stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None))
+                {
+                    stream.Close();
+                }
+            }
+            catch (IOException)
+            {
+                return true;
+            }
+            return false;
+        }
+
         private async Task<bool> CheckGetDataFromExcel(FileInfo fileInfo)
         {
             if (!IsFileLocked(fileInfo) && fileInfo.Exists)
@@ -330,7 +358,7 @@ namespace BookManagement
 
                         String bookAuthors = worksheet.Cells[row, 3].Value.ToString();
                         List<string> authorNames = bookAuthors.Split(',').ToList();
-                        if(authorNames.Any(p=>p.Length == 0))
+                        if (authorNames.Any(p => String.IsNullOrEmpty(p)))
                         {
                             return false;
                         }    
@@ -382,14 +410,8 @@ namespace BookManagement
                         String unitPrice = worksheet.Cells[row, 5].Value.ToString();
                         try
                         {
-                            
                             importExcelObject.UnitPrice = decimal.Parse(unitPrice);
-                            SACH book = await bookRepo.GetSingleAsync(p => p.DAUSACH.TenSach == bookName && p.NhaXuatBan == NXB);
-                            if (book != null && book.DonGiaNhap != importExcelObject.UnitPrice)
-                            {
-                                return false;
-                            }
-                            else if (importExcelObject.UnitPrice <= 0) 
+                            if (importExcelObject.UnitPrice <= 0) 
                             {
                                 return false;
                             }
@@ -403,7 +425,7 @@ namespace BookManagement
                         try
                         {
                             importExcelObject.Amount = int.Parse(amount);
-                            if (importExcelObject.Amount <= 0)
+                            if (importExcelObject.Amount < 0)
                             {
                                 return false;
                             }
@@ -428,20 +450,38 @@ namespace BookManagement
                 return false;
             }
         }
-        private async Task<bool> DowloadTemplate()
+        private async Task DowloadTemplate()
         {
-            //string dowloadPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            string userRoot = System.Environment.GetEnvironmentVariable("USERPROFILE");
-            string downloadFolder = Path.Combine(userRoot, "Downloads");
-
-            FileInfo fileInfo = new FileInfo($"{downloadFolder}\\template.xlsx");
-            if (!IsFileLocked(fileInfo))
+            MainViewModel.IsLoading = true;
+            string filePath = "";
+            var saveFileDialog = new SaveFileDialog();
+            saveFileDialog.FileName = "Template";
+            saveFileDialog.Filter = "Excel Sheet(*.xlsx)|*.xlsx|All Files(*.*)|*.*";
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                if (fileInfo.Exists)
+                filePath = saveFileDialog.FileName;
+            }
+            else
+            {
+                PreviousItem = MainViewModel.UpdateDialog("Main");
+                ConfirmDialog notification = new ConfirmDialog()
                 {
-                    fileInfo.Delete();
-                }
-                using (var package = new ExcelPackage(fileInfo))
+                    Header = "Lỗi",
+                    ContentString = "Xuất file không thành công.",
+                    CM = new RelayCommandWithNoParameter(() =>
+                    {
+                        DialogHost.CloseDialogCommand.Execute(null, null);
+                        DialogHost.Show(PreviousItem, "Main");
+                    })
+                };
+                MainViewModel.SetLoading(false);
+                await DialogHost.Show(notification, "Main");
+                return;
+            }
+           
+            try
+            {
+                using (ExcelPackage package = new ExcelPackage())
                 {
                     //MainReport
                     ExcelWorksheet worksheetMain = package.Workbook.Worksheets.Add("MainReport");
@@ -490,20 +530,20 @@ namespace BookManagement
                     worksheetBook.Cells[1, 2].Value = "Thể loại";
                     worksheetBook.Cells[1, 3].Value = "Tác giả";
                     worksheetBook.Cells[1, 4].Value = "Nhà xuất bản";
-                    worksheetBook.Cells[1, 5].Value = "Đơn giá";
+                    worksheetBook.Cells[1, 5].Value = "Đơn giá nhập mới nhất";
                     int row = 0;
-                    for(int i = 0; i < bookHeaders.Count; i++)
+                    for (int i = 0; i < bookHeaders.Count; i++)
                     {
                         DAUSACH bookHeader = bookHeaders.ElementAt(i);
-                        for(int j = 0; j < bookHeader.SACHes.Count; j++)
+                        for (int j = 0; j < bookHeader.SACHes.Count; j++)
                         {
                             worksheetBook.Cells[2 + row, 1].Value = bookHeader.TenSach;
                             worksheetBook.Cells[2 + row, 2].Value = bookHeader.THELOAI.TenTheLoai;
                             worksheetBook.Cells[2 + row, 3].Value = string.Join(",", bookHeader.TACGIAs.Select(p => p.TenTacGia).ToList());
                             worksheetBook.Cells[2 + row, 4].Value = bookHeader.SACHes.ElementAt(j).NhaXuatBan;
-                            worksheetBook.Cells[2 + row, 5].Value = bookHeader.SACHes.ElementAt(j).DonGiaNhap;
+                            worksheetBook.Cells[2 + row, 5].Value = bookHeader.SACHes.ElementAt(j).DonGiaNhapMoiNhat;
                             row++;
-                        }    
+                        }
                     }
 
                     var allCellsBook = worksheetBook.Cells[1, 1, worksheetBook.Dimension.End.Row, worksheetBook.Dimension.End.Column];
@@ -515,7 +555,7 @@ namespace BookManagement
                     {
                         worksheetBook.Column(i).Width *= 1.2;
                     }
-                    
+
                     using (ExcelRange excelRange = worksheetBook.Cells[$"A1:E{row + 1}"])
                     {
                         excelRange.Style.Border.Top.Style = ExcelBorderStyle.Thin;
@@ -523,7 +563,7 @@ namespace BookManagement
                         excelRange.Style.Border.Right.Style = ExcelBorderStyle.Thin;
                         excelRange.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
                     }
-                    
+
                     //Author template
                     ExcelWorksheet worksheetAuthor = package.Workbook.Worksheets.Add("AuthorData");
                     worksheetAuthor.Cells[1, 1].Value = "Tên tác giả";
@@ -532,7 +572,7 @@ namespace BookManagement
                         TACGIA author = authors.ElementAt(i);
 
                         worksheetAuthor.Cells[2 + i, 1].Value = author.TenTacGia;
-     
+
                     }
 
                     var allCellsAuthors = worksheetAuthor.Cells[1, 1, worksheetAuthor.Dimension.End.Row, worksheetAuthor.Dimension.End.Column];
@@ -581,36 +621,40 @@ namespace BookManagement
                         excelRange.Style.Border.Right.Style = ExcelBorderStyle.Thin;
                         excelRange.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
                     }
+                    Byte[] bin = package.GetAsByteArray();
+                    File.WriteAllBytes(filePath, bin);
+                }
 
-                    await package.SaveAsAsync(fileInfo);
-
-                    System.Diagnostics.Process.Start(fileInfo.FullName);
-                }
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        private bool IsFileLocked(FileInfo file)
-        {
-            try
-            {
-                if (!file.Exists) 
+                PreviousItem = MainViewModel.UpdateDialog("Main");
+                ConfirmDialog notification = new ConfirmDialog()
                 {
-                    return false;
-                }
-                using (FileStream stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None))
-                {
-                    stream.Close();
-                }
+                    Header = "Thông báo",
+                    ContentString = "Xuất file thành công.",
+                    CM = new RelayCommandWithNoParameter(() =>
+                    {
+                        DialogHost.CloseDialogCommand.Execute(null, null);
+                        DialogHost.Show(PreviousItem, "Main");
+                    })
+                };
+                MainViewModel.SetLoading(false);
+                await DialogHost.Show(notification, "Main");
             }
-            catch (IOException)
+            catch
             {
-                return true;
+                PreviousItem = MainViewModel.UpdateDialog("Main");
+                ConfirmDialog notification = new ConfirmDialog()
+                {
+                    Header = "Lỗi",
+                    ContentString = "Có lỗi khi lưu file.",
+                    CM = new RelayCommandWithNoParameter(() =>
+                    {
+                        DialogHost.CloseDialogCommand.Execute(null, null);
+                        DialogHost.Show(PreviousItem, "Main");
+                    })
+                };
+                MainViewModel.SetLoading(false);
+                await DialogHost.Show(notification, "Main");
             }
-            return false;
         }
 
         private class ImportExcelObject

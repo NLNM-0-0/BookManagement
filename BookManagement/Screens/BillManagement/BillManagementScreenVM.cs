@@ -107,14 +107,14 @@ namespace BookManagement
 
         public async Task Load()
         {
-            AllBills = new ObservableCollection<HOADON>(
+            AllBills = new ObservableCollection<HOADON>((
                 await billRepo.GetAllAsync(
                     p => p.NHANVIEN, 
                     p => p.KHACHHANG, 
                     p => p.CHITIETHOADONs,
-                    p => p.CHITIETHOADONs.Select(c=>c.SACH.DAUSACH)
+                    p => p.CHITIETHOADONs.Select(c => c.SACH.DAUSACH)
                 )
-            );
+            ).OrderByDescending(p=>p.NgayLapHoaDon));
             FilterBills = new ObservableCollection<HOADON>(AllBills);
         }
 
@@ -136,7 +136,7 @@ namespace BookManagement
                 {
                     return false;
                 }
-                bool checkDate = SearchDate == null || (SearchDate != null && p.NgayLapHoaDon == SearchDate);
+                bool checkDate = SearchDate == null || (SearchDate != null && p.NgayLapHoaDon.ToShortDateString() == SearchDate.Value.ToShortDateString());
                 if (!checkDate)
                 {
                     return false;

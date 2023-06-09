@@ -42,7 +42,7 @@ namespace BookManagement
             Customer = customer;
             CollectCommand = new RelayCommand<object>((p) =>
             {
-                return DebtCollect != null && DebtCollect.Length > 0;
+                return !String.IsNullOrEmpty(DebtCollect);
             },async (p) =>
             {
                 PreviousItem = MainViewModel.UpdateDialog("Main");

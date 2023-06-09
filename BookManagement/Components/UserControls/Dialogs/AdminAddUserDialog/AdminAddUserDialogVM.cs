@@ -15,6 +15,7 @@ namespace BookManagement
     {
         #region DataRepository
         private readonly GenericDataRepository<NHANVIEN> userRepo = new GenericDataRepository<NHANVIEN>();
+        private readonly GenericDataRepository<NHOMNGUOIDUNG> userGroupRepo = new GenericDataRepository<NHOMNGUOIDUNG>();
         #endregion
 
         #region Action
@@ -31,62 +32,103 @@ namespace BookManagement
 
         #region Properties
         public NHANVIEN NewUser { get; set; } = new NHANVIEN();
-
+        private ObservableCollection<NHOMNGUOIDUNG> userGroups;
+        public ObservableCollection<NHOMNGUOIDUNG> UserGroups
+        {
+            get => userGroups;
+            set
+            {
+                userGroups = value;
+                OnPropertyChanged();
+            }
+        }
+        private NHOMNGUOIDUNG selectedUserGroup;
+        public NHOMNGUOIDUNG SelectedUserGroup
+        {
+            get => selectedUserGroup;
+            set
+            {
+                selectedUserGroup = value;
+                OnPropertyChanged();
+            }
+        }    
         private System.Windows.Controls.UserControl PreviousItem;
         #endregion
 
         #region Constructor
         public AdminAddUserDialogVM() {
-            NewUser.GioiTinh = "Nữ";
-            NewUser.DienThoai = "";
-            NewUser.TenNhanVien = "";
-            NewUser.UserName = "";
-
-            AddUserCommand = new RelayCommand<object>((_)=>{
-                return NewUser.DienThoai.Length > 0 &&
-                NewUser.TenNhanVien.Length > 0 &&
-                NewUser.UserName.Length > 0;
-            }
-            , async(_) =>
-            {
-                PreviousItem = MainViewModel.UpdateDialog("Main");
-
+            Task.Run(async() => {
                 MainViewModel.SetLoading(true);
-
-                var check = await userRepo.GetSingleAsync(d => d.UserName == NewUser.UserName);
-                if (check != null)
+                NewUser.GioiTinh = "Nữ";
+                NewUser.DienThoai = "";
+                NewUser.TenNhanVien = "";
+                NewUser.UserName = "";
+                await Load();
+                App.Current.Dispatcher.Invoke((Action)(() =>
                 {
-                    var dl = new ConfirmDialog()
-                    {
-                        Header = "Oops",
-                        ContentString = "This username is already exists",
-                        CM = new RelayCommandWithNoParameter(() =>
-                        {
-                            DialogHost.CloseDialogCommand.Execute(null, null);
-                            if (PreviousItem != null)
-                            {
-                                DialogHost.Show(PreviousItem, "Main");
-                            }
-                        })
-                    };
-                    MainViewModel.SetLoading(false);
-                    await DialogHost.Show(dl, "Main");
-                    return;
+                    UserGroups = new ObservableCollection<NHOMNGUOIDUNG>(UserGroups);
+                    SelectedUserGroup = UserGroups[0]??null;
+                }));
+                
+                AddUserCommand = new RelayCommand<object>((_) => {
+                    return !String.IsNullOrEmpty(NewUser.DienThoai) &&
+                    !String.IsNullOrEmpty(NewUser.TenNhanVien) &&
+                    !String.IsNullOrEmpty(NewUser.UserName) &&
+                    !String.IsNullOrEmpty(NewUser.DiaChi) &&
+                    NewUser.NgaySinh!=null;
                 }
+                , async (_) =>
+                {
+                    PreviousItem = MainViewModel.UpdateDialog("Main");
 
-                NewUser.MaNhanVien = await GenerateId.Gen(typeof(NHANVIEN), "MaNhanVien");
-                NewUser.MaNhomNguoiDung = AppEnum.Staff;
-                NewUser.isActive = true;    
-                NewUser.NgayVaoLam = DateTime.Now;
-                NewUser.Password = "";
-                NewUser.DiaChi = NewUser.DiaChi ?? "";
+                    MainViewModel.SetLoading(true);
 
-                await userRepo.Add(NewUser);
+                    var check = await userRepo.GetSingleAsync(d => d.UserName == NewUser.UserName);
+                    if (check != null)
+                    {
+                        var dl = new ConfirmDialog()
+                        {
+                            Header = "Oops",
+                            ContentString = "Đã tồn tại tài khoản trong hệ thống.",
+                            CM = new RelayCommandWithNoParameter(() =>
+                            {
+                                DialogHost.CloseDialogCommand.Execute(null, null);
+                                if (PreviousItem != null)
+                                {
+                                    DialogHost.Show(PreviousItem, "Main");
+                                }
+                            })
+                        };
+                        MainViewModel.SetLoading(false);
+                        await DialogHost.Show(dl, "Main");
+                        return;
+                    }
 
+                    NewUser.TenNhanVien = NewUser.TenNhanVien.Trim();
+                    NewUser.DiaChi = NewUser.DiaChi.Trim();
+                    NewUser.MaNhanVien = await GenerateId.Gen(typeof(NHANVIEN), "MaNhanVien");
+                    NewUser.MaNhomNguoiDung = SelectedUserGroup.MaNhomNguoiDung;
+                    NewUser.isActive = true;
+                    NewUser.NgayVaoLam = DateTime.Now;
+                    NewUser.Password = "BUUK123";
+                    NewUser.DiaChi = NewUser.DiaChi ?? "";
+
+                    await userRepo.Add(NewUser);
+
+                    MainViewModel.SetLoading(false);
+                    DialogHost.CloseDialogCommand.Execute(null, null);
+                    OnClosedDialog();
+                });
                 MainViewModel.SetLoading(false);
-                DialogHost.CloseDialogCommand.Execute(null, null);
-                OnClosedDialog();
             });
+            
+        }
+        #endregion
+
+        #region Command Define
+        public async Task Load()
+        {
+            UserGroups = new ObservableCollection<NHOMNGUOIDUNG>(await userGroupRepo.GetAllAsync());
         }
         #endregion
     }

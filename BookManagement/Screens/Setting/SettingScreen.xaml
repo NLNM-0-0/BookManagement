@@ -33,22 +33,20 @@
                 SelectedIndex="{Binding SelectedPage}">
         <TabItem Style="{StaticResource RadioTabItem}"
                  Header="Qui định" 
-                 Width="{c:Binding ElementName=tabcontrol, Path=ActualWidth/2, UpdateSourceTrigger=PropertyChanged}"
-                 IsEnabled="{Binding IsAllowChangeRule, UpdateSourceTrigger=PropertyChanged}">
+                 Width="{c:Binding ElementName=tabcontrol, Path=ActualWidth/2, UpdateSourceTrigger=PropertyChanged}">
             <Grid>
                 <ScrollViewer
                     x:Name="scroll">
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="20"/>
                             <RowDefinition Height="auto"/>
-                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="20"/>
                             <RowDefinition Height="auto"/>
-                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="20"/>
                             <RowDefinition Height="auto"/>
-                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="20"/>
                             <RowDefinition Height="auto"/>
-                            <RowDefinition Height="30"/>
                         </Grid.RowDefinitions>
                         <Grid
                             Grid.Row="1"
@@ -271,7 +269,8 @@
                         </Grid>
                         <Grid
                             Grid.Row="7"
-                            Margin="30 0">
+                            Margin="30 0 30 20"
+                            Visibility="{c:Binding IsAllowChangeRule, UpdateSourceTrigger=PropertyChanged}">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="30"/>
@@ -311,11 +310,11 @@
                  IsEnabled="{c:Binding IsAllowDecentralization, UpdateSourceTrigger=PropertyChanged}">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="20"/>
                     <RowDefinition Height="auto"/>
-                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="20"/>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="20"/>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
                 <Grid

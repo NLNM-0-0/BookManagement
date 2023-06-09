@@ -59,6 +59,7 @@
           <Property Name="MaSach" Type="varchar" MaxLength="8" Nullable="false" />
           <Property Name="MaPhieuNhap" Type="varchar" MaxLength="8" Nullable="false" />
           <Property Name="SoLuong" Type="int" Nullable="false" />
+          <Property Name="DonGiaNhap" Type="money" Nullable="false" />
         </EntityType>
         <EntityType Name="CHITIETTACGIA">
           <Key>
@@ -165,7 +166,7 @@
           <Property Name="MaDauSach" Type="varchar" MaxLength="8" />
           <Property Name="NhaXuatBan" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="SoLuong" Type="int" />
-          <Property Name="DonGiaNhap" Type="money" Nullable="false" />
+          <Property Name="DonGiaNhapMoiNhat" Type="money" Nullable="false" />
         </EntityType>
         <EntityType Name="TACGIA">
           <Key>
@@ -688,6 +689,7 @@
           <Property Name="MaSach" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="false" />
           <Property Name="MaPhieuNhap" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="false" />
           <Property Name="SoLuong" Type="Int32" Nullable="false" />
+          <Property Name="DonGiaNhap" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
           <NavigationProperty Name="PHIEUNHAPSACH" Relationship="WPFBookManagementModel.FK__CHITIETPH__MaPhi__5CD6CB2B" FromRole="CHITIETPHIEUNHAP" ToRole="PHIEUNHAPSACH" />
           <NavigationProperty Name="SACH" Relationship="WPFBookManagementModel.FK__CHITIETPH__MaSac__5BE2A6F2" FromRole="CHITIETPHIEUNHAP" ToRole="SACH" />
         </EntityType>
@@ -800,7 +802,7 @@
           <Property Name="MaDauSach" Type="String" MaxLength="8" FixedLength="false" Unicode="false" />
           <Property Name="NhaXuatBan" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="SoLuong" Type="Int32" />
-          <Property Name="DonGiaNhap" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="DonGiaNhapMoiNhat" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
           <NavigationProperty Name="CHITIETBAOCAOTONs" Relationship="WPFBookManagementModel.FK__CHITIETBA__MaSac__6A30C649" FromRole="SACH" ToRole="CHITIETBAOCAOTON" />
           <NavigationProperty Name="CHITIETHOADONs" Relationship="WPFBookManagementModel.FK__CHITIETHO__MaSac__6477ECF3" FromRole="SACH" ToRole="CHITIETHOADON" />
           <NavigationProperty Name="CHITIETPHIEUNHAPs" Relationship="WPFBookManagementModel.FK__CHITIETPH__MaSac__5BE2A6F2" FromRole="SACH" ToRole="CHITIETPHIEUNHAP" />
@@ -1086,6 +1088,7 @@
           <EntitySetMapping Name="CHITIETPHIEUNHAPs">
             <EntityTypeMapping TypeName="WPFBookManagementModel.CHITIETPHIEUNHAP">
               <MappingFragment StoreEntitySet="CHITIETPHIEUNHAP">
+                <ScalarProperty Name="DonGiaNhap" ColumnName="DonGiaNhap" />
                 <ScalarProperty Name="SoLuong" ColumnName="SoLuong" />
                 <ScalarProperty Name="MaPhieuNhap" ColumnName="MaPhieuNhap" />
                 <ScalarProperty Name="MaSach" ColumnName="MaSach" />
@@ -1184,7 +1187,7 @@
           <EntitySetMapping Name="SACHes">
             <EntityTypeMapping TypeName="WPFBookManagementModel.SACH">
               <MappingFragment StoreEntitySet="SACH">
-                <ScalarProperty Name="DonGiaNhap" ColumnName="DonGiaNhap" />
+                <ScalarProperty Name="DonGiaNhapMoiNhat" ColumnName="DonGiaNhapMoiNhat" />
                 <ScalarProperty Name="SoLuong" ColumnName="SoLuong" />
                 <ScalarProperty Name="NhaXuatBan" ColumnName="NhaXuatBan" />
                 <ScalarProperty Name="MaDauSach" ColumnName="MaDauSach" />

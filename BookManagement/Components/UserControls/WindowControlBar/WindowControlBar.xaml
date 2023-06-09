@@ -68,7 +68,7 @@
             <!--Drag Area-->
             <Grid x:Name="TitleBarContainer" Background="Transparent">
                 <Label
-                    Height="auto" Content="BUKU"
+                    Height="auto" Content="BUUK"
                     Margin="15 0"
                     FontSize="{StaticResource FontSize14}"
                         FontWeight="Regular"

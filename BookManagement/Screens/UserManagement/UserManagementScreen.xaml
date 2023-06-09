@@ -8,7 +8,8 @@
              xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
              xmlns:local="clr-namespace:BookManagement"
              mc:Ignorable="d" 
-             d:DesignHeight="900" d:DesignWidth="1440">
+             d:DesignHeight="900" d:DesignWidth="1440"
+             Background="White">
     <UserControl.Resources>
         <local:BindingProxy x:Key="proxy" Data="{Binding}"/>
         <local:FalsesToTrueConverters x:Key="FalsesToTrueConverters"/>
@@ -45,7 +46,7 @@
 
                 <Grid 
                     Grid.Row="0"
-                    Margin="0 50 0 30">
+                    Margin="0 40 0 20">
                     <DockPanel>
                         <Button 
                             DockPanel.Dock="Right"
@@ -78,7 +79,7 @@
                                 SelectedItem="{Binding SearchBy}"
                                 ItemsSource="{Binding SearchByOptions}"
                                 Style="{StaticResource MaterialDesignFloatingHintComboBox}"
-                                materialDesign:HintAssist.Hint="Search by">
+                                materialDesign:HintAssist.Hint="Tìm kiếm bằng">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="SelectionChanged">
                                         <i:InvokeCommandAction Command="{Binding SearchCommand}"/>
@@ -94,7 +95,7 @@
                     Text="* Bạn hiện không có quyền tra cứu nhân viên. Hãy liên hệ với người có quyền hành để được giải quyết."
                     FontSize="{StaticResource FontSize16}"
                     Foreground="{StaticResource ErrorColorBrush}"
-                    Margin="0 0 0 30"
+                    Margin="0 0 0 20"
                     Visibility="{c:Binding '!IsAllowSearchUser', UpdateSourceTrigger=PropertyChanged, FalseToVisibility=Collapsed}"/>
                 <StackPanel Grid.Row="2" 
                             Orientation="Horizontal" 
@@ -112,7 +113,7 @@
                 <ScrollViewer
                     x:Name="grid" 
                     Grid.Row="3" 
-                    Margin="0 30 0 0"
+                    Margin="0 20 0 0"
                     Background="{StaticResource WhiteColorBrush}"
                     HorizontalScrollBarVisibility="Auto" 
                     ScrollViewer.CanContentScroll="True">
@@ -245,10 +246,10 @@
                                         <Label>
                                             <Hyperlink
                                                 Foreground="#4B8CDE"
-                                                Command="{Binding RelativeSource={RelativeSource AncestorType=local:UserManagementScreen}, Path=DataContext.ShowPasswordCommand, UpdateSourceTrigger=PropertyChanged}"
+                                                Command="{Binding RelativeSource={RelativeSource AncestorType=local:UserManagementScreen}, Path=DataContext.ResetPasswordCommand, UpdateSourceTrigger=PropertyChanged}"
                                                 CommandParameter="{Binding}">
                                                 <TextBlock
-                                                    Text="Xem">
+                                                    Text="Reset">
                                                 </TextBlock>
                                             </Hyperlink>
                                         </Label>
@@ -273,7 +274,7 @@
             <StackPanel 
                 HorizontalAlignment="Center" 
                 Width="600"
-                Margin="0 50">
+                Margin="0 40">
                 <PasswordBox 
                     x:Name="CurrentPW"
                     Margin="0 0 0 30"
@@ -283,6 +284,8 @@
                     Width="auto"
                     FontSize="{StaticResource FontSize16}"
                     HorizontalContentAlignment="Stretch"
+                    materialDesign:TextFieldAssist.CharacterCounterVisibility="Visible"
+                    MaxLength="100"
                     materialDesign:HintAssist.HelperText="">
                     <materialDesign:PasswordBoxAssist.Password>
                         <Binding Path="CurrentPassword" UpdateSourceTrigger="PropertyChanged">
@@ -301,6 +304,8 @@
                     materialDesign:TextFieldAssist.HasClearButton="True"
                     Width="auto"
                     FontSize="{StaticResource FontSize16}"
+                    MaxLength="100"
+                    materialDesign:TextFieldAssist.CharacterCounterVisibility="Visible"
                     HorizontalContentAlignment="Stretch"
                     materialDesign:HintAssist.HelperText="">
                     <materialDesign:PasswordBoxAssist.Password>
@@ -319,7 +324,9 @@
                     materialDesign:HintAssist.Hint="Confirm New Password"
                     materialDesign:TextFieldAssist.HasClearButton="True"
                     Width="auto"
+                    MaxLength="100"
                     FontSize="{StaticResource FontSize16}"
+                    materialDesign:TextFieldAssist.CharacterCounterVisibility="Visible"
                     HorizontalContentAlignment="Stretch"
                     materialDesign:HintAssist.HelperText="">
                     <materialDesign:PasswordBoxAssist.Password>

@@ -89,11 +89,14 @@ namespace BookManagement
             set
             {
                 userGroup = value;
-                InitAccessList = updateAccessList();
-                AccessList.Clear();
-                foreach (AccessItem item in InitAccessList)
+                if(userGroup != null)
                 {
-                    AccessList.Add((AccessItem)item.Clone());
+                    InitAccessList = updateAccessList();
+                    AccessList.Clear();
+                    foreach (AccessItem item in InitAccessList)
+                    {
+                        AccessList.Add((AccessItem)item.Clone());
+                    }
                 }
                 OnPropertyChanged();
             }
@@ -166,14 +169,6 @@ namespace BookManagement
         {
             MainViewModel.IsLoading = true;
             AccountStore.instance.AccountReLoad += Instance_AccountReLoad;
-            if(!IsAllowChangeRule)
-            {
-                SelectedPage = 1;
-            }    
-            else
-            {
-                SelectedPage = 0;
-            }
             updateRuleProperty();
             Task.Run(async () =>
             {
@@ -210,7 +205,7 @@ namespace BookManagement
                     }
                     MainViewModel.SetLoading(false);
                 });
-                BackToPreviousRuleCommand = new RelayCommandWithNoParameter(async () =>
+                BackToPreviousRuleCommand = new RelayCommandWithNoParameter(() =>
                 {
                     MainViewModel.SetLoading(true);
                     updateRuleProperty();
@@ -227,7 +222,7 @@ namespace BookManagement
                             var dl = new ConfirmDialog()
                             {
                                 Header = "Oops",
-                                ContentString = $"Không thể thực hiện chức năng này. Ngoài nhóm người dùng {userGroup.TenNhomNguoiDung}, không nhóm người dùng nào khác có thể phân quyền.",
+                                ContentString = $"Không thể thực hiện chức năng này. Ngoài nhóm người dùng {userGroup.TenNhomNguoiDung}, không nhóm người dùng nào khác còn có thể phân quyền.",
                             };
                             MainViewModel.SetLoading(false);
                             await DialogHost.Show(dl, "Main");
@@ -256,12 +251,8 @@ namespace BookManagement
                             await UserGroupAccessAPI.Add(userGroup.MaNhomNguoiDung, initAccess.Access.MaChucNang);
                         }
                     }
-                    InitAccessList.Clear();
-                    foreach (AccessItem item in accessList)
-                    {
-                        InitAccessList.Add((AccessItem)item.Clone());
-                    }
-                    if(AccountStore.instance.CurrentAccount.MaNhomNguoiDung == userGroup.MaNhomNguoiDung)
+                    await Load();
+                    if (AccountStore.instance.CurrentAccount.MaNhomNguoiDung == userGroup.MaNhomNguoiDung)
                     {
                         await AccountStore.instance.Reload();
                     }    
@@ -301,14 +292,7 @@ namespace BookManagement
         {
             OnPropertyChanged(nameof(IsAllowChangeRule));
             OnPropertyChanged(nameof(IsAllowDecentralization));
-            if (!IsAllowChangeRule)
-            {
-                SelectedPage = 1;
-            }
-            else if(!IsAllowDecentralization)
-            {
-                SelectedPage = 0;
-            }
+            SelectedPage = 0;
         }
 
         private ObservableCollection<AccessItem> updateAccessList()

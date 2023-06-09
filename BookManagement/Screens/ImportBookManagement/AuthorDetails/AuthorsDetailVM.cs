@@ -86,7 +86,7 @@ namespace BookManagement
             {
                 FilterAuthors.Remove(p);
             });
-            AddAuthorCommand = new RelayCommand<object>(p => SelectedAuthorString.Length > 0, async(p) =>
+            AddAuthorCommand = new RelayCommand<object>(p => !String.IsNullOrEmpty(SelectedAuthorString), async(p) =>
             {
                 if(!FilterAuthors.Any(a => a.TenTacGia == SelectedAuthorString))
                 {
@@ -96,7 +96,7 @@ namespace BookManagement
                     }    
                     else
                     {
-                        FilterAuthors.Insert(0, new TACGIA() { TenTacGia = SelectedAuthorString });
+                        FilterAuthors.Insert(0, new TACGIA() { TenTacGia = SelectedAuthorString.Trim() });
                     }    
                 }    
                 else

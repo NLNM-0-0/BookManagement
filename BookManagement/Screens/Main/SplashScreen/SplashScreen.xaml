@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BookManagement"
         mc:Ignorable="d"
-        Title="BUKU" 
-        Icon="..\..\..\Assets\Icons\BUKU.png"
+        Title="BUUK" 
+        Icon="..\..\..\Assets\Icons\BUUK.png"
         Height="766" Width="1200"
         d:Background="White"
         WindowStyle="None"
@@ -22,7 +22,7 @@
         </ResourceDictionary>
     </Window.Resources>
     <StackPanel>
-        <TextBlock Text="B U K U" 
+        <TextBlock Text="B U U K" 
                    FontSize="100" 
                    HorizontalAlignment="Center" 
                    Margin="0 169 0 0" 

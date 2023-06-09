@@ -24,7 +24,7 @@ namespace BookManagement {
             //Set service
             //setup Transient ViewModel
             #region Shop
-            services.AddTransient<HomeScreenVM>();
+            services.AddTransient<ReportScreenVM>();
             services.AddTransient<SaleBookScreenVM>();
             services.AddTransient<BookManagementScreenVM>();
             services.AddTransient<BillManagementScreenVM>();

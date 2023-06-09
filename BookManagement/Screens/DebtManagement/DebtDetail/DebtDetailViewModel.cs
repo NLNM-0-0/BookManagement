@@ -1,7 +1,6 @@
 ﻿
 
 using BookManagement.Models;
-using DocumentFormat.OpenXml.Wordprocessing;
 using MaterialDesignThemes.Wpf;
 using System;
 using System.Collections.Generic;
@@ -173,7 +172,10 @@ namespace BookManagement
         private async Task Load()
         {
             KhachHang = await khRepo.GetSingleAsync(k => k.MaKhachHang == maKH, k => k.PHIEUTHUNOes);
-            allPhieuThu = new List<PHIEUTHUNO>(await ptRepo.GetListAsync(p=>p.MaKhachHang==maKH, p=>p.NHANVIEN));
+            allPhieuThu = new List<PHIEUTHUNO>((await ptRepo.GetListAsync(
+                p=>p.MaKhachHang==maKH, 
+                p=>p.NHANVIEN, 
+                p=>p.KHACHHANG)).OrderByDescending(p => p.NgayThu));
             ListPhieuThu = new ObservableCollection<PHIEUTHUNO>(allPhieuThu);
         }
     }

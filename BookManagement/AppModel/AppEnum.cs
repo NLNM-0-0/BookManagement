@@ -22,10 +22,11 @@ namespace BookManagement
         public static readonly string TraCuuPhieuThuTien = "cn08";
         public static readonly string TraCuuPhieuNhapSach = "cn09";
         public static readonly string LuuThongTinKhachHang = "cn10";
-        public static readonly string ThayDoiMatKhau = "cn11";
-        public static readonly string TraCuuNhanVien = "cn12";
-        public static readonly string ThemNguoiDung = "cn13";
-        public static readonly string ThayDoiQuiDinh = "cn14";
+        public static readonly string TraCuukhachHang = "cn11";
+        public static readonly string ThayDoiMatKhau = "cn12";
+        public static readonly string TraCuuNhanVien = "cn13";
+        public static readonly string ThemNguoiDung = "cn14";
+        public static readonly string ThayDoiQuiDinh = "cn15";
         //enum cho QUIDINH
         public static readonly string LuongSachNhapItNhat = "LuongSachNhapItNhat";
         public static readonly string LuongTonToiDaKhiNhap = "LuongTonToiDaKhiNhap";

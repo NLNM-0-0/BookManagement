@@ -44,11 +44,11 @@
     </UserControl.Resources>
     <ScrollViewer>
         <Grid
-            Margin="50 0">
+            Margin="40 0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="30"/>
+                <RowDefinition Height="20"/>
                 <RowDefinition Height="auto"/>
-                <RowDefinition Height="30"/>
+                <RowDefinition Height="20"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="auto"/>
@@ -69,10 +69,6 @@
                 Text="Phiếu nhập sách"
                 FontSize="{StaticResource FontSize34}"
                 HorizontalAlignment="Center"/>
-            <!--<Grid
-                Grid.Row="3">
-                
-            </Grid>-->
             <StackPanel
                     Grid.Row="3"
                     Orientation="Horizontal">
@@ -84,7 +80,7 @@
                         Text="Thông tin cơ bản"
                         VerticalAlignment="Center"
                         HorizontalAlignment="Left"
-                        FontWeight="DemiBold"
+                        FontWeight="SemiBold"
                         FontSize="{StaticResource FontSize24}"/>
             </StackPanel>
             <Grid
@@ -98,13 +94,13 @@
                 </Grid.ColumnDefinitions>
                 <TextBox 
                     Grid.Column="0"
-                    Margin="0 0 30 0"
+                    Margin="0 0 20 0"
                     Text="{Binding SelectedImportPage.MaPhieuNhap, UpdateSourceTrigger=PropertyChanged}"
                     Width="auto"
                     FontSize="{StaticResource FontSize16}"
                     Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                    materialDesign:HintAssist.Hint="Id"
-                    IsEnabled="False"/>
+                    materialDesign:HintAssist.Hint="Mã phiếu nhập"
+                    IsReadOnly="True"/>
                 <TextBox 
                     Grid.Column="1"
                     Text="{Binding SelectedImportPage.NHANVIEN.TenNhanVien, UpdateSourceTrigger=PropertyChanged}"
@@ -112,7 +108,7 @@
                     FontSize="{StaticResource FontSize16}"
                     Style="{StaticResource MaterialDesignOutlinedTextBox}"
                     materialDesign:HintAssist.Hint="Tên nhân viên"
-                    IsEnabled="False"/>
+                    IsReadOnly="True"/>
             </Grid>
             <Grid
                 Grid.Row="6">
@@ -120,18 +116,14 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="3*"/>
                 </Grid.ColumnDefinitions>
-                <DatePicker
+                <TextBox 
                     Grid.Column="0"
-                    Style="{StaticResource OurDatePicker}"
-                    materialDesign:HintAssist.Hint="Ngày nhập"
-                    VerticalAlignment="Center"
-                    HorizontalAlignment="Stretch"
-                    FontSize="{StaticResource FontSize16}"
-                    SelectedDate="{Binding SelectedDate, UpdateSourceTrigger=PropertyChanged}"
-                    IsEnabled="False"
+                    Text="{Binding SelectedDate, UpdateSourceTrigger=PropertyChanged, Converter={x:Static local:DateTimeToShortConverter.Instance}}"
                     Width="auto"
-                    Background="{StaticResource WhiteColorBrush}">
-                </DatePicker>
+                    FontSize="{StaticResource FontSize16}"
+                    Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                    materialDesign:HintAssist.Hint="Ngày nhập"
+                    IsReadOnly="True"/>
             </Grid>
             <StackPanel
                 Grid.Row="8"
@@ -144,7 +136,7 @@
                     Text="Thông tin sách"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Left"
-                    FontWeight="DemiBold"
+                    FontWeight="SemiBold"
                     FontSize="{StaticResource FontSize24}"/>
             </StackPanel>
             <Grid
@@ -171,9 +163,10 @@
                         SelectedValuePath="Content"
                         SelectedValue="{Binding SearchBy, UpdateSourceTrigger=PropertyChanged}">
                         <ComboBoxItem Content="Id" Visibility="{c:Binding '!(DataContext.IsNew)', Source={x:Reference dummyElement}, UpdateSourceTrigger=PropertyChanged}"/>
-                        <ComboBoxItem Content="Tên"/>
+                        <ComboBoxItem Content="Tên sách"/>
                         <ComboBoxItem Content="Tác giả"/>
                         <ComboBoxItem Content="Thể loại"/>
+                        <ComboBoxItem Content="NXB"/>
                     </ComboBox>
                     <Grid Grid.Column="1">
                         <TextBox 
@@ -265,7 +258,7 @@
             </Grid>
             <TextBlock
                 Grid.Row="12"
-                Text="Lưu ý: Hệ thống cho phép tồn tại sách có cùng tên và nhà xuất bản."
+                Text="Lưu ý: Hệ thống cho phép tồn tại sách có cùng tên và nhà xuất bản. Mỗi đầu sách chỉ tương ứng 1 thể loại và 1 nhóm tác giả."
                 FontSize="{StaticResource FontSize16}"
                 TextWrapping="Wrap"
                 Margin="0 0 0 15"
@@ -275,7 +268,7 @@
             <FrameworkElement x:Name="dummyElement" Visibility="Collapsed"/>
             <!--- -->
             <DataGrid
-                Grid.Row="13"
+                Grid.Row="15"
                 ItemsSource="{Binding FilterImportDetails, UpdateSourceTrigger=PropertyChanged}" 
                 AutoGenerateColumns="False"
                 CanUserReorderColumns="False" 
@@ -283,7 +276,7 @@
                 CanUserDeleteRows="False" 
                 CanUserResizeColumns="False"
                 IsReadOnly="True"
-                Height="500">
+                VerticalScrollBarVisibility="Disabled">
                 <DataGrid.Columns>
                     <DataGridTextColumn 
                         Header="ID" 
@@ -363,7 +356,7 @@
                         Width="2*" 
                         HeaderStyle="{StaticResource RightHeader}"
                         CellStyle="{StaticResource RightCell}"
-                        Binding="{Binding SACH.DonGiaNhap, Converter={x:Static local:DecimalToMoneyConveter.Instance}}">
+                        Binding="{Binding DonGiaNhap, Converter={x:Static local:DecimalToMoneyConveter.Instance}}">
                         <DataGridTextColumn.ElementStyle>
                             <Style>
                                 <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
@@ -377,7 +370,7 @@
                         CellStyle="{StaticResource RightCell}">
                         <DataGridTextColumn.Binding>
                             <MultiBinding Converter="{x:Static local:NumberAndUnitPriceToTotalPriceConverter.Instance}">
-                                <Binding Path="SACH.DonGiaNhap"/>
+                                <Binding Path="DonGiaNhap"/>
                                 <Binding Path="SoLuong"/>
                             </MultiBinding>
                         </DataGridTextColumn.Binding>
@@ -411,7 +404,7 @@
                 </DataGrid.Columns>
             </DataGrid>
             <Grid
-                Grid.Row="15">
+                Grid.Row="13">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="auto"/>
@@ -419,12 +412,11 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock
                     Grid.Column="1"
-                    FontWeight="DemiBold"
+                    FontWeight="SemiBold"
                     FontSize="{StaticResource FontSize18}"
                     Text="Tổng tiền: "/>
                 <TextBlock 
                     Grid.Column="2"
-                    FontWeight="DemiBold"
                     FontSize="{StaticResource FontSize18}"
                     Text="{Binding TotalPrice, Converter={x:Static local:DecimalToMoneyConveter.Instance}}"/>
             </Grid>

@@ -14,9 +14,9 @@ namespace BookManagement
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             if (values == null || values.Length != 2) return null;
-            int amount = (int)values[0];
-            decimal unitMoney = (decimal)values[1];
-            decimal money = unitMoney * amount;
+            decimal value1 = Decimal.Parse(values[0].ToString());
+            decimal value2 = Decimal.Parse(values[1].ToString());
+            decimal money = value1 * value2;
             if (money == 0)
             {
                 return "0 đ";

@@ -4,39 +4,82 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BookManagement"
-             mc:Ignorable="d" 
-             d:DesignHeight="100" d:DesignWidth="300">
-    <StackPanel Background="White">
-        <TextBlock Text="Teen"
-                   FontSize="{StaticResource FontSize16}"
-                   FontWeight="Bold"
-                   Margin="10">
+             mc:Ignorable="d">
+    <StackPanel 
+        Background="White"
+        Margin="10">
+        <Grid
+            Margin="0 0 0 5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="5"/>              
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock 
+                    Grid.Row="0"
+                    Text="{Binding BillDetail.SACH.DAUSACH.TenSach,UpdateSourceTrigger=PropertyChanged}"
+                    FontSize="{StaticResource FontSize16}"
+                    FontWeight="SemiBold"
+                    TextWrapping="Wrap"/>
+                <TextBlock 
+                    Grid.Row="2"
+                    Text="{Binding BillDetail.SACH.NhaXuatBan,UpdateSourceTrigger=PropertyChanged}"
+                    FontSize="{StaticResource FontSize16}"
+                    Foreground="{StaticResource BlurColorBrush}"
+                    TextWrapping="Wrap"/>
+            </Grid>
             
-        </TextBlock>
+            <Button
+                Grid.Column="1"
+                Content="x"
+                Width="40"
+                Style="{StaticResource TransparentButton}"
+                Foreground="{StaticResource ErrorColorBrush}"
+                Command="{Binding RelativeSource={RelativeSource AncestorType=local:SaleBookScreen, Mode=FindAncestor},Path=DataContext.DeleteCommand}"
+                CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}, Path=DataContext}"/>
+        </Grid>
+        
+
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*"/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="40"/>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="40"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Text="Gia"
-                   FontSize="{StaticResource FontSize14}"
-                   Margin="10"
-                   Grid.Column="0">
+            <TextBlock 
+                Text="{Binding BillDetail.DonGia, UpdateSourceTrigger=PropertyChanged, Converter={x:Static local:DecimalToMoneyConveter.Instance}}"
+                FontSize="{StaticResource FontSize16}"
+                Grid.Column="0"
+                VerticalAlignment="Center">
             </TextBlock>
-            <Button Grid.Column="1"
-                    Content="-"
-                    Style="{StaticResource TransparentButton}">
+            <Button 
+                Grid.Column="1"
+                Content="-"
+                Width="auto"
+                Style="{StaticResource ButtonRectangle}"
+                Command="{Binding RelativeSource={RelativeSource AncestorType=local:SaleBookScreen, Mode=FindAncestor},Path=DataContext.DecreaseAmountCommand}"
+                CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}, Path=DataContext}">
             </Button>
-            <TextBlock Text="Amount"
-                   FontSize="{StaticResource FontSize14}"
-                   Margin="10"
-                   Grid.Column="2">
+            <TextBlock 
+                Text="{Binding SoLuong,UpdateSourceTrigger=PropertyChanged}"
+                FontSize="{StaticResource FontSize16}"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+                Grid.Column="2">
             </TextBlock>
-            <Button Grid.Column="3"
-                    Content="+"
-                    Style="{StaticResource TransparentButton}">
+            <Button 
+                Grid.Column="3"
+                Content="+"
+                Width="auto"
+                Style="{StaticResource ButtonRectangle}"
+                Command="{Binding RelativeSource={RelativeSource AncestorType=local:SaleBookScreen, Mode=FindAncestor},Path=DataContext.IncreaseAmountCommand}"
+                CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}, Path=DataContext}">
             </Button>
         </Grid>
     </StackPanel>

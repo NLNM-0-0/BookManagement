@@ -71,17 +71,17 @@
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="20"/>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="20"/>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="20"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
         <Grid 
-            Margin="50 0" 
+            Margin="40 0" 
             Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -145,7 +145,7 @@
             
         </Grid>
         <Border Background="{StaticResource BackgroundColorBrush}"
-                Padding="50 30"
+                Padding="40 20"
                 Grid.Row="3">
             <Grid>
                 <Grid>
@@ -292,7 +292,7 @@
             Text="* Bạn hiện không có quyền tra cứu phiếu nhập sách. Hãy liên hệ với người có quyền hành để được giải quyết."
             FontSize="{StaticResource FontSize16}"
             Foreground="{StaticResource ErrorColorBrush}"
-            Margin="50 0 0 30"
+            Margin="40 0 0 20"
             Visibility="{c:Binding '!IsAllowSearchImport', UpdateSourceTrigger=PropertyChanged, FalseToVisibility=Collapsed}"/>
         <DataGrid
             Grid.Row="6"
@@ -302,7 +302,7 @@
             CanUserAddRows="False"
             CanUserDeleteRows="False"   
             IsReadOnly="True"
-            Margin="50 0">
+            Margin="40 0">
             <DataGrid.Columns>
                 <DataGridTextColumn 
                     Header="ID" 

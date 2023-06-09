@@ -9,13 +9,13 @@ namespace BookManagement
 {
     public class ImportDetailAPI
     {
-        public static async Task<bool> Add(string bookId, string importId, int number)
+        public static async Task<bool> Add(string bookId, string importId, int number, decimal unitImportPrice)
         {
             bool res = true;
             await Task.Run(() => {
                 using (var context = new WPFBookManagementEntities())
                 {
-                    var sql = $"insert into dbo.CHITIETPHIEUNHAP values ('{bookId}', '{importId}', {number})";
+                    var sql = $"insert into dbo.CHITIETPHIEUNHAP values ('{bookId}', '{importId}', {number}, {unitImportPrice})";
                     try
                     {
                         context.Database.ExecuteSqlCommand(sql);

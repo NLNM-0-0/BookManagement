@@ -1,0 +1,331 @@
+﻿<UserControl x:Class="BookManagement.BillDetail"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BookManagement"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
+             mc:Ignorable="d" >
+    <UserControl.Resources>
+        <local:OrderToSubtotalConverter x:Key="OrderToSubtotalConverter"/>
+    </UserControl.Resources>
+    <ScrollViewer>
+        <Grid
+            Margin="40 0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="30"/>
+            </Grid.RowDefinitions>
+            <Grid
+                Grid.Row="1"
+                VerticalAlignment="Stretch">
+                <TextBlock 
+                    Text="Chi tiết hóa đơn"
+                    TextAlignment="Center"
+                    FontSize="{StaticResource FontSize34}"/>
+            </Grid>
+
+            <Grid
+                Grid.Row="3">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <StackPanel
+                    Grid.Row="0"
+                    Orientation="Horizontal">
+                    <Grid
+                        Background="{DynamicResource PrimaryHueMidBrush}"
+                        Width="10"
+                        Margin="0 0 10 0"/>
+                    <TextBlock
+                        Text="Thông tin cơ bản"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Left"
+                        FontWeight="SemiBold"
+                        FontSize="{StaticResource FontSize24}"/>
+                </StackPanel>
+                <Grid
+                    Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox 
+                        Grid.Column="0"
+                        Text="{Binding HoaDon.MaHoaDon, UpdateSourceTrigger=PropertyChanged}"
+                        Width="auto"
+                        FontSize="{StaticResource FontSize16}"
+                        Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                        materialDesign:HintAssist.Hint="Mã hóa đơn"
+                        IsReadOnly="True"/>
+                    <TextBox 
+                        Grid.Column="2"
+                        Text="{Binding HoaDon.NgayLapHoaDon, UpdateSourceTrigger=PropertyChanged,Converter={x:Static local:DateTimeToShortConverter.Instance}}"
+                        Width="auto"
+                        FontSize="{StaticResource FontSize16}"
+                        Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                        materialDesign:HintAssist.Hint="Ngày lập hóa đơn"
+                        IsReadOnly="True"/>
+                </Grid>
+            </Grid>
+
+            <Grid
+                Grid.Row="5"
+                Margin="0 0 0 30"
+                Visibility="{c:Binding 'KhachHang != null'}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <StackPanel
+                    Grid.Row="0"
+                    Orientation="Horizontal">
+                    <Grid
+                        Background="{DynamicResource PrimaryHueMidBrush}"
+                        Width="10"
+                        Margin="0 0 10 0"/>
+                    <TextBlock
+                        Text="Thông tin khách hàng"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Left"
+                        FontWeight="SemiBold"
+                        FontSize="{StaticResource FontSize24}"/>
+                </StackPanel>
+                <Grid
+                    Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox 
+                        Grid.Column="0"
+                        Text="{Binding KhachHang.TenKhachHang, UpdateSourceTrigger=PropertyChanged}"
+                        Width="auto"
+                        FontSize="{StaticResource FontSize16}"
+                        Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                        materialDesign:HintAssist.Hint="Tên khách hàng"
+                        IsReadOnly="True"/>
+                </Grid>
+                <Grid
+                    Grid.Row="4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="30"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <TextBox 
+                        Grid.Column="0"
+                        Text="{Binding KhachHang.DienThoai, UpdateSourceTrigger=PropertyChanged}"
+                        Width="auto"
+                        FontSize="{StaticResource FontSize16}"
+                        Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                        materialDesign:HintAssist.Hint="Ngày mua"
+                        IsReadOnly="True"/>
+                    <TextBox 
+                        Grid.Column="2"
+                        Text="{Binding KhachHang.DiaChi, UpdateSourceTrigger=PropertyChanged}"
+                        Width="auto"
+                        FontSize="{StaticResource FontSize16}"
+                        Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                        materialDesign:HintAssist.Hint="Địa chỉ"
+                        IsReadOnly="True"/>
+                </Grid>
+            </Grid>
+
+            <Grid
+                Grid.Row="6">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <StackPanel
+                    Grid.Row="0"
+                    Orientation="Horizontal">
+                    <Grid
+                        Background="{DynamicResource PrimaryHueMidBrush}"
+                        Width="10"
+                        Margin="0 0 10 0"/>
+                    <TextBlock
+                        Text="Danh sách sản phẩm"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Left"
+                        FontWeight="SemiBold"
+                        FontSize="{StaticResource FontSize24}"/>
+                </StackPanel>
+                <DataGrid 
+                    Grid.Row="2"
+                    ItemsSource="{Binding ListBillDetail}"
+                    VerticalScrollBarVisibility="Disabled"
+                    AutoGenerateColumns="False"
+                    ScrollViewer.CanContentScroll="False"
+                    CanUserReorderColumns="False" CanUserAddRows="False"
+                    CanUserDeleteRows="False" IsReadOnly="True"
+                    CanUserResizeColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn 
+                            Header="Mã sách" 
+                            HeaderStyle="{StaticResource CenterHeader}"
+                            CellStyle="{StaticResource CenterCell}"
+                            Width="1.5*"
+                            Binding="{Binding MaSach}">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style>
+                                    <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn 
+                            Header="Tên sách" 
+                            HeaderStyle="{StaticResource LeftHeader}"
+                            CellStyle="{StaticResource LeftCell}"
+                            Width="4*" 
+                            Binding="{Binding SACH.DAUSACH.TenSach}">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style>
+                                    <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn 
+                            Header="Nhà xuất bản" 
+                            HeaderStyle="{StaticResource LeftHeader}"
+                            CellStyle="{StaticResource LeftCell}"
+                            Width="2*" 
+                            Binding="{Binding SACH.NhaXuatBan}">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style>
+                                    <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn 
+                            Header="Số lượng" 
+                            HeaderStyle="{StaticResource RightHeader}"
+                            CellStyle="{StaticResource RightCell}"
+                            Width="2*" 
+                            Binding="{Binding SoLuong}">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style>
+                                    <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn 
+                            Header="Đơn giá" 
+                            HeaderStyle="{StaticResource RightHeader}"
+                            CellStyle="{StaticResource RightCell}"
+                            Width="2*" 
+                            Binding="{Binding DonGia, Converter={x:Static local:DecimalToMoneyConveter.Instance}}">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style>
+                                    <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn 
+                            Header="Tổng tiền" 
+                            HeaderStyle="{StaticResource RightHeader}"
+                            CellStyle="{StaticResource RightCell}"
+                            Width="2*">
+                            <DataGridTextColumn.Binding>
+                                <Binding Converter="{StaticResource OrderToSubtotalConverter}"/>
+                            </DataGridTextColumn.Binding>
+                            <DataGridTextColumn.ElementStyle>
+                                <Style>
+                                    <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <Grid
+                    Grid.Row="4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid
+                        Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition
+                                Width="auto"/>
+                            <ColumnDefinition
+                                Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <TextBlock
+                            Grid.Column="0"
+                            Grid.Row="0"
+                            Margin="0 0 0 15"
+                            Text="Tổng tiền: "
+                            FontWeight="SemiBold"
+                            FontSize="{StaticResource FontSize18}"/>
+                        <TextBlock
+                            Grid.Column="1"
+                            Grid.Row="0"
+                            Margin="0 0 0 15"
+                            HorizontalAlignment="Right"
+                            Text="{Binding HoaDon.TongTien,UpdateSourceTrigger=PropertyChanged, Converter={x:Static local:DecimalToMoneyConveter.Instance}}"
+                            FontSize="{StaticResource FontSize18}"/>
+                        <TextBlock
+                            Grid.Column="0"
+                            Grid.Row="1"
+                            Margin="0 0 0 15"
+                            Text="Số tiền nợ: "
+                            Visibility="{c:Binding 'HoaDon.SoTienNo != 0'}"
+                            FontWeight="SemiBold"
+                            FontSize="{StaticResource FontSize18}"/>
+                        <TextBlock
+                            Grid.Column="1"
+                            Grid.Row="1"
+                            Margin="0 0 0 15"
+                            HorizontalAlignment="Right"
+                            Visibility="{c:Binding 'HoaDon.SoTienNo != 0'}"
+                            Text="{Binding HoaDon.SoTienNo, UpdateSourceTrigger=PropertyChanged, Converter={x:Static local:DecimalToMoneyConveter.Instance}}"
+                            FontSize="{StaticResource FontSize18}"/>
+                        <TextBlock
+                            Grid.Column="0"
+                            Grid.Row="2"
+                            Text="Đã trả: "
+                            FontWeight="SemiBold"
+                            Visibility="{c:Binding 'HoaDon.SoTienNo != 0'}"
+                            FontSize="{StaticResource FontSize18}"/>
+                        <TextBlock
+                            Grid.Column="1"
+                            Grid.Row="2"
+                            HorizontalAlignment="Right"
+                            Visibility="{c:Binding 'HoaDon.SoTienNo != 0'}"
+                            Text="{Binding Paid, UpdateSourceTrigger=PropertyChanged, Converter={x:Static local:DecimalToMoneyConveter.Instance}}"
+                            FontSize="{StaticResource FontSize18}"/>
+                    </Grid>
+                </Grid>
+                
+            </Grid>
+        </Grid>
+    </ScrollViewer>
+
+</UserControl>

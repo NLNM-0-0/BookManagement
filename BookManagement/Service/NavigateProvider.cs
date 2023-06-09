@@ -79,8 +79,8 @@ namespace BookManagement {
         }
         static public INavigationService HomeScreen()
         {
-            return new NavigationService<HomeScreenVM>(
-                serviceProvider.GetRequiredService<HomeScreenVM>);
+            return new NavigationService<ReportScreenVM>(
+                serviceProvider.GetRequiredService<ReportScreenVM>);
         }
         static public INavigationService ImportBookManagementScreen()
         {

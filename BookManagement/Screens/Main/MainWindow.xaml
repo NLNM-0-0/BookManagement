@@ -8,7 +8,7 @@
         xmlns:fa= "http://schemas.fontawesome.com/icons/"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
-        Icon="..\..\Assets\Icons\BUKU.png"
+        Icon="..\..\Assets\Icons\BUUK.png"
         Height="950" Width="1440"
         MinWidth="1212.63" MinHeight="800"
         WindowStyle="None"
