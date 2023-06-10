@@ -12,9 +12,6 @@ namespace BookManagement.Screens.SaleBook.AddCustomer
 {
     public class AddCustomerVM : BaseViewModel
     {
-        #region GenericDataRepository
-        private GenericDataRepository<KHACHHANG> customerRepo = new GenericDataRepository<KHACHHANG>();
-        #endregion
         #region Action
         public event Action<KHACHHANG> ClosedDialog;
         #endregion
@@ -25,21 +22,19 @@ namespace BookManagement.Screens.SaleBook.AddCustomer
         #endregion
 
         #region Properties
-        public KHACHHANG NewCustomer { get; set; } = new KHACHHANG();
-        private List<KHACHHANG> customerList;   
+        public KHACHHANG NewCustomer { get; set; } = new KHACHHANG(); 
         private System.Windows.Controls.UserControl PreviousItem;
         #endregion
 
         #region Constructor
-        public AddCustomerVM()
+        public AddCustomerVM(List<KHACHHANG> customers)
         {
-            Task.Run(async () => {
+            Task.Run(() => {
                 MainViewModel.SetLoading(true);
                 NewCustomer.GioiTinh = "Nữ";
                 NewCustomer.DienThoai = "";
                 NewCustomer.TenKhachHang = "";
                 NewCustomer.Email = "";
-                await Load();
 
                 AddCustomerCommand = new RelayCommand<object>((_) => {
                     return !String.IsNullOrEmpty(NewCustomer.DienThoai) &&
@@ -54,7 +49,16 @@ namespace BookManagement.Screens.SaleBook.AddCustomer
 
                     MainViewModel.SetLoading(true);
 
-                    var check = await customerRepo.GetSingleAsync(d => d.DienThoai == NewCustomer.DienThoai);
+                    KHACHHANG check = null;
+                    try
+                    {
+                        check = customers.Single(d => d.DienThoai == NewCustomer.DienThoai);
+                    }
+                    catch
+                    {
+                        //Không có khách hàng trùng số điện thoại hoặc là có 2 khách hàng có sđt trùng
+                    } 
+                    
                     if (check != null)
                     {
                         var dl = new ConfirmDialog()
@@ -86,13 +90,6 @@ namespace BookManagement.Screens.SaleBook.AddCustomer
                 MainViewModel.SetLoading(false);
             });
 
-        }
-        #endregion
-
-        #region Command Define
-        public async Task Load()
-        {
-            customerList = (await customerRepo.GetAllAsync()).ToList();
         }
         #endregion
     }

@@ -283,27 +283,27 @@ namespace BookManagement
         public void Search()
         {
             ICollection<PHIEUNHAPSACH> temp = AllImports.Where(p => {
-                bool checkId = SearchId == null || SearchId == "" || p.MaPhieuNhap.ToLower().Contains(SearchId.Trim().ToLower());
+                bool checkId = String.IsNullOrEmpty(SearchId) || p.MaPhieuNhap.ToLower().Contains(SearchId.Trim().ToLower());
                 if(!checkId)
                 {
                     return false;
                 }    
-                bool checkDate = SearchDate == null || (SearchDate != null && p.NgayNhap.Value.ToShortDateString() == SearchDate.Value.ToShortDateString());
+                bool checkDate = SearchDate == null || (SearchDate != null && p.NgayNhap.Value.Date == SearchDate.Value.Date);
                 if (!checkDate)
                 {
                     return false;
                 }
-                bool checkMinTotalPrice = SearchMinPrice == null || SearchMinPrice == "" || p.TongTien >= decimal.Parse(SearchMinPrice);
+                bool checkMinTotalPrice = String.IsNullOrEmpty(SearchMinPrice) || p.TongTien >= decimal.Parse(SearchMinPrice);
                 if (!checkMinTotalPrice)
                 {
                     return false;
                 }
-                bool checkMaxTotalPrice = SearchMaxPrice == null || SearchMaxPrice == "" || p.TongTien <= decimal.Parse(SearchMaxPrice);
+                bool checkMaxTotalPrice = String.IsNullOrEmpty(SearchMaxPrice) || p.TongTien <= decimal.Parse(SearchMaxPrice);
                 if (!checkMaxTotalPrice)
                 {
                     return false;
                 }
-                bool checkStaffName = SearchStaffName == null || SearchStaffName == "" || p.NHANVIEN.TenNhanVien.ToLower().Contains(SearchStaffName.Trim().ToLower());
+                bool checkStaffName = String.IsNullOrEmpty(SearchStaffName) || Helpers.convertToUnSign3(p.NHANVIEN.TenNhanVien).ToLower().Contains(Helpers.convertToUnSign3(SearchStaffName.Trim()).ToLower());
                 if (!checkStaffName)
                 {
                     return false;

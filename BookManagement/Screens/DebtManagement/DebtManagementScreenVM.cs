@@ -112,12 +112,12 @@ namespace BookManagement
         public void Search()
         {
             ICollection<KHACHHANG> temp = AllCustomers.Where(p => {
-                bool checkId = SearchId == null || SearchId == "" || p.MaKhachHang.ToLower().Contains(SearchId.Trim().ToLower());
+                bool checkId = String.IsNullOrEmpty(SearchId) || p.MaKhachHang.ToLower().Contains(SearchId.Trim().ToLower());
                 if (!checkId)
                 {
                     return false;
                 }
-                bool checkCustomerName = SearchCustomerName == null || SearchCustomerName == "" || p.TenKhachHang.ToLower().Contains(SearchCustomerName.Trim().ToLower());
+                bool checkCustomerName = String.IsNullOrEmpty(SearchCustomerName) || Helpers.convertToUnSign3(p.TenKhachHang).ToLower().Contains(Helpers.convertToUnSign3(SearchCustomerName.Trim()).ToLower());
                 if (!checkCustomerName)
                 {
                     return false;
@@ -127,12 +127,12 @@ namespace BookManagement
                 {
                     return false;
                 }
-                bool checkPhone = SearchPhone == null || SearchPhone == "" || p.DienThoai.Contains(SearchPhone.Trim());
+                bool checkPhone = String.IsNullOrEmpty(SearchPhone) || p.DienThoai.Contains(SearchPhone.Trim());
                 if (!checkPhone)
                 {
                     return false;
                 }
-                bool checkEmail = SearchEmail == null || SearchEmail == "" || p.Email.ToLower().Contains(SearchEmail.Trim().ToLower());
+                bool checkEmail = String.IsNullOrEmpty(SearchEmail) || p.Email.ToLower().Contains(SearchEmail.Trim().ToLower());
                 if (!checkEmail)
                 {
                     return false;

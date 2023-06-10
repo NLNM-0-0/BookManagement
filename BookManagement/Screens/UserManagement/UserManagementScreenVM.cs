@@ -97,7 +97,7 @@ namespace BookManagement
                 {
                     StatusText = "Không hoạt động";
                     FilteredUsers = usersToSearch = bannedUsers;
-                    RemoveOrUnBanned = "Ngưng chặn";
+                    RemoveOrUnBanned = "Bỏ chặn";
                 }
 
                 _isChecked = value;
@@ -296,7 +296,7 @@ namespace BookManagement
                 else if (SearchBy == "Tên")
                 {
                     _lastSearchOption = "Tên";
-                    FilteredUsers = new ObservableCollection<NHANVIEN>(usersToSearch.Where(br => br.TenNhanVien.ToLower().Contains(SearchText.ToLower())));
+                    FilteredUsers = new ObservableCollection<NHANVIEN>(usersToSearch.Where(br => Helpers.convertToUnSign3(br.TenNhanVien).ToLower().Contains(Helpers.convertToUnSign3(SearchText).ToLower())));
                 }
                 else if (SearchBy == "SĐT")
                 {
@@ -306,7 +306,7 @@ namespace BookManagement
                 else if (SearchBy == "Địa chỉ")
                 {
                     _lastSearchOption = "Địa chỉ";
-                    FilteredUsers = new ObservableCollection<NHANVIEN>(usersToSearch.Where(br => br.DiaChi.ToLower().Contains(SearchText.ToLower())));
+                    FilteredUsers = new ObservableCollection<NHANVIEN>(usersToSearch.Where(br => Helpers.convertToUnSign3(br.DiaChi).ToLower().Contains(Helpers.convertToUnSign3(SearchText).ToLower())));
                 }
                 else if (SearchBy == "Username")
                 {

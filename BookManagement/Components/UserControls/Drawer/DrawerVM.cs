@@ -259,9 +259,7 @@ namespace BookManagement {
                     isExistAccess(accessList, AppEnum.TraCuukhachHang)));
                 buttonItems.Add(new ButtonItem("CalendarText", "Báo cáo", 5,
                     isExistAccess(accessList, AppEnum.LapBaoCaoThang)));
-                buttonItems.Add(new ButtonItem("Cog", "Cài đặt", 6, 
-                    isExistAccess(accessList, AppEnum.ThayDoiQuiDinh) || 
-                    isExistAccess(accessList, AppEnum.PhanQuyen)));
+                buttonItems.Add(new ButtonItem("Cog", "Cài đặt", 6, true));
                 buttonItems.Add(new ButtonItem("Account", "Tài khoản", 7, 
                     isExistAccess(accessList, AppEnum.ThayDoiMatKhau) ||
                     isExistAccess(accessList, AppEnum.TraCuuNhanVien)));

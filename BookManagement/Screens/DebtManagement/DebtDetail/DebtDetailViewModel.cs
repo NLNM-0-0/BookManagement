@@ -130,8 +130,8 @@ namespace BookManagement
                 MainViewModel.SetLoading(true);
                 ConfirmDialog notification = new ConfirmDialog()
                 {
-                    Header = "Error",
-                    ContentString = "Min price is bigger than max price"
+                    Header = "Lỗi",
+                    ContentString = "Giá tối thiểu đang lớn hơn giá tối đa."
                 };
                 MainViewModel.SetLoading(false);
                 await DialogHost.Show(notification, "Main");
@@ -144,12 +144,12 @@ namespace BookManagement
                 {
                     return false;
                 }
-                bool checkDate = SearchFromDate == null || (SearchFromDate != null && p.NgayThu >= SearchFromDate);
+                bool checkDate = SearchFromDate == null || (SearchFromDate != null && p.NgayThu >= SearchFromDate.Value.Date);
                 if (!checkDate)
                 {
                     return false;
                 }
-                bool checkToDate = SearchToDate == null || (SearchToDate != null && p.NgayThu <= SearchToDate);
+                bool checkToDate = SearchToDate == null || (SearchToDate != null && p.NgayThu <= SearchToDate.Value.AddDays(1).Date);
                 if (!checkToDate)
                 {
                     return false;

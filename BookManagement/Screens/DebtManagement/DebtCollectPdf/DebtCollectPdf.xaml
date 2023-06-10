@@ -194,10 +194,6 @@
                         Margin="5" 
                         FontWeight="Light"/>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
-                    <TextBlock Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" FontSize="8" Margin="5" FontWeight="Light"/>
-                    <TextBlock Text="{Binding PhoneNumber, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" FontSize="8" Margin="5" FontWeight="Light"/>
-                </StackPanel>
             </Grid>
         </StackPanel>
     </Grid>

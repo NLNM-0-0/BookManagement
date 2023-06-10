@@ -12,7 +12,7 @@ namespace BookManagement {
             decimal money = (decimal)value;
             if (money == 0)
             {
-                return "0 đ";
+                return "0";
             }
             CultureInfo cul = CultureInfo.GetCultureInfo("vi-VN");
             return money.ToString("#,###", cul.NumberFormat);

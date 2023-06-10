@@ -12,10 +12,13 @@ namespace BookManagement
         public int Index { get; set; }
         public CHUCNANG Access { get; set; }
         public bool IsAllowed { get; set; }
-        public AccessItem(int index, CHUCNANG access, bool isAllowed) {
+        public bool IsEnabled { get; set; }
+        public AccessItem(int index, CHUCNANG access, bool isAllowed, bool isEnabled)
+        {
             Index = index;
             Access = access;
             IsAllowed = isAllowed;
+            IsEnabled = isEnabled;
         }
 
         public object Clone()
@@ -24,7 +27,8 @@ namespace BookManagement
             (
                 Index,
                 Access,
-                IsAllowed
+                IsAllowed,
+                IsEnabled
             );
         }
     }

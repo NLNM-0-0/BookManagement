@@ -102,7 +102,7 @@
                     Width="10"
                     Margin="0 0 10 0"/>
                 <TextBlock
-                    Text="Danh sách các phiếu nợ"
+                    Text="Danh sách các phiếu thu"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Left"
                     FontWeight="SemiBold"

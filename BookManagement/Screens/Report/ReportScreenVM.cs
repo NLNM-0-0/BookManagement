@@ -236,12 +236,12 @@ namespace BookManagement
             else if (StockSearchBy == "Tên sách")
             {
                 FilterStockReports = new ObservableCollection<CHITIETBAOCAOTON>(
-                    AllStockReports.Where(p => p.SACH.DAUSACH.TenSach.ToLower().Contains(StockSearchByValue.Trim().ToLower())));
+                    AllStockReports.Where(p => Helpers.convertToUnSign3(p.SACH.DAUSACH.TenSach).ToLower().Contains(Helpers.convertToUnSign3(StockSearchByValue.Trim()).ToLower())));
             }
             else if (StockSearchBy == "NXB")
             {
                 FilterStockReports = new ObservableCollection<CHITIETBAOCAOTON>(
-                    AllStockReports.Where(p => p.SACH.NhaXuatBan.ToLower().Contains(StockSearchByValue.Trim().ToLower())));
+                    AllStockReports.Where(p => Helpers.convertToUnSign3(p.SACH.NhaXuatBan).ToLower().Contains(Helpers.convertToUnSign3(StockSearchByValue.Trim()).ToLower())));
             }
         }
         private void ResetSearchStock()
@@ -260,7 +260,7 @@ namespace BookManagement
             else if (DebtSearchBy == "Tên KH")
             {
                 FilterDebtReports = new ObservableCollection<CHITIETBAOCAOCONGNO>(
-                    AllDebtReports.Where(p => p.KHACHHANG.TenKhachHang.ToLower().Contains(DebtSearchByValue.Trim().ToLower())));
+                    AllDebtReports.Where(p => Helpers.convertToUnSign3(p.KHACHHANG.TenKhachHang).ToLower().Contains(Helpers.convertToUnSign3(DebtSearchByValue.Trim()).ToLower())));
             }
         }
         private void ResetSearchDebt()
@@ -525,7 +525,7 @@ namespace BookManagement
         {
             MainViewModel.SetLoading(true);
             var now = DateTime.Now;
-
+            DebtSearchBy = "Mã KH";
             if (string.IsNullOrEmpty(SelectedDebtMonth) || string.IsNullOrEmpty(SelectedDebtYear))
             {
                 ConfirmDialog notification = new ConfirmDialog()
@@ -550,6 +550,13 @@ namespace BookManagement
                     };
                     MainViewModel.SetLoading(false);
                     await DialogHost.Show(notification, "Main");
+
+                    var selected = DateTime.Now.AddMonths(-1);
+
+                    SelectedDebtMonth = selected.Month.ToString();
+                    SelectedDebtYear = selected.Year.ToString();
+
+                    await ViewDebt();
                 }
                 else if (selectedMonth == now.Month && selectedYear == now.Year)
                 {
@@ -573,13 +580,14 @@ namespace BookManagement
 
                     if (baocao == null || baocao.CHITIETBAOCAOCONGNOes == null || string.IsNullOrEmpty(baocao.MaBaoCaoCongNo))
                     {
-                        ConfirmDialog notification = new ConfirmDialog()
+                        //Mai comment
+                        /*ConfirmDialog notification = new ConfirmDialog()
                         {
                             Header = "Không hợp lệ",
                             ContentString = "Không có báo cáo vào tháng và năm được chọn"
                         };
                         MainViewModel.SetLoading(false);
-                        await DialogHost.Show(notification, "Main");
+                        await DialogHost.Show(notification, "Main");*/
                     }
                     AllDebtReports = new ObservableCollection<CHITIETBAOCAOCONGNO>((
                         await ctDebtRepo.GetListAsync(ct => ct.MaBaoCaoCongNo == baocao.MaBaoCaoCongNo, ct => ct.KHACHHANG))
@@ -593,6 +601,7 @@ namespace BookManagement
         private async Task ViewStock()
         {
             MainViewModel.SetLoading(true);
+            StockSearchBy = "Mã sách";
             var now = DateTime.Now;
 
             if (string.IsNullOrEmpty(SelectedStockMonth) || string.IsNullOrEmpty(SelectedStockYear))
@@ -604,6 +613,8 @@ namespace BookManagement
                 };
                 MainViewModel.SetLoading(false);
                 await DialogHost.Show(notification, "Main");
+
+
             }
             else
             {
@@ -619,6 +630,13 @@ namespace BookManagement
                     };
                     MainViewModel.SetLoading(false);
                     await DialogHost.Show(notification, "Main");
+
+                    var selected = DateTime.Now.AddMonths(-1);
+
+                    SelectedStockMonth = selected.Month.ToString();
+                    SelectedStockYear = selected.Year.ToString();
+
+                    await ViewStock();
                 }
                 else if (selectedMonth == now.Month && selectedYear == now.Year)
                 {
@@ -642,13 +660,14 @@ namespace BookManagement
 
                     if (baocao == null || baocao.CHITIETBAOCAOTONs == null || string.IsNullOrEmpty(baocao.MaBaoCaoTon))
                     {
-                        ConfirmDialog notification = new ConfirmDialog()
+                        //Mai comment
+                        /*ConfirmDialog notification = new ConfirmDialog()
                         {
                             Header = "Không hợp lệ",
                             ContentString = "Không có báo cáo vào tháng và năm được chọn"
                         };
                         MainViewModel.SetLoading(false);
-                        await DialogHost.Show(notification, "Main");
+                        await DialogHost.Show(notification, "Main");*/
                     }
                     AllStockReports = new ObservableCollection<CHITIETBAOCAOTON>((
                         await ctStockRepo.GetListAsync(ct => ct.MaBaoCaoTon == baocao.MaBaoCaoTon, ct => ct.SACH, ct => ct.SACH.DAUSACH)).
