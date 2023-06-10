@@ -492,8 +492,10 @@ namespace BookManagement
         private async Task ChangeTab(object p)
         {
             var e = p as SelectionChangedEventArgs;
-            if (e != null && e.OriginalSource is System.Windows.Controls.TabControl)
+            if (e != null && e.OriginalSource as System.Windows.Controls.TabControl!=null)
             {
+                if ((e.OriginalSource as System.Windows.Controls.TabControl).SelectedIndex < 0)
+                    return;
                 if (SelectedTabIndex == "0")
                 {
                     if (isStockFirstLoad)
