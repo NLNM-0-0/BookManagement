@@ -188,7 +188,7 @@ namespace BookManagement
                     {
                         return true;
                     }
-                    return importPageAuthors.Except(bookAuthors).ToList().Count != 0;
+                    return importPageAuthors.Intersect(bookAuthors).ToList().Count != importPageAuthors.Count;
                 }))
                 {
                     var dl = new ConfirmDialog()

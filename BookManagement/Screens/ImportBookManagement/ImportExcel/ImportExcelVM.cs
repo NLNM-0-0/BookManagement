@@ -64,9 +64,20 @@ namespace BookManagement
                         if (openDialog.FileName != "")
                         {
                             FileInfo fileInfo = new FileInfo(openDialog.FileName);
-                            bool isAvailable = await CheckGetDataFromExcel(fileInfo);
+                            int isAvailable = await CheckGetDataFromExcel(fileInfo);
                             PreviousItem = MainViewModel.UpdateDialog("Main");
-                            if (!isAvailable)
+                            if (isAvailable == -1)
+                            {
+                                var dl = new ConfirmDialog()
+                                {
+                                    Header = "Lỗi",
+                                    ContentString = "File bạn vừa nhập đang được mở hoặc không tồn tại. Xin hãy sửa lại.",
+                                };
+                                MainViewModel.IsLoading = false;
+                                await DialogHost.Show(dl, "Main");
+                                return;
+                            }
+                            else if (isAvailable == 0)
                             {
                                 var dl = new ConfirmDialog()
                                 {
@@ -77,7 +88,7 @@ namespace BookManagement
                                 await DialogHost.Show(dl, "Main");
                                 return;
                             }
-                            else
+                            else if (isAvailable == 1)
                             {
                                 bool isDataMatchRule = await CheckRule();
                                 if (!isDataMatchRule)
@@ -180,7 +191,7 @@ namespace BookManagement
                         {
                             return false;
                         }    
-                        if(firstImportExcelObject.Authors.Except(secondImportExcelObect.Authors).ToList().Count != 0)
+                        if(firstImportExcelObject.Authors.Count != secondImportExcelObect.Authors.Count || firstImportExcelObject.Authors.Intersect(secondImportExcelObect.Authors).ToList().Count != firstImportExcelObject.Authors.Count)
                         {
                             return false;
                         }    
@@ -291,9 +302,13 @@ namespace BookManagement
             return false;
         }
 
-        private async Task<bool> CheckGetDataFromExcel(FileInfo fileInfo)
+        private async Task<int> CheckGetDataFromExcel(FileInfo fileInfo)
         {
-            if (!IsFileLocked(fileInfo) && fileInfo.Exists)
+            if (IsFileLocked(fileInfo))
+            {
+                return -1;
+            }    
+            else if(fileInfo.Exists)
             {
                 using (var package = new ExcelPackage(fileInfo))
                 {
@@ -301,27 +316,27 @@ namespace BookManagement
                     ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
                     if (worksheet.Cells[6, 1].Value == null || worksheet.Cells[6, 1].Value.ToString() != "Tên sách")
                     {
-                        return false;
+                        return 0;
                     }
                     if (worksheet.Cells[6, 2].Value == null || worksheet.Cells[6, 2].Value.ToString() != "Nhà xuất bản")
                     {
-                        return false;
+                        return 0;
                     }
                     if (worksheet.Cells[6, 3].Value == null || worksheet.Cells[6, 3].Value.ToString() != "Tác giả")
                     {
-                        return false;
+                        return 0;
                     }
                     if (worksheet.Cells[6, 4].Value == null || worksheet.Cells[6, 4].Value.ToString() != "Thể loại")
                     {
-                        return false;
+                        return 0;
                     }
                     if (worksheet.Cells[6, 5].Value == null || worksheet.Cells[6, 5].Value.ToString() != "Đơn giá")
                     {
-                        return false;
+                        return 0;
                     }
                     if (worksheet.Cells[6, 6].Value == null || worksheet.Cells[6, 6].Value.ToString() != "Số lượng")
                     {
-                        return false;
+                        return 0;
                     }
 
                     int row = 7;
@@ -329,23 +344,23 @@ namespace BookManagement
                     {
                         if (worksheet.Cells[row, 2].Value == null || worksheet.Cells[6, 2].Value.ToString() == "")
                         {
-                            return false;
+                            return 0;
                         }
                         if (worksheet.Cells[row, 3].Value == null || worksheet.Cells[6, 3].Value.ToString() == "")
                         {
-                            return false;
+                            return 0;
                         }
                         if (worksheet.Cells[row, 4].Value == null || worksheet.Cells[6, 4].Value.ToString() == "")
                         {
-                            return false;
+                            return 0;
                         }
                         if (worksheet.Cells[row, 5].Value == null || worksheet.Cells[6, 5].Value.ToString() == "")
                         {
-                            return false;
+                            return 0;
                         }
                         if (worksheet.Cells[row, 6].Value == null || worksheet.Cells[6, 6].Value.ToString() == "")
                         {
-                            return false;
+                            return 0;
                         }
 
                         ImportExcelObject importExcelObject = new ImportExcelObject();
@@ -360,7 +375,7 @@ namespace BookManagement
                         List<string> authorNames = bookAuthors.Split(',').ToList();
                         if (authorNames.Any(p => String.IsNullOrEmpty(p)))
                         {
-                            return false;
+                            return 0;
                         }    
                         else
                         {
@@ -390,7 +405,7 @@ namespace BookManagement
                             }
                             else
                             {
-                                return false;
+                                return 0;
                             }    
                         }
 
@@ -404,35 +419,35 @@ namespace BookManagement
                         }
                         else
                         {
-                            return false;
+                            return 0;
                         }    
 
                         String unitPrice = worksheet.Cells[row, 5].Value.ToString();
                         try
                         {
                             importExcelObject.UnitPrice = decimal.Parse(unitPrice);
-                            if (importExcelObject.UnitPrice <= 0) 
+                            if (importExcelObject.UnitPrice < 0) 
                             {
-                                return false;
+                                return 0;
                             }
                         }
                         catch
                         {
-                            return false;
+                            return 0;
                         }
 
                         String amount = worksheet.Cells[row, 6].Value.ToString();
                         try
                         {
                             importExcelObject.Amount = int.Parse(amount);
-                            if (importExcelObject.Amount < 0)
+                            if (importExcelObject.Amount <= 0)
                             {
-                                return false;
+                                return 0;
                             }
                         }
                         catch
                         {
-                            return false;
+                            return 0;
                         }
 
                         importExcelObjects.Add(importExcelObject);
@@ -440,14 +455,14 @@ namespace BookManagement
                     } 
                     if(row == 7)
                     {
-                        return false;
+                        return 0;
                     }    
                 }
-                return true;
+                return 1;
             }
             else
             {
-                return false;
+                return -1;
             }
         }
         private async Task DowloadTemplate()

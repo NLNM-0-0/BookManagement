@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Data;
 
 namespace BookManagement
@@ -13,7 +14,7 @@ namespace BookManagement
         public static MultiDecimalToMoneyConverter Instance => new MultiDecimalToMoneyConverter();
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            if (values == null || values.Length != 2) return null;
+            if (values == null || values.Length != 2 || values[0] == null || values[1] == null || values[1] == DependencyProperty.UnsetValue) return null;
             decimal value1 = Decimal.Parse(values[0].ToString());
             decimal value2 = Decimal.Parse(values[1].ToString());
             decimal money = value1 * value2;
