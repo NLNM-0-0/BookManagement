@@ -162,7 +162,7 @@
                                 Header="NXB" 
                                 HeaderStyle="{StaticResource LeftHeader}"
                                 CellStyle="{StaticResource LeftCell}"
-                                Width="auto" MinWidth="100" MaxWidth="700" 
+                                Width="auto" MinWidth="250" MaxWidth="700" 
                                 Binding="{Binding SACH.NhaXuatBan}">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style>
@@ -174,19 +174,19 @@
                                 Header="Tồn đầu" 
                                 HeaderStyle="{StaticResource RightHeader}"
                                 CellStyle="{StaticResource RightCell}"
-                                Width="auto" MinWidth="200" MaxWidth="700" 
+                                Width="auto" MinWidth="100" MaxWidth="700" 
                                 Binding="{Binding TonDau}"/>
                             <DataGridTextColumn 
                                 Header="Nhập" 
                                 HeaderStyle="{StaticResource RightHeader}"
                                 CellStyle="{StaticResource RightCell}"
-                                Width="auto" MinWidth="200" MaxWidth="700" 
+                                Width="auto" MinWidth="100" MaxWidth="700" 
                                 Binding="{Binding PhatSinh}"/>
                             <DataGridTextColumn 
                                 Header="Xuất" 
                                 HeaderStyle="{StaticResource RightHeader}"
                                 CellStyle="{StaticResource RightCell}"
-                                Width="auto" MinWidth="200" MaxWidth="700">
+                                Width="auto" MinWidth="100" MaxWidth="700">
                                 <DataGridTextColumn.Binding>
                                     <Binding Converter="{StaticResource StockConverter}"/>
                                 </DataGridTextColumn.Binding>
@@ -195,7 +195,7 @@
                                 Header="Tồn cuối" 
                                 HeaderStyle="{StaticResource RightHeader}"
                                 CellStyle="{StaticResource RightCell}"
-                                Width="auto" MinWidth="200" MaxWidth="700" 
+                                Width="auto" MinWidth="100" MaxWidth="700" 
                                 Binding="{Binding TonCuoi}"/>
                         </DataGrid.Columns>
                     </DataGrid>

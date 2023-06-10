@@ -21,7 +21,7 @@ namespace BookManagement
         public static readonly string TraCuuHoaDonBanSach = "cn07";
         public static readonly string TraCuuPhieuThuTien = "cn08";
         public static readonly string TraCuuPhieuNhapSach = "cn09";
-        public static readonly string LuuThongTinKhachHang = "cn10";
+        public static readonly string GhiNoKhachHang = "cn10";
         public static readonly string TraCuukhachHang = "cn11";
         public static readonly string ThayDoiMatKhau = "cn12";
         public static readonly string TraCuuNhanVien = "cn13";

@@ -4,6 +4,7 @@ using BookManagement.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -54,11 +55,11 @@ namespace BookManagement
         private async Task Load()
         {
             HoaDon = await billRepo.GetSingleAsync(b => b.MaHoaDon.Equals(billId), b => b.KHACHHANG);
-            List<CHITIETHOADON> list = new List<CHITIETHOADON>(
+            List<CHITIETHOADON> list = new List<CHITIETHOADON>((
                 await ctRepo.GetListAsync(
                     c => c.MaHoaDon == billId, 
                     c => c.SACH, 
-                    c => c.SACH.DAUSACH));
+                    c => c.SACH.DAUSACH)).OrderBy(p=>p.SACH.DAUSACH.TenSach).ThenBy(p=>p.SACH.NhaXuatBan));
 
             ListBillDetail = new ObservableCollection<CHITIETHOADON>(list);
 
