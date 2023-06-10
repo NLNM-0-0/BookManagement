@@ -34,5 +34,6 @@ namespace BookManagement
         public static readonly string LuongTonToiDaKhiBan = "LuongTonToiDaKhiBan";
         public static readonly string TiLeTinhDonGiaXuat = "TiLeTinhDonGiaXuat";
         public static readonly string ApDungQDKiemTraTienThu = "ApDungQDKiemTraTienThu";
+
     }
 }

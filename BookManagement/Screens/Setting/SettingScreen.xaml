@@ -376,6 +376,7 @@
                                                 Grid.Column="3"
                                                 Style="{StaticResource MaterialDesignCheckBox}"
                                                 material:CheckBoxAssist.CheckBoxSize="30"
+                                                IsEnabled="{Binding IsEnabled, UpdateSourceTrigger=PropertyChanged}"
                                                 IsChecked="{Binding IsAllowed, UpdateSourceTrigger=PropertyChanged}"/>
                                         </Grid>
                                     </Border>

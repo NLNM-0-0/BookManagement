@@ -170,8 +170,8 @@ namespace BookManagement
                     MainViewModel.SetLoading(true);
                         ConfirmDialog notification = new ConfirmDialog()
                         {
-                            Header = "Error",
-                            ContentString = "Min price is bigger than max price"
+                            Header = "Lỗi",
+                            ContentString = "Giá tối thiểu đang lớn hơn giá tối đa."
                         };
                         MainViewModel.SetLoading(false);
                         await DialogHost.Show(notification, "Main");
@@ -182,8 +182,8 @@ namespace BookManagement
                 {
                     MainViewModel.SetLoading(true);
                     ConfirmDialog notification = new ConfirmDialog() {
-                    Header="Error",
-                    ContentString="Min quantity is bigger than max quantity"};
+                    Header="Lỗi",
+                    ContentString="Số lượng tối thiểu đang lớn hơn số lượng tối đa."};
                     MainViewModel.SetLoading(false);
                     await DialogHost.Show(notification, "Main");
 

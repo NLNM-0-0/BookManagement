@@ -216,22 +216,14 @@ namespace BookManagement
                     MainViewModel.SetLoading(true);
                     if (initAccessList[0].IsAllowed == true && accessList[0].IsAllowed == false)
                     {
-                        bool result = await CheckOtherAccessDecentralization();
-                        if(result == false) 
+                        var dl = new ConfirmDialog()
                         {
-                            var dl = new ConfirmDialog()
-                            {
-                                Header = "Oops",
-                                ContentString = $"Không thể thực hiện chức năng này. Ngoài nhóm người dùng {userGroup.TenNhomNguoiDung}, không nhóm người dùng nào khác còn có thể phân quyền.",
-                            };
-                            MainViewModel.SetLoading(false);
-                            await DialogHost.Show(dl, "Main");
-                            return;
-                        }
-                        else
-                        {
-                            await UserGroupAccessAPI.Delete(userGroup.MaNhomNguoiDung, initAccessList[0].Access.MaChucNang);
-                        }    
+                            Header = "Oops",
+                            ContentString = $"Không thể thực hiện chức năng này. Ngoài nhóm người dùng Quần trị viên, không còn nhóm người dùng nào khác có thể phân quyền.",
+                        };
+                        MainViewModel.SetLoading(false);
+                        await DialogHost.Show(dl, "Main");
+                        return; 
                     }
                     else if(initAccessList[0].IsAllowed == false && accessList[0].IsAllowed == true)
                     {
@@ -309,7 +301,14 @@ namespace BookManagement
                         break;
                     }
                 }
-                newAccessList.Add(new AccessItem(i + 1, allAccessList.ElementAt(i), flag));
+                if(i == 0 && userGroup.MaNhomNguoiDung != AppEnum.Admin)
+                {
+                    newAccessList.Add(new AccessItem(i + 1, allAccessList.ElementAt(i), flag, false));
+                }    
+                else
+                {
+                    newAccessList.Add(new AccessItem(i + 1, allAccessList.ElementAt(i), flag, true));
+                }    
             }
             return newAccessList;
         }    
@@ -326,7 +325,7 @@ namespace BookManagement
         }
 
         //Kiểm tra xem coi có nhóm người dùng nào ngoài nhóm người dùng userGroup được phân quyền
-        private async Task<bool> CheckOtherAccessDecentralization()
+        /*private async Task<bool> CheckOtherAccessDecentralization()
         {
             List<NHOMNGUOIDUNG> userGroupList = (await userGroupRepo.GetListAsync(p => p.MaNhomNguoiDung != userGroup.MaNhomNguoiDung, p=>p.CHUCNANGs)).ToList();
             for(int i = 0; i < userGroupList.Count; i++)
@@ -338,6 +337,6 @@ namespace BookManagement
                 }    
             }
             return false;
-        }
+        }*/
     }
 }

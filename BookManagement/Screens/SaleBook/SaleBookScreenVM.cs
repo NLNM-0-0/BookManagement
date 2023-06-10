@@ -215,11 +215,11 @@ namespace BookManagement
             }    
             else if(SearchBy == SearchByOptions[1]) //Tên sách
             {
-                SearchedBooks = new ObservableCollection<SACH>(filterBooks.Where(p => p.DAUSACH.TenSach.ToLower().Contains(SearchText.ToLower().Trim())));
+                SearchedBooks = new ObservableCollection<SACH>(filterBooks.Where(p => Helpers.convertToUnSign3(p.DAUSACH.TenSach).ToLower().Contains(Helpers.convertToUnSign3(SearchText.Trim()).ToLower())));
             }
             else if (SearchBy == SearchByOptions[2]) //NXB
             {
-                SearchedBooks = new ObservableCollection<SACH>(filterBooks.Where(p => p.NhaXuatBan.ToLower().Contains(SearchText.ToLower().Trim())));
+                SearchedBooks = new ObservableCollection<SACH>(filterBooks.Where(p => Helpers.convertToUnSign3(p.NhaXuatBan).ToLower().Contains(Helpers.convertToUnSign3(SearchText).ToLower().Trim())));
             }
         }
         private void CloseSearch() {

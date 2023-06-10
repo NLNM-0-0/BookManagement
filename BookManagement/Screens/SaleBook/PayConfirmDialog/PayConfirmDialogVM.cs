@@ -26,6 +26,7 @@ namespace BookManagement
         #region GenericDataRepository
         private GenericDataRepository<KHACHHANG> customerRepo = new GenericDataRepository<KHACHHANG> { };
         private GenericDataRepository<HOADON> billRepo = new GenericDataRepository<HOADON> { };
+        private GenericDataRepository<SACH> bookRepo = new GenericDataRepository<SACH> { };
         private GenericDataRepository<CHITIETHOADON> billDetailRepo = new GenericDataRepository<CHITIETHOADON> { };
         #endregion
 
@@ -124,7 +125,7 @@ namespace BookManagement
                 {
                     PreviousItem = MainViewModel.UpdateDialog("Main");
                     AddCustomer addCustomer = new AddCustomer();
-                    AddCustomerVM addCustomerVM = new AddCustomerVM();
+                    AddCustomerVM addCustomerVM = new AddCustomerVM(customers.ToList());
                     addCustomerVM.ClosedDialog += AddCustomerBack;
                     addCustomerVM.CloseDialogCommand = new RelayCommandWithNoParameter(() =>
                     {
@@ -274,6 +275,9 @@ namespace BookManagement
                         billDetail.SACH = null;
                         await billDetailRepo.Add(billDetail);
                         billDetail.SACH = book;
+                        billDetail.SACH.SoLuong -= billDetail.SoLuong;
+
+                        await bookRepo.Update(billDetail.SACH);
                     }
 
                     AddBillSuccess?.Invoke();

@@ -235,23 +235,23 @@ namespace BookManagement
             }
             else if (SearchBy == "Tên sách")
             {
-                FilterImportDetails = new ObservableCollection<CHITIETPHIEUNHAP>(allImportDetails.Where(p => p.SACH.DAUSACH.TenSach.ToLower().Trim().Contains(SearchByValue == null ? "" : SearchByValue.ToLower().Trim())));
+                FilterImportDetails = new ObservableCollection<CHITIETPHIEUNHAP>(allImportDetails.Where(p => Helpers.convertToUnSign3(p.SACH.DAUSACH.TenSach).ToLower().Trim().Contains(SearchByValue == null ? "" : Helpers.convertToUnSign3(SearchByValue.Trim()).ToLower())));
             }
             else if (SearchBy == "Tác giả")
             {
                 FilterImportDetails = new ObservableCollection<CHITIETPHIEUNHAP>(allImportDetails.Where(p => {
                     List<TACGIA> authors = p.SACH.DAUSACH.TACGIAs.ToList();
                     List<string> authorNames = authors.Select(author => author.TenTacGia).ToList();
-                    return authorNames.Any(a => a.ToLower().Contains(SearchByValue == null ? "" : SearchByValue.ToLower().Trim()));
+                    return authorNames.Any(a => Helpers.convertToUnSign3(a).ToLower().Contains(SearchByValue == null ? "" : Helpers.convertToUnSign3(SearchByValue.Trim()).ToLower()));
                 }));
             }
             else if (SearchBy == "Thể loại")
             {
-                FilterImportDetails = new ObservableCollection<CHITIETPHIEUNHAP>(allImportDetails.Where(p => p.SACH.DAUSACH.THELOAI.TenTheLoai.ToLower().Trim().Contains(SearchByValue == null ? "" : SearchByValue.ToLower().Trim())));
+                FilterImportDetails = new ObservableCollection<CHITIETPHIEUNHAP>(allImportDetails.Where(p => Helpers.convertToUnSign3(p.SACH.DAUSACH.THELOAI.TenTheLoai.Trim()).ToLower().Contains(SearchByValue == null ? "" : Helpers.convertToUnSign3(SearchByValue).ToLower().Trim())));
             }
             else if (SearchBy == "NXB")
             {
-                FilterImportDetails = new ObservableCollection<CHITIETPHIEUNHAP>(allImportDetails.Where(p => p.SACH.NhaXuatBan.ToLower().Trim().Contains(SearchByValue == null ? "" : SearchByValue.ToLower().Trim())));
+                FilterImportDetails = new ObservableCollection<CHITIETPHIEUNHAP>(allImportDetails.Where(p => Helpers.convertToUnSign3(p.SACH.NhaXuatBan.Trim()).ToLower().Contains(SearchByValue == null ? "" : Helpers.convertToUnSign3(SearchByValue.Trim()).ToLower())));
             }
         }
         private async Task Save()
