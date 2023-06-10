@@ -17,7 +17,7 @@ namespace BookManagement
     {
         #region Access property
         public bool IsAllowSaveBillWithDebt =>
-            AccountStore.instance.CurrentAccount.NHOMNGUOIDUNG.CHUCNANGs.Any(p => p.MaChucNang == AppEnum.LuuThongTinKhachHang);
+            AccountStore.instance.CurrentAccount.NHOMNGUOIDUNG.CHUCNANGs.Any(p => p.MaChucNang == AppEnum.GhiNoKhachHang);
         #endregion
 
         #region Action

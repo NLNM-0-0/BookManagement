@@ -72,10 +72,15 @@
         <Grid
             Grid.Column="1"
             Background="{StaticResource BoxLineColorBrush}"/>
-        <StackPanel 
+        <Grid 
             Grid.Column="2"
             Margin="10 0">
-            <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid
+                Grid.Row="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="auto"/>
@@ -93,44 +98,42 @@
                     materialDesign:HintAssist.Hint="Tìm kiếm bằng">
                 </ComboBox>
             </Grid>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                
-            </StackPanel>
             <ListView 
-                    x:Name="ProductList"
-                    Margin="20"
-                    ItemsSource="{Binding SearchedBooks,UpdateSourceTrigger=PropertyChanged}"
-                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                    BorderThickness="0"
-                    ScrollViewer.VerticalScrollBarVisibility="Auto"
-                    ScrollViewer.CanContentScroll="True"
-                    Grid.Column="0"
-                    HorizontalContentAlignment="Center">
-                    <ListView.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel
-                                HorizontalAlignment="Stretch"
-                                Width="auto"/>
-                        </ItemsPanelTemplate>
-                    </ListView.ItemsPanel>
+                Grid.Row="1"
+                x:Name="ProductList"
+                Margin="20"
+                ItemsSource="{Binding SearchedBooks,UpdateSourceTrigger=PropertyChanged}"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                BorderThickness="0"
+                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                ScrollViewer.CanContentScroll="True"
+                Grid.Column="0"
+                HorizontalContentAlignment="Center">
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel
+                            HorizontalAlignment="Stretch"
+                            Width="auto"/>
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
 
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem" BasedOn="{StaticResource MaterialDesignCardsListBoxItem}">
-                            <Setter Property="Margin" Value="5 10"/>
-                        </Style>
-                    </ListView.ItemContainerStyle>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem" BasedOn="{StaticResource MaterialDesignCardsListBoxItem}">
+                        <Setter Property="Margin" Value="5 10"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
 
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <local:BookItem
-                                DataContext="{Binding}"
-                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:SaleBookScreen}, Path=DataContext.SelectBookCommand}"
-                                CommandParameter=""/>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <local:BookItem
+                            DataContext="{Binding}"
+                            Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:SaleBookScreen}, Path=DataContext.SelectBookCommand}"
+                            CommandParameter=""/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
             
-        </StackPanel>
+        </Grid>
         <Grid
             Grid.Column="3"
             Background="{StaticResource BoxLineColorBrush}"/>
@@ -147,6 +150,7 @@
                 ItemsSource="{Binding BillDetails, UpdateSourceTrigger=PropertyChanged}"
                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                 BorderBrush="{StaticResource WhiteColorBrush}"
+                ScrollViewer.CanContentScroll="True"
                 Padding="5 0">
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>

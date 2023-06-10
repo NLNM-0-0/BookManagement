@@ -12,40 +12,49 @@
     <Grid
         Cursor="Hand"
         Background="{StaticResource WhiteColorBrush}">
-        <StackPanel
+        <Grid
             Margin="10">
-            <TextBlock 
-                Text="{Binding DAUSACH.TenSach, UpdateSourceTrigger=PropertyChanged}"
-                FontSize="{StaticResource FontSize16}"
-                HorizontalAlignment="Center"
-                TextAlignment="Center"
-                FontWeight="Bold"
-                TextWrapping="Wrap">
-            </TextBlock>
-            <TextBlock 
-                Text="{Binding NhaXuatBan, UpdateSourceTrigger=PropertyChanged}"
-                FontSize="{StaticResource FontSize16}"
-                HorizontalAlignment="Center"
-                TextAlignment="Center"
-                Margin="0 5 0 0"
-                FontWeight="SemiBold"
-                Foreground="{StaticResource BlurColorBrush}"
-                TextWrapping="Wrap">
-            </TextBlock>
-            <TextBlock 
-                FontSize="{StaticResource FontSize16}"
-                HorizontalAlignment="Center"
-                Margin="0 15 0 0"
-                Foreground="{DynamicResource PrimaryHueMidBrush}"
-                TextWrapping="Wrap">
-                <TextBlock.Text>
-                    <MultiBinding Converter="{x:Static local:MultiDecimalToMoneyConverter.Instance}">
-                        <Binding ElementName="bookItem" Path="DataContext.DonGiaNhapMoiNhat" />
-                        <Binding RelativeSource="{RelativeSource AncestorType=local:SaleBookScreen}" Path="DataContext.PercentProfit"/>
-                    </MultiBinding>
-                </TextBlock.Text>
-            </TextBlock>
-        </StackPanel>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0">
+                    <TextBlock 
+                        Text="{Binding DAUSACH.TenSach, UpdateSourceTrigger=PropertyChanged}"
+                        FontSize="{StaticResource FontSize16}"
+                        HorizontalAlignment="Center"
+                        TextAlignment="Center"
+                        FontWeight="DemiBold"
+                        TextWrapping="Wrap">
+                    </TextBlock>
+                    <TextBlock 
+                        Text="{Binding NhaXuatBan, UpdateSourceTrigger=PropertyChanged}"
+                        FontSize="{StaticResource FontSize16}"
+                        HorizontalAlignment="Center"
+                        TextAlignment="Center"
+                        Margin="0 5 0 0"
+                        FontWeight="SemiBold"
+                        Foreground="{StaticResource BlurColorBrush}"
+                        TextWrapping="Wrap">
+                    </TextBlock>
+                </StackPanel>
+                <TextBlock 
+                    Grid.Row="1"
+                    FontSize="{StaticResource FontSize16}"
+                    HorizontalAlignment="Center"
+                    Margin="0 15 0 0"
+                    Foreground="{DynamicResource PrimaryHueMidBrush}"
+                    TextWrapping="Wrap">
+                    <TextBlock.Text>
+                        <MultiBinding Converter="{x:Static local:MultiDecimalToMoneyConverter.Instance}">
+                            <Binding ElementName="bookItem" Path="DataContext.DonGiaNhapMoiNhat" />
+                            <Binding RelativeSource="{RelativeSource AncestorType=local:SaleBookScreen}" Path="DataContext.PercentProfit"/>
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+            </Grid>
+        </Grid>
         <Grid.InputBindings>
             <MouseBinding 
                 Gesture="LeftClick" 

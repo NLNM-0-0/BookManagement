@@ -108,6 +108,7 @@ namespace BookManagement
         #endregion
         public ImportBookPageVM(PHIEUNHAPSACH import)
         {
+            import.CHITIETPHIEUNHAPs = (import.CHITIETPHIEUNHAPs.OrderBy(p => p.SACH.DAUSACH.TenSach).ThenBy(p => p.SACH.NhaXuatBan)).ToList();
             SelectedImportPage = import;
             allImportDetails = import.CHITIETPHIEUNHAPs.ToList();
             FilterImportDetails = new ObservableCollection<CHITIETPHIEUNHAP>(allImportDetails);

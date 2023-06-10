@@ -14,7 +14,8 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
-            <Grid>
+            <Grid
+                Margin="0 7 0 0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="5"/>              
@@ -38,6 +39,7 @@
                 Grid.Column="1"
                 Content="xóa"
                 Width="40"
+                VerticalAlignment="Top"
                 Style="{StaticResource TransparentButton}"
                 Foreground="{StaticResource ErrorColorBrush}"
                 Command="{Binding RelativeSource={RelativeSource AncestorType=local:SaleBookScreen, Mode=FindAncestor},Path=DataContext.DeleteCommand}"
