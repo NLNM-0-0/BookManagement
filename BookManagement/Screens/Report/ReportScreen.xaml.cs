@@ -18,9 +18,9 @@ namespace BookManagement
     /// <summary>
     /// Interaction logic for HomeScreen.xaml
     /// </summary>
-    public partial class HomeScreen : UserControl
+    public partial class ReportScreen : UserControl
     {
-        public HomeScreen()
+        public ReportScreen()
         {
             InitializeComponent();
         }

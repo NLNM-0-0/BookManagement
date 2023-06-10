@@ -11,6 +11,13 @@ namespace BookManagement
 {
     public class DebtManagementScreenVM : BaseViewModel
     {
+        #region Access property
+        public bool IsAllowDebtCollect =>
+            AccountStore.instance.CurrentAccount.NHOMNGUOIDUNG.CHUCNANGs.Any(p => p.MaChucNang == AppEnum.LapPhieuThuTien);
+        public bool IsAllowSearchDebtCollect=>
+            AccountStore.instance.CurrentAccount.NHOMNGUOIDUNG.CHUCNANGs.Any(p => p.MaChucNang == AppEnum.TraCuuPhieuThuTien);
+        #endregion
+
         #region GenericDataRepository
         GenericDataRepository<KHACHHANG> customerRepo = new GenericDataRepository<KHACHHANG>();
         #endregion
@@ -115,7 +122,7 @@ namespace BookManagement
                 {
                     return false;
                 }
-                bool checkDate = SearchDate == null || (SearchDate != null && p.NgaySinh == SearchDate);
+                bool checkDate = SearchDate == null || (SearchDate != null && p.NgaySinh.Value.ToShortDateString() == SearchDate.Value.ToShortDateString());
                 if (!checkDate)
                 {
                     return false;

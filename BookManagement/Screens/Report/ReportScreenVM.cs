@@ -2,6 +2,7 @@
 using DocumentFormat.OpenXml.Bibliography;
 using LiveCharts;
 using LiveCharts.Wpf;
+using MaterialDesignColors;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Win32;
 using Microsoft.Xaml.Behaviors.Core;
@@ -20,7 +21,7 @@ using System.Windows.Input;
 
 namespace BookManagement
 {
-    internal class HomeScreenVM : BaseViewModel
+    internal class ReportScreenVM : BaseViewModel
     {
         #region Properties
         private GenericDataRepository<BAOCAOTON> stockRepo;
@@ -40,8 +41,10 @@ namespace BookManagement
         private GenericDataRepository<BAOCAOCONGNO> debtRepo;
         private GenericDataRepository<CHITIETBAOCAOCONGNO> ctDebtRepo;
         private GenericDataRepository<PHIEUTHUNO> phieuThuRepo;
-        public ObservableCollection<CHITIETBAOCAOTON> StockReports { get; set; }
-        public ObservableCollection<CHITIETBAOCAOCONGNO> DebtReports { get; set; }
+        private ObservableCollection<CHITIETBAOCAOTON> AllStockReports { get; set; }
+        public ObservableCollection<CHITIETBAOCAOTON> FilterStockReports { get; set; }
+        private ObservableCollection<CHITIETBAOCAOCONGNO> AllDebtReports { get; set; }
+        public ObservableCollection<CHITIETBAOCAOCONGNO> FilterDebtReports { get; set; }
 
         private bool isStockFirstLoad = true;
         private bool isDebtFirstLoad = true;
@@ -87,7 +90,59 @@ namespace BookManagement
                 }
             }
         }
+        private string stockSearchBy;
+        public string StockSearchBy
+        {
+            get { return stockSearchBy; }
+            set
+            {
+                if (stockSearchBy != value)
+                {
+                    stockSearchBy = value; 
+                    OnPropertyChanged();
+                }
+            }
+        }
         
+        private string stockSearchByValue;
+        public string StockSearchByValue
+        {
+            get { return stockSearchByValue; }
+            set
+            {
+                if (stockSearchByValue != value)
+                {
+                    stockSearchByValue = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        private string debtSearchByValue;
+        public string DebtSearchByValue
+        {
+            get { return debtSearchByValue; }
+            set
+            {
+                if (debtSearchByValue != value)
+                {
+                    debtSearchByValue = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        private string debtSearchBy;
+        public string DebtSearchBy
+        {
+            get { return debtSearchBy; }
+            set
+            {
+                if (debtSearchBy != value)
+                {
+                    debtSearchBy = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
         public string[] Labels { get; set; }
         public Func<double, string> YFormatter { get; set; }
         public ChartValues<double> Values1 { get; set; }
@@ -100,11 +155,13 @@ namespace BookManagement
         public ICommand ViewStockCommand { get; set; }
         public ICommand TabSelected { get; set; }
         public ICommand ViewDebtCommand { get; set; }
+        public ICommand SearchStockCommand { get; set; }
+        public ICommand SearchDebtCommand { get; set; }
         public ICommand ExportStockCommand { get; set; }
         public ICommand ExportDebtCommand { get; set; }
         #endregion
 
-        public HomeScreenVM()
+        public ReportScreenVM()
         {
             stockRepo = new GenericDataRepository<BAOCAOTON>();
             sachRepo = new GenericDataRepository<SACH>();
@@ -156,10 +213,65 @@ namespace BookManagement
             ExportStockCommand = new RelayCommandWithNoParameter(ExportStock);
             ExportDebtCommand = new RelayCommandWithNoParameter(ExportDebt);
             TabSelected = new RelayCommand<object>((p)=>p!=null, async (p) => await ChangeTab(p));
+            SearchStockCommand = new RelayCommandWithNoParameter(() =>
+            {
+                MainViewModel.IsLoading = true;
+                SearchStock();
+                MainViewModel.IsLoading = false;
+            });
+            SearchDebtCommand = new RelayCommandWithNoParameter(() =>
+            {
+                MainViewModel.IsLoading = true;
+                SearchDebt();
+                MainViewModel.IsLoading = false;
+            });
         }
-
+        private void SearchStock()
+        {
+            if(StockSearchBy == "Mã sách")
+            {
+                FilterStockReports = new ObservableCollection<CHITIETBAOCAOTON>(
+                    AllStockReports.Where(p => p.MaSach.ToLower().Contains(StockSearchByValue.Trim().ToLower())));
+            }
+            else if (StockSearchBy == "Tên sách")
+            {
+                FilterStockReports = new ObservableCollection<CHITIETBAOCAOTON>(
+                    AllStockReports.Where(p => p.SACH.DAUSACH.TenSach.ToLower().Contains(StockSearchByValue.Trim().ToLower())));
+            }
+            else if (StockSearchBy == "NXB")
+            {
+                FilterStockReports = new ObservableCollection<CHITIETBAOCAOTON>(
+                    AllStockReports.Where(p => p.SACH.NhaXuatBan.ToLower().Contains(StockSearchByValue.Trim().ToLower())));
+            }
+        }
+        private void ResetSearchStock()
+        {
+            StockSearchBy = "Mã sách";
+            StockSearchByValue = "";
+            FilterStockReports = new ObservableCollection<CHITIETBAOCAOTON>(AllStockReports);
+        }
+        private void SearchDebt()
+        {
+            if (DebtSearchBy == "Mã KH")
+            {
+                FilterDebtReports = new ObservableCollection<CHITIETBAOCAOCONGNO>(
+                    AllDebtReports.Where(p => p.MaKhachHang.ToLower().Contains(DebtSearchByValue.Trim().ToLower())));
+            }
+            else if (DebtSearchBy == "Tên KH")
+            {
+                FilterDebtReports = new ObservableCollection<CHITIETBAOCAOCONGNO>(
+                    AllDebtReports.Where(p => p.KHACHHANG.TenKhachHang.ToLower().Contains(DebtSearchByValue.Trim().ToLower())));
+            }
+        }
+        private void ResetSearchDebt()
+        {
+            DebtSearchBy = "Mã KH";
+            DebtSearchByValue = "";
+            FilterDebtReports = new ObservableCollection<CHITIETBAOCAOCONGNO>(AllDebtReports);
+        }
         private void ExportDebt()
         {
+            MainViewModel.IsLoading = true;
             string filePath = "";
             var saveFileDialog = new SaveFileDialog();
             saveFileDialog.Filter = "Excel Sheet(*.xlsx)|*.xlsx|All Files(*.*)|*.*";
@@ -173,7 +285,7 @@ namespace BookManagement
                 ConfirmDialog notification = new ConfirmDialog()
                 {
                     Header = "Lỗi",
-                    ContentString = "Xuất file không thành công"
+                    ContentString = "Xuất file không thành công."
                 };
                 MainViewModel.SetLoading(false);
                 DialogHost.Show(notification, "Main");
@@ -216,7 +328,7 @@ namespace BookManagement
                         colIndex++;
                     }
 
-                    foreach (var report in DebtReports)
+                    foreach (var report in AllDebtReports)
                     {
                         colIndex = 1;
                         rowIndex++;
@@ -227,6 +339,20 @@ namespace BookManagement
                         ws.Cells[rowIndex, colIndex++].Value = report.PhatSinh;
                         ws.Cells[rowIndex, colIndex++].Value = report.NoDau + report.PhatSinh - report.NoCuoi;
                         ws.Cells[rowIndex, colIndex++].Value = report.NoCuoi;
+                    }
+
+                    using (ExcelRange excelRange = ws.Cells[$"A1:F{rowIndex}"])
+                    {
+                        excelRange.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                        excelRange.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                        excelRange.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                        excelRange.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                    }
+
+                    ws.Cells.AutoFitColumns();
+                    for (int i = 1; i <= 6; i++)
+                    {
+                        ws.Column(i).Width *= 1.2;
                     }
 
                     Byte[] bin = p.GetAsByteArray();
@@ -246,7 +372,7 @@ namespace BookManagement
                 ConfirmDialog notification = new ConfirmDialog()
                 {
                     Header = "Lỗi",
-                    ContentString = "Có lỗi khi lưu file"
+                    ContentString = "Có lỗi khi lưu file."
                 };
                 MainViewModel.SetLoading(false);
                 DialogHost.Show(notification, "Main");
@@ -255,6 +381,7 @@ namespace BookManagement
 
         private void ExportStock()
         {
+            MainViewModel.IsLoading = true;
             string filePath = "";
             var saveFileDialog = new SaveFileDialog();
             saveFileDialog.Filter = "Excel Sheet(*.xlsx)|*.xlsx|All Files(*.*)|*.*";
@@ -268,12 +395,11 @@ namespace BookManagement
                 ConfirmDialog notification = new ConfirmDialog()
                 {
                     Header = "Lỗi",
-                    ContentString = "Xuất file không thành công"
+                    ContentString = "Xuất file không thành công."
                 };
                 MainViewModel.SetLoading(false);
                 DialogHost.Show(notification, "Main");
             }
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             try
             {
                 using (ExcelPackage p =new ExcelPackage())
@@ -311,7 +437,7 @@ namespace BookManagement
                         colIndex++;
                     }
 
-                    foreach(var report in StockReports)
+                    foreach(var report in AllStockReports)
                     {
                         colIndex = 1;
                         rowIndex++;
@@ -323,6 +449,20 @@ namespace BookManagement
                         var converter = new StockConverter();
                         ws.Cells[rowIndex, colIndex++].Value = converter.Convert(report, null, null, null);
                         ws.Cells[rowIndex, colIndex++].Value = report.TonCuoi.ToString();
+                    }
+
+                    using (ExcelRange excelRange = ws.Cells[$"A1:F{rowIndex}"])
+                    {
+                        excelRange.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                        excelRange.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                        excelRange.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                        excelRange.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                    }
+
+                    ws.Cells.AutoFitColumns();
+                    for (int i = 1; i <= 6; i++)
+                    {
+                        ws.Column(i).Width *= 1.2;
                     }
 
                     Byte[] bin = p.GetAsByteArray();
@@ -342,7 +482,7 @@ namespace BookManagement
                 ConfirmDialog notification = new ConfirmDialog()
                 {
                     Header = "Lỗi",
-                    ContentString = "Có lỗi khi lưu file"
+                    ContentString = "Có lỗi khi lưu file."
                 };
                 MainViewModel.SetLoading(false);
                 DialogHost.Show(notification, "Main");
@@ -352,19 +492,29 @@ namespace BookManagement
         private async Task ChangeTab(object p)
         {
             var e = p as SelectionChangedEventArgs;
-                if (e != null && e.OriginalSource is System.Windows.Controls.TabControl)
+            if (e != null && e.OriginalSource is System.Windows.Controls.TabControl)
+            {
+                if (SelectedTabIndex == "0")
                 {
-                    if (SelectedTabIndex == "0" && isStockFirstLoad)
+                    if (isStockFirstLoad)
                     {
                         await ViewStock();
                         isStockFirstLoad = false;
                     }
-                    else if (SelectedTabIndex == "1"&& isDebtFirstLoad)
+                    ResetSearchStock();
+
+                }
+                else if (SelectedTabIndex == "1")
+                {
+                    if (isDebtFirstLoad)
                     {
                         await ViewDebt();
                         isDebtFirstLoad = false;
                     }
+                    ResetSearchDebt();
+
                 }
+            }
         }
 
 
@@ -409,8 +559,10 @@ namespace BookManagement
                     };
                     MainViewModel.SetLoading(false);
                     await DialogHost.Show(notification, "Main");
-                    DebtReports = new ObservableCollection<CHITIETBAOCAOCONGNO>(
-                        await CalculateDebtWithoutSave(allReports, selectedMonth, selectedYear));
+                    AllDebtReports = new ObservableCollection<CHITIETBAOCAOCONGNO>((
+                        await CalculateDebtWithoutSave(allReports, selectedMonth, selectedYear))
+                        .OrderBy(p => p.KHACHHANG.TenKhachHang));
+                    ResetSearchDebt();
                 }
                 else
                 {
@@ -427,8 +579,10 @@ namespace BookManagement
                         MainViewModel.SetLoading(false);
                         await DialogHost.Show(notification, "Main");
                     }
-                    DebtReports = new ObservableCollection<CHITIETBAOCAOCONGNO>(
-                        await ctDebtRepo.GetListAsync(ct => ct.MaBaoCaoCongNo == baocao.MaBaoCaoCongNo, ct => ct.KHACHHANG));
+                    AllDebtReports = new ObservableCollection<CHITIETBAOCAOCONGNO>((
+                        await ctDebtRepo.GetListAsync(ct => ct.MaBaoCaoCongNo == baocao.MaBaoCaoCongNo, ct => ct.KHACHHANG))
+                        .OrderBy(p=>p.KHACHHANG.TenKhachHang));
+                    ResetSearchDebt();
 
                 }
             }
@@ -474,8 +628,10 @@ namespace BookManagement
                     };
                     MainViewModel.SetLoading(false);
                     await DialogHost.Show(notification, "Main");
-                    StockReports = new ObservableCollection<CHITIETBAOCAOTON>(
-                        await CalculateWithoutSave(allReports, selectedMonth, selectedYear));
+                    AllStockReports = new ObservableCollection<CHITIETBAOCAOTON>((
+                        await CalculateWithoutSave(allReports, selectedMonth, selectedYear)).
+                        OrderBy(p => p.SACH.DAUSACH.TenSach).ThenBy(p => p.SACH.NhaXuatBan));
+                    ResetSearchStock();
                 }
                 else
                 {
@@ -492,9 +648,10 @@ namespace BookManagement
                         MainViewModel.SetLoading(false);
                         await DialogHost.Show(notification, "Main");
                     }
-                    StockReports = new ObservableCollection<CHITIETBAOCAOTON>(
-                        await ctStockRepo.GetListAsync(ct => ct.MaBaoCaoTon == baocao.MaBaoCaoTon, ct => ct.SACH, ct => ct.SACH.DAUSACH));
-
+                    AllStockReports = new ObservableCollection<CHITIETBAOCAOTON>((
+                        await ctStockRepo.GetListAsync(ct => ct.MaBaoCaoTon == baocao.MaBaoCaoTon, ct => ct.SACH, ct => ct.SACH.DAUSACH)).
+                        OrderBy(p=>p.SACH.DAUSACH.TenSach).ThenBy(p=>p.SACH.NhaXuatBan));
+                    ResetSearchStock();
                 }
             }
             MainViewModel.SetLoading(false);

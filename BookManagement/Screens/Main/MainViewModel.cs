@@ -51,8 +51,8 @@ namespace BookManagement {
                     IsLoading = false;
                 }
                 if(flag) {
-                    if(message == null) message = "We are working on your request.\n It may take a while to update!";
-                    if(header == null) header = "On the way";
+                    if(message == null) message = "Chúng tôi đang xử lý yêu cầu của bạn.\n Nó sẽ tốn 1 khoảng thời gian để cập nhật!";
+                    if(header == null) header = "Đang xử lý";
                     App.Current.Dispatcher.Invoke(() => {
                         var dl = new ConfirmDialog() {
                             ContentString = message,
@@ -104,8 +104,8 @@ namespace BookManagement {
                     (t as Window).Close();
                     App.Current.Shutdown();
                 }),
-                Header = "Are you sure?",
-                ContentString = "Your process may not be saved if you close the app. Please check your work before closing the app!"
+                Header = "Bạn có chắc?",
+                ContentString = "Quy trình của bạn có thể không được lưu nếu bạn đóng ứng dụng. Vui lòng kiểm tra trước khi đóng ứng dụng!"
             };
 
             //need to handle mulltiple identifier

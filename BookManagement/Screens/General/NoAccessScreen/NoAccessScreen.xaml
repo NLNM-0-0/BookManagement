@@ -21,7 +21,7 @@
                 HorizontalAlignment="Center">
                 <TextBlock
                     VerticalAlignment="Center"
-                    Text="You dont' have any access now."
+                    Text="Hiện tại bạn đang không có quyền gì."
                     FontSize="{StaticResource FontSize16}"
                     FontFamily="{StaticResource Medium}"/>
             </StackPanel>

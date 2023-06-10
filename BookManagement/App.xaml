@@ -13,6 +13,8 @@
                 <ResourceDictionary Source="Constants/Fonts.xaml"/>
                 <ResourceDictionary Source="Components/Buttons/Buttons.xaml"/>
                 <ResourceDictionary Source="Components/TextBoxes/TextBoxes.xaml"/>
+                <ResourceDictionary Source="Components/RadioButton/RadioButtonFill.xaml"/>
+                <ResourceDictionary Source="Components/ListView/ListViewContainerStyle.xaml"/>
                 <ResourceDictionary Source="Components/OurDatePicker.xaml"/>
                 <ResourceDictionary Source="Components/Scroll.xaml"/>
                 <ResourceDictionary Source="Components/TabControl.xaml"/>

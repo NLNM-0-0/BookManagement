@@ -12,128 +12,206 @@
     <UserControl.Resources>
         <local:BindingProxy x:Key="proxy" Data="{Binding}"/>
         <local:FalsesToTrueConverters x:Key="FalsesToTrueConverters"/>
-        <Style x:Key="buttonColor" TargetType="{x:Type Button}" BasedOn="{StaticResource MaterialDesignRaisedLightButton}">
-            <Setter Property="materialDesign:ButtonAssist.CornerRadius" Value="25"/>
-            <Setter Property="Height" Value="50"/>
-            <Setter Property="Width" Value="50"/>
-            <Setter Property="HorizontalContentAlignment" Value="Left"/>
-            <Setter Property="VerticalContentAlignment" Value="Top"/>
-            <Setter Property="materialDesign:ElevationAssist.Elevation" Value="Dp0"/>
-            <Setter Property="Padding" Value="8"/>
-            <Setter Property="Foreground" Value="{StaticResource WhiteColorBrush}"/>
-            <Setter Property="BorderBrush" Value="{StaticResource BoxLineColorBrush}"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Command" Value="{Binding OnChangePrimaryColor}"/>
-            <Setter Property="CommandParameter" 
-                    Value="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
-        </Style>
     </UserControl.Resources>
-    <Grid Background="White">
+    <Grid 
+        Background="White"
+        Margin="10">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="3.5*"/>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="2"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2"/>
+            <ColumnDefinition Width="400"/>
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0">
-            <TextBlock Text="BUKU'S BOOKS"
+            <TextBlock Text="BUUK"
                        Margin="10"
                        FontSize="{StaticResource FontSize24}"
                        FontWeight="Bold">
                 
             </TextBlock>
-            <TextBlock Text="Categories"
+            <TextBlock Text="Thể loại"
                        FontWeight="Bold"
-                       Margin="20"
-                       FontSize="{StaticResource FontSize16}">
-
+                       Margin="10"
+                       FontSize="{StaticResource FontSize18}">
             </TextBlock>
+            <ListView ItemsSource="{Binding Categories, UpdateSourceTrigger=PropertyChanged}" Margin="10"
+                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                      BorderBrush="{StaticResource WhiteColorBrush}"
+                      SelectedItem="{Binding SelectedCategory, UpdateSourceTrigger=PropertyChanged}">
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel/>
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource ListItemContainer}">
+                        <Setter Property="Padding" Value="0"/>
+                        <Setter Property="Margin" Value="10 0 0 0"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <RadioButton 
+                            Style="{StaticResource RadioButtonFill}"
+                            Content="{Binding TenTheLoai}"
+                            HorizontalContentAlignment="Left"
+                            HorizontalAlignment="Stretch"
+                            BorderBrush="{StaticResource WhiteColorBrush}"
+                            FontSize="{StaticResource FontSize16}"
+                            IsChecked="{Binding IsSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}}}"
+                            GroupName="Categories"
+                            Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:SaleBookScreen}, Path=DataContext.ChangeCategory}"
+                            CommandParameter="{Binding}"/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackPanel>
+        <Grid
+            Grid.Column="1"
+            Background="{StaticResource BoxLineColorBrush}"/>
+        <StackPanel 
+            Grid.Column="2"
+            Margin="10 0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <local:SearchBar  
+                    SearchText="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
+                <ComboBox 
+                    Grid.Column="1"
+                    Margin="15 0" 
+                    Width="150"
+                    FontSize="{StaticResource FontSize16}"
+                    SelectedItem="{Binding SearchBy, UpdateSourceTrigger=PropertyChanged}"
+                    ItemsSource="{Binding SearchByOptions, UpdateSourceTrigger=PropertyChanged}"
+                    Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                    materialDesign:HintAssist.Hint="Tìm kiếm bằng">
+                </ComboBox>
+            </Grid>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                
+            </StackPanel>
+            <ListView 
+                    x:Name="ProductList"
+                    Margin="20"
+                    ItemsSource="{Binding SearchedBooks,UpdateSourceTrigger=PropertyChanged}"
+                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                    BorderThickness="0"
+                    ScrollViewer.VerticalScrollBarVisibility="Auto"
+                    ScrollViewer.CanContentScroll="True"
+                    Grid.Column="0"
+                    HorizontalContentAlignment="Center">
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel
+                                HorizontalAlignment="Stretch"
+                                Width="auto"/>
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem" BasedOn="{StaticResource MaterialDesignCardsListBoxItem}">
+                            <Setter Property="Margin" Value="5 10"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <local:BookItem
+                                DataContext="{Binding}"
+                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:SaleBookScreen}, Path=DataContext.SelectBookCommand}"
+                                CommandParameter=""/>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
             
         </StackPanel>
-        <StackPanel Grid.Column="1">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-
-                <local:SearchBar Width="600" SearchText="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
-                <ComboBox 
-                                Margin="15 0" 
-                                Width="100"
-                                FontSize="{StaticResource FontSize16}"
-                                SelectedItem="{Binding SearchBy}"
-                                ItemsSource="{Binding SearchByOptions}"
-                                Style="{StaticResource MaterialDesignFloatingHintComboBox}"
-                                materialDesign:HintAssist.Hint="Search by">
-                   
-                </ComboBox>
-            </StackPanel>
-            <Grid Margin="20">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
+        <Grid
+            Grid.Column="3"
+            Background="{StaticResource BoxLineColorBrush}"/>
+        <Grid 
+            Grid.Column="4"
+            Margin="10 50 0 0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <ListView
+                Grid.Row="1"
+                ItemsSource="{Binding BillDetails, UpdateSourceTrigger=PropertyChanged}"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                BorderBrush="{StaticResource WhiteColorBrush}"
+                Padding="5 0">
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel/>
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+                <ListView.ItemContainerStyle>   
+                    <Style TargetType="ListViewItem" BasedOn="{StaticResource ListItemContainer}">
+                        <Setter Property="Margin" Value="0"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                        <Setter Property="BorderBrush" Value="{StaticResource BoxLineColorBrush}"/>
+                        <Setter Property="BorderThickness" Value="0 0 0 1"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <local:OrderUC 
+                            DataContext="{Binding}"/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <Border 
+                Grid.Row="2"
+                BorderThickness="1">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="5"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="5"/>
+                        <ColumnDefinition Width="auto"/>
                     </Grid.ColumnDefinitions>
-                    <local:BookItem Grid.Column="0"></local:BookItem>
-                    <local:BookItem Grid.Column="1"></local:BookItem>
-                    <local:BookItem Grid.Column="2"></local:BookItem>
+                    <Grid
+                        Grid.Column="0"
+                        VerticalAlignment="Center">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="5"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock
+                            Grid.Row="0"
+                            Text="Tổng"
+                            FontSize="{StaticResource FontSize18}"
+                            FontWeight="DemiBold"/>
+                        <TextBlock 
+                            Grid.Row="2"
+                            Text="{Binding Total, UpdateSourceTrigger=PropertyChanged,Converter={x:Static local:DecimalToMoneyConveter.Instance}}"
+                            FontSize="{StaticResource FontSize18}"/>
+                    </Grid>
+                    
+                    <Button 
+                        Content="Xóa"
+                        Style="{StaticResource WhiteButtonRectangle}"
+                        Command="{Binding DeleteAllCommand, UpdateSourceTrigger=PropertyChanged}"
+                        Grid.Column="2"/>
+                    <Button 
+                        Content="Thanh toán"
+                        Style="{StaticResource ButtonRectangle}"
+                        Command="{Binding PayCommand, UpdateSourceTrigger=PropertyChanged}"
+                        CommandParameter=""
+                        Grid.Column="4"/>
                 </Grid>
-                <Grid Grid.Column="1">
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <TextBlock
-                           Text="My Order"
-                           FontWeight="Bold"
-                           Margin="0 0 0 20"
-                           Grid.Row="0"
-                           FontSize="{StaticResource FontSize18}">
-                    </TextBlock>
-                    <StackPanel Grid.Row="1">
-
-                        <local:OrderUC></local:OrderUC>
-                        <local:OrderUC/>
-                        <local:OrderUC/>
-                    </StackPanel>
-                    <Border Grid.Row="2"
-                            BorderThickness="1">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="1.5*"/>
-                                <ColumnDefinition Width="1.5*"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0"
-                                       Text="Total"
-                                       Margin="5 0 0 0"
-                                       FontSize="{StaticResource FontSize14}">
-                                
-                            </TextBlock>
-                            <TextBlock Grid.Column="1"
-                                       Margin="5 0 0 0"
-                                       Text="NO"
-                                       FontSize="{StaticResource FontSize14}">
-
-                            </TextBlock>
-                            <Button Content="Cancel"
-                                    Style="{StaticResource ButtonRectangle}"
-                                    Grid.Column="2">
-                                
-                            </Button>
-                            <Button Content="Purchase"
-                                    Style="{StaticResource ButtonRectangle}"
-                                    Grid.Column="3">
-
-                            </Button>
-                        </Grid>
-                    </Border>
-                </Grid>
-                
-                
-            </Grid>
-        </StackPanel>
+            </Border>
+        </Grid>
     </Grid>
 </UserControl>

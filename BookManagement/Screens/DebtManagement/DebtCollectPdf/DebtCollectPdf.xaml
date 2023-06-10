@@ -30,7 +30,7 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock
                     Margin="30 0 0 0"
-                    Text="BUKU"
+                    Text="BUUK"
                     FontSize="{StaticResource FontSize34}"
                     FontWeight="Bold"/>
                 <Grid

@@ -4,6 +4,7 @@ using DocumentFormat.OpenXml.Vml.Office;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Win32;
 using OfficeOpenXml;
+using OfficeOpenXml.FormulaParsing.ExpressionGraph.FunctionCompilers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Windows.Media.Animation;
 
 namespace BookManagement
 {
@@ -112,7 +114,7 @@ namespace BookManagement
             IsNew = SelectedImportPage.MaPhieuNhap == null;
             SelectedDate = SelectedImportPage.NgayNhap ?? DateTime.Now;
             TotalPrice = SelectedImportPage.TongTien;
-            SearchBy = IsNew?"Tên":"Id";
+            SearchBy = IsNew?"Tên sách":"Id";
 
             #region Define Commands
             AddBookCommand = new RelayCommandWithNoParameter(async () =>
@@ -148,16 +150,17 @@ namespace BookManagement
             {
                 allImportDetails.Remove(p);
                 FilterImportDetails.Remove(p);
-                TotalPrice -= p.SoLuong * p.SACH.DonGiaNhap;
+                TotalPrice -= p.SoLuong * p.DonGiaNhap;
             });
             
             #endregion
         }
-        private void OnAddBookSuccess(SACH book)
+        private void OnAddBookSuccess(SACH book, int number, decimal unitImportPrice)
         {
             if(book.MaSach==null)
             {
-                if(allImportDetails.Any(p=>p.SACH.DAUSACH.TenSach == book.DAUSACH.TenSach && p.SACH.NhaXuatBan == book.NhaXuatBan))
+                List<CHITIETPHIEUNHAP> importListHasBookHeader = allImportDetails.Where(p => p.SACH.DAUSACH.TenSach == book.DAUSACH.TenSach).ToList();
+                if(importListHasBookHeader.Any(p=>p.SACH.NhaXuatBan == book.NhaXuatBan))
                 {
                     var dl = new ConfirmDialog()
                     {
@@ -167,27 +170,62 @@ namespace BookManagement
                     DialogHost.Show(dl, "Main");
                     return;
                 }
+                if (importListHasBookHeader.Any(p => p.SACH.DAUSACH.THELOAI.TenTheLoai != book.DAUSACH.THELOAI.TenTheLoai))
+                {
+                    var dl = new ConfirmDialog()
+                    {
+                        ContentString = "Mỗi đầu sách chỉ tương ứng với 1 thể loại.",
+                        Header = "Oops"
+                    };
+                    DialogHost.Show(dl, "Main");
+                    return;
+                }
+                if (importListHasBookHeader.Any(p =>
+                {
+                    List<String> importPageAuthors = p.SACH.DAUSACH.TACGIAs.Select(a=>a.TenTacGia).ToList();
+                    List<String> bookAuthors = book.DAUSACH.TACGIAs.Select(a => a.TenTacGia).ToList();
+                    if (importPageAuthors.Count != bookAuthors.Count)
+                    {
+                        return true;
+                    }
+                    return importPageAuthors.Except(bookAuthors).ToList().Count != 0;
+                }))
+                {
+                    var dl = new ConfirmDialog()
+                    {
+                        ContentString = "Mỗi đầu sách chỉ tương ứng với 1 nhóm tác giả.",
+                        Header = "Oops"
+                    };
+                    DialogHost.Show(dl, "Main");
+                    return;
+                }
                 CHITIETPHIEUNHAP importDetail = new CHITIETPHIEUNHAP();
                 importDetail.SACH = book;
-                importDetail.SoLuong = book.SoLuong??0;
+                importDetail.SoLuong = number;
+                importDetail.DonGiaNhap = unitImportPrice;
                 allImportDetails.Insert(0, importDetail);
                 Search();
             }
             else if(allImportDetails.Any(p => p.MaSach == book.MaSach))
             {
-                CHITIETPHIEUNHAP importDetail = allImportDetails.Where(p=>p.MaSach == book.MaSach).FirstOrDefault();
-                importDetail.SoLuong += book.SoLuong??0;
-                Search();
+                var dl = new ConfirmDialog()
+                {
+                    ContentString = "Bạn đã thêm vào sách có cùng tên và nhà xuất bản với sách đã có sẵn.",
+                    Header = "Oops"
+                };
+                DialogHost.Show(dl, "Main");
+                return;
             }
             else
             {
                 CHITIETPHIEUNHAP importDetail = new CHITIETPHIEUNHAP();
                 importDetail.SACH = book;
-                importDetail.SoLuong = book.SoLuong ?? 0;
+                importDetail.SoLuong = number;
+                importDetail.DonGiaNhap = unitImportPrice;
                 allImportDetails.Insert(0, importDetail);
                 Search();
             }
-            TotalPrice += (book.SoLuong ?? 0) * book.DonGiaNhap;
+            TotalPrice += number * unitImportPrice;
         }
         private void Search()
         {
@@ -195,7 +233,7 @@ namespace BookManagement
             {
                 FilterImportDetails = new ObservableCollection<CHITIETPHIEUNHAP>(allImportDetails.Where(p => p.SACH.MaSach.ToLower().Trim().Contains(SearchByValue == null ? "" : SearchByValue.ToLower().Trim())));
             }
-            else if (SearchBy == "Tên")
+            else if (SearchBy == "Tên sách")
             {
                 FilterImportDetails = new ObservableCollection<CHITIETPHIEUNHAP>(allImportDetails.Where(p => p.SACH.DAUSACH.TenSach.ToLower().Trim().Contains(SearchByValue == null ? "" : SearchByValue.ToLower().Trim())));
             }
@@ -210,6 +248,10 @@ namespace BookManagement
             else if (SearchBy == "Thể loại")
             {
                 FilterImportDetails = new ObservableCollection<CHITIETPHIEUNHAP>(allImportDetails.Where(p => p.SACH.DAUSACH.THELOAI.TenTheLoai.ToLower().Trim().Contains(SearchByValue == null ? "" : SearchByValue.ToLower().Trim())));
+            }
+            else if (SearchBy == "NXB")
+            {
+                FilterImportDetails = new ObservableCollection<CHITIETPHIEUNHAP>(allImportDetails.Where(p => p.SACH.NhaXuatBan.ToLower().Trim().Contains(SearchByValue == null ? "" : SearchByValue.ToLower().Trim())));
             }
         }
         private async Task Save()
@@ -235,21 +277,32 @@ namespace BookManagement
                         bookHeader = new DAUSACH();
                         bookHeader.MaDauSach = await GenerateId.Gen(typeof(DAUSACH), "MaDauSach");
 
+                        //book's name handle
+                        bookHeader.TenSach = book.DAUSACH.TenSach;
+
+                        for (int u = i + 1; u < allImportDetails.Count; u++)
+                        {
+                            DAUSACH tempBookHeader = allImportDetails.ElementAt(u).SACH.DAUSACH;
+                            if (tempBookHeader.TenSach == bookHeader.TenSach)
+                            {
+                                tempBookHeader.MaDauSach = bookHeader.MaDauSach;
+                            }
+                        }
                         //category handle
                         THELOAI bookCategory;
                         if(book.DAUSACH.THELOAI.MaTheLoai == null)
                         {
                             bookCategory = new THELOAI();
                             bookCategory.MaTheLoai = await GenerateId.Gen(typeof(THELOAI), "MaTheLoai");
+                            bookCategory.TenTheLoai = book.DAUSACH.THELOAI.TenTheLoai;
                             for (int u = i + 1; u < allImportDetails.Count; u++)
                             {
                                 THELOAI tempCategory = allImportDetails.ElementAt(u).SACH.DAUSACH.THELOAI;
-                                if (tempCategory.TenTheLoai == tempCategory.TenTheLoai)
+                                if (tempCategory.TenTheLoai == bookCategory.TenTheLoai)
                                 {
                                     tempCategory.MaTheLoai = bookCategory.MaTheLoai;
                                 }
                             }
-                            bookCategory.TenTheLoai = book.DAUSACH.THELOAI.TenTheLoai;
                             await categoryRepo.Add(bookCategory);
                         }    
                         else
@@ -264,24 +317,18 @@ namespace BookManagement
                             TACGIA author = book.DAUSACH.TACGIAs.ElementAt(j);
                             if(author.MaTacGia == null)
                             {
-                                author.MaTacGia = await GenerateId.Gen(typeof(TACGIA), "MaTacGia");
-                                for(int u = j + 1; u < book.DAUSACH.TACGIAs.Count; u++)
+                                TACGIA doubleAuthor = await authorRepo.GetSingleAsync(p=>p.TenTacGia == author.TenTacGia);
+                                if(doubleAuthor == null)
                                 {
-                                    TACGIA tempAuthor = book.DAUSACH.TACGIAs.ElementAt(u);
-                                    if (tempAuthor.TenTacGia == author.TenTacGia)
-                                    {
-                                        tempAuthor.MaTacGia = author.MaTacGia;
-                                    }    
-                                }    
-                                await authorRepo.Add(author);
+                                    author.MaTacGia = await GenerateId.Gen(typeof(TACGIA), "MaTacGia");
+                                    await authorRepo.Add(author);
+                                }
+                                else
+                                {
+                                    author.MaTacGia = doubleAuthor.MaTacGia;
+                                }   
                             }
                         }
-
-                        //book's name handle
-                        bookHeader.TenSach = book.DAUSACH.TenSach;
-
-                        //add to db
-                        bookHeader.MaDauSach = await GenerateId.Gen(typeof(DAUSACH), "MaDauSach");
                         await bookHeaderRepo.Add(bookHeader);
                     }
                     else
@@ -292,7 +339,14 @@ namespace BookManagement
                     for (int j = 0; j < book.DAUSACH.TACGIAs.Count; j++)
                     {
                         TACGIA author = book.DAUSACH.TACGIAs.ElementAt(j);
-                        await AuthorDetailAPI.Add(author.MaTacGia, bookHeader.MaDauSach);
+                        try
+                        {
+                            await AuthorDetailAPI.Add(author.MaTacGia, bookHeader.MaDauSach);
+                        }
+                        catch 
+                        {
+                            //Đã có CHITIETTACGIA này trong hệ thống
+                        }
                     }
 
                     book.MaDauSach = bookHeader.MaDauSach;
@@ -303,10 +357,11 @@ namespace BookManagement
                 else
                 {
                     SACH tempBook = await bookRepo.GetSingleAsync(p=>p.MaSach == book.MaSach);
-                    tempBook.SoLuong += book.SoLuong;
+                    tempBook.SoLuong += allImportDetails[i].SoLuong;
+                    tempBook.DonGiaNhapMoiNhat = allImportDetails[i].DonGiaNhap;
                     await bookRepo.Update(tempBook);
                 }
-                await ImportDetailAPI.Add(book.MaSach, import.MaPhieuNhap, book.SoLuong??0);
+                await ImportDetailAPI.Add(book.MaSach, import.MaPhieuNhap, allImportDetails[i].SoLuong, allImportDetails[i].DonGiaNhap);
             }    
         }
     }

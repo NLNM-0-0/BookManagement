@@ -22,7 +22,7 @@
         Height="auto">
         <StackPanel x:Name="content">
             <Grid>
-                <TextBlock Text="Add new staff" HorizontalAlignment="Left" FontSize="{StaticResource FontSize24}"/>
+                <TextBlock Text="Thêm nhân viên mới" HorizontalAlignment="Left" FontSize="{StaticResource FontSize24}"/>
                 <Button HorizontalAlignment="Right"
                         Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
                         x:Name="ButtonClose"
@@ -55,25 +55,39 @@
                     Grid.Column="0">
                     <StackPanel>
                         <ComboBox 
+                            x:Name="userGroupComboBox"
+                            Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                            materialDesign:TextFieldAssist.TextFieldCornerRadius="5"
+                            SelectedItem="{Binding SelectedUserGroup}"
+                            DisplayMemberPath="TenNhomNguoiDung"
+                            ItemsSource="{Binding UserGroups, UpdateSourceTrigger=PropertyChanged}"
+                            materialDesign:HintAssist.Hint="Nhóm người dùng"
+                            FontSize="{StaticResource FontSize16}"/>
+                        <Grid
+                            Height="30"/>
+                        <ComboBox 
                             x:Name="genderComboBox"
                             Style="{StaticResource MaterialDesignOutlinedComboBox}"
                             materialDesign:TextFieldAssist.TextFieldCornerRadius="5"
                             SelectedItem="{Binding NewUser.GioiTinh}"
-                            materialDesign:HintAssist.Hint="Gender"/>
+                            materialDesign:HintAssist.Hint="Giới tính"
+                            FontSize="{StaticResource FontSize16}"/>
                         <Grid
                             Height="30"/>
                         <DatePicker 
                             Width="auto"
                             SelectedDate="{Binding NewUser.NgaySinh}"
                             Style="{StaticResource OurDatePicker}"
-                            materialDesign:HintAssist.Hint="Birth"/>
+                            materialDesign:HintAssist.Hint="Ngày sinh"
+                            FontSize="{StaticResource FontSize16}"/>
                         <Grid
                             Height="30"/>
                         <TextBox 
                             x:Name="phonenumber"
                             Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                            materialDesign:HintAssist.Hint="Phone number"
-                            MaxLength="13">
+                            materialDesign:HintAssist.Hint="Số điện thoại"
+                            MaxLength="13"
+                            FontSize="{StaticResource FontSize16}">
                             <Binding
                                     Path="NewUser.DienThoai"
                                     UpdateSourceTrigger="PropertyChanged">
@@ -92,8 +106,9 @@
                             x:Name="username"
                             DockPanel.Dock="Left"    
                             Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                            materialDesign:HintAssist.Hint="Username"
-                            MaxLength="50">
+                            materialDesign:HintAssist.Hint="Tên đăng nhập"
+                            MaxLength="50"
+                            FontSize="{StaticResource FontSize16}">
                             <Binding
                                 Path="NewUser.UserName"
                                 UpdateSourceTrigger="PropertyChanged">
@@ -109,8 +124,9 @@
                         <TextBox
                             x:Name="name"
                             Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                            materialDesign:HintAssist.Hint="Name"
-                            MaxLength="100">
+                            materialDesign:HintAssist.Hint="Tên nhân viên"
+                            MaxLength="100"
+                            FontSize="{StaticResource FontSize16}">
                             <Binding
                                     Path="NewUser.TenNhanVien"
                                     UpdateSourceTrigger="PropertyChanged">
@@ -126,15 +142,21 @@
                         <TextBox 
                             x:Name="address"
                             Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                            materialDesign:HintAssist.Hint="Adress"
+                            materialDesign:HintAssist.Hint="Địa chỉ"
                             MaxLength="200"
                             TextWrapping="Wrap"
                             Height="100"
                             VerticalContentAlignment="Top"
-                            materialDesign:TextFieldAssist.CharacterCounterVisibility="Visible">
+                            materialDesign:TextFieldAssist.CharacterCounterVisibility="Visible"
+                            FontSize="{StaticResource FontSize16}">
                             <Binding
                                     Path="NewUser.DiaChi"
                                     UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <local:NotEmptyValidationRule
+                                        IsNotCheckFirstTime="False"
+                                        ValidatesOnTargetUpdated="True"/>
+                                </Binding.ValidationRules>
                             </Binding>
                         </TextBox>
                     </StackPanel>
@@ -142,7 +164,7 @@
             </Grid>
             <Grid
                 Height="30"/>
-            <Button Content="ADD" 
+            <Button Content="Thêm" 
                     HorizontalAlignment="Right" 
                     Command="{Binding AddUserCommand, UpdateSourceTrigger=PropertyChanged}"
                     CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
@@ -151,6 +173,7 @@
                         <Binding ElementName="phonenumber" Path="(Validation.HasError)"/>
                         <Binding ElementName="username" Path="(Validation.HasError)"/>
                         <Binding ElementName="name" Path="(Validation.HasError)"/>
+                        <Binding ElementName="address" Path="(Validation.HasError)"/>
                     </MultiBinding>
                 </Button.IsEnabled>
             </Button>

@@ -72,6 +72,7 @@
     <Compile Include="API\ImportDetailAPI.cs" />
     <Compile Include="API\UserGroupAccessAPI.cs" />
     <Compile Include="AppModel\AccessItem.cs" />
+    <Compile Include="AppModel\BillDetailCanPropertyChange.cs" />
     <Compile Include="Components\UserControls\Dialogs\AdminAddUserDialog\AdminAddUserDialog.xaml.cs">
       <DependentUpon>AdminAddUserDialog.xaml</DependentUpon>
     </Compile>
@@ -179,10 +180,10 @@
       <DependentUpon>Login.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\Auth\Login\LoginViewModel.cs" />
-    <Compile Include="Screens\BillManagement\BillDetail.xaml.cs">
+    <Compile Include="Screens\BillManagement\BillDetail\BillDetail.xaml.cs">
       <DependentUpon>BillDetail.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\BillManagement\BillDetailViewModel.cs" />
+    <Compile Include="Screens\BillManagement\BillDetail\BillDetailViewModel.cs" />
     <Compile Include="Screens\BillManagement\BillInfoPdf\BillInfoPdf.xaml.cs">
       <DependentUpon>BillInfoPdf.xaml</DependentUpon>
     </Compile>
@@ -203,10 +204,10 @@
       <DependentUpon>DebtCollect.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\DebtManagement\DebtCollect\DebtCollectVM.cs" />
-    <Compile Include="Screens\DebtManagement\DebtDetail.xaml.cs">
+    <Compile Include="Screens\DebtManagement\DebtDetail\DebtDetail.xaml.cs">
       <DependentUpon>DebtDetail.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\DebtManagement\DebtDetailViewModel.cs" />
+    <Compile Include="Screens\DebtManagement\DebtDetail\DebtDetailViewModel.cs" />
     <Compile Include="Screens\DebtManagement\DebtManagementScreen.xaml.cs">
       <DependentUpon>DebtManagementScreen.xaml</DependentUpon>
     </Compile>
@@ -215,10 +216,10 @@
     <Compile Include="Screens\General\NoAccessScreen\NoAccessScreen.xaml.cs">
       <DependentUpon>NoAccessScreen.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\Home\HomeScreen.xaml.cs">
-      <DependentUpon>HomeScreen.xaml</DependentUpon>
+    <Compile Include="Screens\Report\ReportScreen.xaml.cs">
+      <DependentUpon>ReportScreen.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\Home\HomeScreenVM.cs" />
+    <Compile Include="Screens\Report\ReportScreenVM.cs" />
     <Compile Include="Screens\ImportBookManagement\AddBook\AddBook.xaml.cs">
       <DependentUpon>AddBook.xaml</DependentUpon>
     </Compile>
@@ -243,13 +244,20 @@
     <Compile Include="Screens\Main\SplashScreen\SplashScreen.xaml.cs">
       <DependentUpon>SplashScreen.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Screens\SaleBook\AddCustomer\AddCustomer.xaml.cs">
+      <DependentUpon>AddCustomer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\SaleBook\AddCustomer\AddCustomerVM.cs" />
     <Compile Include="Screens\SaleBook\BookItem.xaml.cs">
       <DependentUpon>BookItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\SaleBook\Category.cs" />
     <Compile Include="Screens\SaleBook\OrderUC.xaml.cs">
       <DependentUpon>OrderUC.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Screens\SaleBook\PayConfirmDialog\PayConfirmDialog.xaml.cs">
+      <DependentUpon>PayConfirmDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\SaleBook\PayConfirmDialog\PayConfirmDialogVM.cs" />
     <Compile Include="Screens\SaleBook\SaleBookScreen.xaml.cs">
       <DependentUpon>SaleBookScreen.xaml</DependentUpon>
     </Compile>
@@ -258,6 +266,10 @@
       <DependentUpon>SettingScreen.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\Setting\SettingScreenVM.cs" />
+    <Compile Include="Screens\UserManagement\ConfirmAccountDialog\ConfirmAccountDialog.xaml.cs">
+      <DependentUpon>ConfirmAccountDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\UserManagement\ConfirmAccountDialog\ConfirmAccountDialogVM.cs" />
     <Compile Include="Screens\UserManagement\UserManagementScreen.xaml.cs">
       <DependentUpon>UserManagementScreen.xaml</DependentUpon>
     </Compile>
@@ -274,6 +286,7 @@
     <Compile Include="Utils\BaseViewModel.cs" />
     <Compile Include="Utils\Converters\AuthorsToTextConverter.cs" />
     <Compile Include="Utils\Converters\DecimalToMoneyConverter.cs" />
+    <Compile Include="Utils\Converters\DecimalToMoneyWithoutCurrencyConverter.cs" />
     <Compile Include="Utils\Converters\MultiDecimalToMoneyConverter.cs" />
     <Compile Include="Utils\Converters\MultiValueConverter.cs" />
     <Compile Include="Utils\Converters\NumberAndUnitPriceToTotalPriceConverter.cs" />
@@ -292,6 +305,7 @@
     <Compile Include="Utils\ImmediateCommand.cs" />
     <Compile Include="Utils\RelayCommand.cs" />
     <Compile Include="Utils\RelayCommandWithNoParameter.cs" />
+    <Compile Include="Utils\ValidationRule\EmailValidate.cs" />
     <Compile Include="Utils\ValidationRule\NotEmptyValidation.cs" />
     <Compile Include="Utils\ValidationRule\NumberTextBoxValidation.cs" />
     <Compile Include="Utils\ValidationRule\PasswordValidateRule.cs" />
@@ -338,9 +352,17 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Components\ListView\ListViewContainerStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Components\OurDatePicker.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Components\RadioButton\RadioButtonFill.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Components\Scroll.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -414,7 +436,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Screens\BillManagement\BillDetail.xaml">
+    <Page Include="Screens\BillManagement\BillDetail\BillDetail.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -430,7 +452,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Screens\DebtManagement\DebtDetail.xaml">
+    <Page Include="Screens\DebtManagement\DebtDetail\DebtDetail.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -458,9 +480,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="API\Hashing.cs" />
-    <Compile Include="API\OAuth.cs" />
-    <Compile Include="API\TaskHelper.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -481,7 +500,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Screens\Home\HomeScreen.xaml">
+    <Page Include="Screens\Report\ReportScreen.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -497,6 +516,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Screens\SaleBook\AddCustomer\AddCustomer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Screens\SaleBook\BookItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -505,11 +528,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Screens\SaleBook\PayConfirmDialog\PayConfirmDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Screens\SaleBook\SaleBookScreen.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Screens\Setting\SettingScreen.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\UserManagement\ConfirmAccountDialog\ConfirmAccountDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -561,7 +592,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Assets\Icons\BUKU.png" />
+    <Resource Include="Assets\Icons\BUUK.png" />
     <Content Include="Models\Model.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>Model.edmx</DependentUpon>
@@ -572,7 +603,6 @@
       <DependentUpon>Model.edmx</DependentUpon>
       <LastGenOutput>Model.cs</LastGenOutput>
     </Content>
-    <Resource Include="Assets\Images\Offline.png" />
     <Resource Include="Assets\Images\img_boarding.png" />
     <Content Include="Assets\Sounds\LoadingSound.mp3" />
   </ItemGroup>

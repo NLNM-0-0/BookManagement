@@ -16,7 +16,7 @@ namespace BookManagement
     public class AddBookVM : BaseViewModel
     {
         #region
-        public Action<SACH> AddBookSuccess;
+        public Action<SACH,int, decimal> AddBookSuccess;
         #endregion
         #region GenericDataRepository
         private GenericDataRepository<DAUSACH> bookHeaderRepo = new GenericDataRepository<DAUSACH>();
@@ -146,17 +146,16 @@ namespace BookManagement
                     selectedBookHeader.TenSach != selectedBookHeaderString ||
                     selectedNXB != selectedNXBString)
                 {
-                    IsCanChangePrice = true;
+                    
                 }
                 else
                 {
                     Task.Run(async() =>
                     {
                         MainViewModel.IsLoading = true;
-                        decimal tempPrice = (await bookRepo.GetSingleAsync(b => b.MaDauSach == SelectedBookHeader.MaDauSach && b.NhaXuatBan == SelectedNXB)).DonGiaNhap;
+                        decimal tempPrice = (await bookRepo.GetSingleAsync(b => b.MaDauSach == SelectedBookHeader.MaDauSach && b.NhaXuatBan == SelectedNXB)).DonGiaNhapMoiNhat;
                         App.Current.Dispatcher.Invoke((Action)(() =>
                         {
-                            IsCanChangePrice = false;
                             Price = tempPrice.ToString("G29");
                         }));
                         MainViewModel.IsLoading = false;
@@ -219,16 +218,7 @@ namespace BookManagement
             }
         }
         public string Amount { get; set; }
-        private bool isCanChangePrice;
-        public bool IsCanChangePrice
-        {
-            get => isCanChangePrice;
-            set
-            {
-                isCanChangePrice = value;
-                OnPropertyChanged();
-            }
-        }
+
         public string Price { get; set; }
         #endregion
         public AddBookVM()
@@ -250,12 +240,12 @@ namespace BookManagement
             });
             AddBookCommand = new RelayCommand<object>(p =>
             {
-                return SelectedBookHeaderString != null && SelectedBookHeaderString.Length > 0 &&
-                SelectedCategoryString != null && SelectedCategoryString.Length > 0 &&
-                SelectedNXBString != null && SelectedNXBString.Length > 0 &&
+                return !String.IsNullOrEmpty(SelectedBookHeaderString) &&
+                !String.IsNullOrEmpty(SelectedCategoryString) &&
+                !String.IsNullOrEmpty(SelectedNXBString) &&
                 Authors != null && Authors.Count > 0 && 
-                Price != null && Price.Length > 0 &&
-                Amount != null && Amount.Length > 0;
+                !String.IsNullOrEmpty(Price) &&
+                !String.IsNullOrEmpty(Amount);
             }, async p =>
             {
                 if(int.Parse(Amount) < RuleStore.instance.getValue(AppEnum.LuongSachNhapItNhat))
@@ -283,7 +273,7 @@ namespace BookManagement
                     if (SelectedCategory == null || SelectedCategory.TenTheLoai != SelectedCategoryString)
                     {
                         bookCategory = new THELOAI();
-                        bookCategory.TenTheLoai = SelectedCategoryString;
+                        bookCategory.TenTheLoai = SelectedCategoryString.Trim();
                     }
                     else
                     {
@@ -295,7 +285,7 @@ namespace BookManagement
                     if (SelectedBookHeader == null || SelectedBookHeader.TenSach != SelectedBookHeaderString)
                     {
                         bookHeader = new DAUSACH();
-                        bookHeader.TenSach = SelectedBookHeaderString;
+                        bookHeader.TenSach = SelectedBookHeaderString.Trim();
                         bookHeader.THELOAI = bookCategory;
                     }
                     else
@@ -311,11 +301,11 @@ namespace BookManagement
                     {
                         book = new SACH();
                         book.SoLuong = int.Parse(Amount);
-                        book.DonGiaNhap = decimal.Parse(Price);
+                        book.DonGiaNhapMoiNhat = decimal.Parse(Price);
                         book.DAUSACH = bookHeader;
-                        book.NhaXuatBan = SelectedNXBString;
+                        book.NhaXuatBan = SelectedNXBString.Trim();
                         DialogHost.CloseDialogCommand.Execute(null, null);
-                        AddBookSuccess?.Invoke(book);
+                        AddBookSuccess?.Invoke(book, book.SoLuong??0, book.DonGiaNhapMoiNhat);
                     }
                     else
                     {
@@ -344,9 +334,8 @@ namespace BookManagement
                         }    
                         else
                         {
-                            book.SoLuong = int.Parse(Amount);
                             DialogHost.CloseDialogCommand.Execute(null, null);
-                            AddBookSuccess?.Invoke(book);
+                            AddBookSuccess?.Invoke(book, int.Parse(Amount), Decimal.Parse(Price));
                         }    
                     }
                 }    

@@ -17,6 +17,7 @@ namespace BookManagement.Models
         public string MaSach { get; set; }
         public string MaPhieuNhap { get; set; }
         public int SoLuong { get; set; }
+        public decimal DonGiaNhap { get; set; }
     
         public virtual PHIEUNHAPSACH PHIEUNHAPSACH { get; set; }
         public virtual SACH SACH { get; set; }

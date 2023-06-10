@@ -33,7 +33,7 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock
                     Margin="30 0 0 0"
-                    Text="BUKU"
+                    Text="BUUK"
                     FontSize="{StaticResource FontSize34}"
                     FontWeight="Bold"/>
                 <Grid
@@ -78,7 +78,7 @@
         <Grid
             Grid.Row="2"
             Margin="0 0 0 30"
-            Visibility="{c:Binding 'Bill.SoTienNo!=0'}">
+            Visibility="{c:Binding 'Bill.KHACHHANG != null'}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="7"/>
@@ -369,10 +369,6 @@
                         FontSize="20" 
                         Margin="5" 
                         FontWeight="Light"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
-                    <TextBlock Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" FontSize="8" Margin="5" FontWeight="Light"/>
-                    <TextBlock Text="{Binding PhoneNumber, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" FontSize="8" Margin="5" FontWeight="Light"/>
                 </StackPanel>
             </Grid>
         </StackPanel>

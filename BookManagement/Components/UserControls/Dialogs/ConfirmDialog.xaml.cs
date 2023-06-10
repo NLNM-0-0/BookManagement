@@ -29,7 +29,7 @@ namespace BookManagement
 
         // Using a DependencyProperty as the backing store for Header.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty HeaderProperty =
-            DependencyProperty.Register("Header", typeof(string), typeof(ConfirmDialog), new PropertyMetadata("Confirm"));
+            DependencyProperty.Register("Header", typeof(string), typeof(ConfirmDialog), new PropertyMetadata("Xác nhận"));
 
         public string ContentString {
             get { return (string)GetValue(ContentStringProperty); }
@@ -38,7 +38,7 @@ namespace BookManagement
 
         // Using a DependencyProperty as the backing store for Content.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ContentStringProperty =
-            DependencyProperty.Register("ContentString", typeof(string), typeof(ConfirmDialog), new PropertyMetadata("Are you sure?"));
+            DependencyProperty.Register("ContentString", typeof(string), typeof(ConfirmDialog), new PropertyMetadata("Bạn có chắc không?"));
 
         public ICommand CM {
             get { return (ICommand)GetValue(commandProperty); }

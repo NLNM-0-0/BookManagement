@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Windows.Input;
 
 namespace BookManagement
@@ -110,22 +111,7 @@ namespace BookManagement
                 });
                 ExportExcelCommand = new RelayCommand<PHIEUNHAPSACH>(p => p != null, async(p) =>
                 {
-                    MainViewModel.IsLoading = true;
-                    bool result = await saveExcelFile(p);
-                    if(result)
-                    {
-                        MainViewModel.SetLoading(false);
-                    }    
-                    else
-                    {
-                        var dl = new ConfirmDialog()
-                        {
-                            ContentString="File đang được sử dụng. Xin hãy đóng file rùi thử lại!",
-                            Header ="Oops"
-                        };
-                        MainViewModel.IsLoading = false;
-                        await DialogHost.Show(dl, "Main");
-                    }    
+                    await saveExcelFile(p);
                 });
                 ImportExcelCommand = new RelayCommandWithNoParameter(async () =>
                 {
@@ -149,19 +135,33 @@ namespace BookManagement
             Search();
             MainViewModel.IsLoading = false;
         }
-        private async Task<bool> saveExcelFile(PHIEUNHAPSACH import)
+        private async Task saveExcelFile(PHIEUNHAPSACH import)
         {
-            string userRoot = System.Environment.GetEnvironmentVariable("USERPROFILE");
-            string downloadFolder = Path.Combine(userRoot, "Downloads");
 
-            FileInfo fileInfo = new FileInfo($"{downloadFolder}\\{import.MaPhieuNhap}.xlsx");
-            if(!IsFileLocked(fileInfo))
+            MainViewModel.IsLoading = true;
+            string filePath = "";
+            var saveFileDialog = new SaveFileDialog();
+            saveFileDialog.FileName = import.MaPhieuNhap;
+            saveFileDialog.Filter = "Excel Sheet(*.xlsx)|*.xlsx|All Files(*.*)|*.*";
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                if (fileInfo.Exists)
+                filePath = saveFileDialog.FileName;
+            }
+            else
+            {
+                ConfirmDialog notification = new ConfirmDialog()
                 {
-                    fileInfo.Delete();
-                }
-                using (var package = new ExcelPackage(fileInfo))
+                    Header = "Lỗi",
+                    ContentString = "Xuất file không thành công."
+                };
+                MainViewModel.SetLoading(false);
+                await DialogHost.Show(notification, "Main");
+                return;
+            }
+
+            try
+            {
+                using (ExcelPackage package = new ExcelPackage())
                 {
                     ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("MainReport");
                     worksheet.Cells[1, 1].Value = "Mã phiếu nhập";
@@ -188,9 +188,9 @@ namespace BookManagement
                         worksheet.Cells[6 + i, 1].Value = importDetail.SACH.MaSach;
                         worksheet.Cells[6 + i, 2].Value = importDetail.SACH.DAUSACH.TenSach;
                         worksheet.Cells[6 + i, 3].Value = importDetail.SACH.NhaXuatBan;
-                        worksheet.Cells[6 + i, 4].Value = importDetail.SACH.DonGiaNhap;
+                        worksheet.Cells[6 + i, 4].Value = importDetail.SACH.DonGiaNhapMoiNhat;
                         worksheet.Cells[6 + i, 5].Value = importDetail.SoLuong;
-                        worksheet.Cells[6 + i, 6].Value = importDetail.SoLuong * importDetail.SACH.DonGiaNhap;
+                        worksheet.Cells[6 + i, 6].Value = importDetail.SoLuong * importDetail.SACH.DonGiaNhapMoiNhat;
                     }
                     using (ExcelRange excelRange = worksheet.Cells[$"A5:F{5 + import.CHITIETPHIEUNHAPs.Count}"])
                     {
@@ -223,16 +223,28 @@ namespace BookManagement
                         worksheet.Column(i).Width *= 1.2;
                     }
 
-                    await package.SaveAsAsync(fileInfo);
-
-                    System.Diagnostics.Process.Start(fileInfo.FullName);
+                    Byte[] bin = package.GetAsByteArray();
+                    File.WriteAllBytes(filePath, bin);
                 }
-                return true;
-            }    
-            else
+
+                ConfirmDialog notification = new ConfirmDialog()
+                {
+                    Header = "Thông báo",
+                    ContentString = "Xuất file thành công.",
+                };
+                MainViewModel.SetLoading(false);
+                await DialogHost.Show(notification, "Main");
+            }
+            catch
             {
-                return false;
-            }    
+                ConfirmDialog notification = new ConfirmDialog()
+                {
+                    Header = "Lỗi",
+                    ContentString = "Có lỗi khi lưu file.",
+                };
+                MainViewModel.SetLoading(false);
+                await DialogHost.Show(notification, "Main");
+            } 
         }
         private bool IsFileLocked(FileInfo file)
         {
@@ -276,7 +288,7 @@ namespace BookManagement
                 {
                     return false;
                 }    
-                bool checkDate = SearchDate == null || (SearchDate != null && p.NgayNhap == SearchDate);
+                bool checkDate = SearchDate == null || (SearchDate != null && p.NgayNhap.Value.ToShortDateString() == SearchDate.Value.ToShortDateString());
                 if (!checkDate)
                 {
                     return false;

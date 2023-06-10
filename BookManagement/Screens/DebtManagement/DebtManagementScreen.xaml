@@ -71,16 +71,16 @@
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="20"/>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="20"/>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="20"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
         <Grid 
-            Margin="50 0" 
+            Margin="40 0" 
             Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -95,7 +95,7 @@
                 FontSize="{StaticResource FontSize34}"/>
         </Grid>
         <Border Background="{StaticResource BackgroundColorBrush}"
-                Padding="50 30"
+                Padding="40 30"
                 Grid.Row="3">
             <Grid>
                 <Grid>
@@ -254,12 +254,15 @@
                 </Grid>
             </Grid>
         </Border>
+        <!-- This to make column in Datagrid collapsed -->
+        <FrameworkElement x:Name="dummyElement" Visibility="Collapsed"/>
+        <!--- -->
         <ScrollViewer
             Grid.Row="5"
             Background="{StaticResource WhiteColorBrush}"
             HorizontalScrollBarVisibility="Auto" 
             ScrollViewer.CanContentScroll="True"
-            Margin="50 0">
+            Margin="40 0">
             <DataGrid
                 ItemsSource="{Binding FilterCustomers, UpdateSourceTrigger=PropertyChanged}" 
                 AutoGenerateColumns="False"
@@ -270,7 +273,9 @@
                 <DataGrid.Columns>
                     <DataGridTextColumn 
                         Header="ID" 
-                        Width="120" 
+                        Width="120"
+                        MinWidth="120"
+                        MaxWidth="120"
                         Binding="{Binding MaKhachHang}"
                         HeaderStyle="{StaticResource CenterHeader}"
                         CellStyle="{StaticResource CenterCell}">
@@ -282,7 +287,9 @@
                     </DataGridTextColumn>
                     <DataGridTextColumn 
                         Header="Tên khách hàng" 
-                        Width="200" 
+                        Width="auto" 
+                        MinWidth="150"
+                        MaxWidth="700"
                         Binding="{Binding TenKhachHang}"
                         HeaderStyle="{StaticResource LeftHeader}"
                         CellStyle="{StaticResource LeftCell}">
@@ -293,8 +300,10 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
                     <DataGridTextColumn 
-                        Header="Giới tính" 
-                        Width="100" 
+                        Header="Giới tính"
+                        Width="auto"
+                        MinWidth="100"
+                        MaxWidth="200"
                         HeaderStyle="{StaticResource CenterHeader}"
                         CellStyle="{StaticResource CenterCell}"
                         Binding="{Binding GioiTinh}">
@@ -305,8 +314,10 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
                     <DataGridTextColumn 
-                        Header="Ngày sinh" 
-                        Width="150" 
+                        Header="Ngày sinh"
+                        Width="150"
+                        MinWidth="150"
+                        MaxWidth="150"
                         HeaderStyle="{StaticResource CenterHeader}"
                         CellStyle="{StaticResource CenterCell}"
                         Binding="{Binding NgaySinh, Converter={x:Static local:DateTimeToShortConverter.Instance}}">
@@ -318,7 +329,9 @@
                     </DataGridTextColumn>
                     <DataGridTextColumn 
                         Header="Điện thoại" 
+                        MinWidth="150"
                         Width="150" 
+                        MaxWidth="150"
                         HeaderStyle="{StaticResource LeftHeader}"
                         CellStyle="{StaticResource LeftCell}"
                         Binding="{Binding DienThoai}">
@@ -329,8 +342,10 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
                     <DataGridTextColumn 
-                        Header="Địa chỉ" 
-                        Width="100" 
+                        Header="Địa chỉ"
+                        Width="auto"
+                        MinWidth="100"
+                        MaxWidth="700"
                         HeaderStyle="{StaticResource LeftHeader}"
                         CellStyle="{StaticResource LeftCell}"
                         Binding="{Binding DiaChi}">
@@ -341,8 +356,10 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
                     <DataGridTextColumn 
-                        Header="Email" 
-                        Width="150" 
+                        Header="Email"
+                        Width="auto"
+                        MinWidth="150"
+                        MaxWidth="500"
                         HeaderStyle="{StaticResource LeftHeader}"
                         CellStyle="{StaticResource LeftCell}"
                         Binding="{Binding Email}">
@@ -353,8 +370,10 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
                     <DataGridTextColumn 
-                        Header="Tiền nợ" 
-                        Width="100" 
+                        Header="Tiền nợ"
+                        Width="auto"
+                        MinWidth="150"
+                        MaxWidth="300"
                         CellStyle="{StaticResource RightCell}"
                         HeaderStyle="{StaticResource RightHeader}"
                         Binding="{Binding TienNo, Converter={x:Static local:DecimalToMoneyConveter.Instance}}">
@@ -365,10 +384,13 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
                     <DataGridTemplateColumn 
-                        Header="Xem" 
+                        Header="Xem"
                         Width="80"
+                        MinWidth="80"
+                        MaxWidth="80"
                         HeaderStyle="{StaticResource CenterHeader}"
-                        CellStyle="{StaticResource CenterCell}">
+                        CellStyle="{StaticResource CenterCell}"
+                        Visibility="{c:Binding 'DataContext.IsAllowSearchDebtCollect', Source={x:Reference dummyElement}, UpdateSourceTrigger=PropertyChanged}">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Label>
@@ -387,8 +409,11 @@
                     <DataGridTemplateColumn 
                         Header="Thu" 
                         Width="80"
+                        MinWidth="80"
+                        MaxWidth="80"
                         HeaderStyle="{StaticResource CenterHeader}"
-                        CellStyle="{StaticResource CenterCell}">
+                        CellStyle="{StaticResource CenterCell}"
+                        Visibility="{c:Binding 'DataContext.IsAllowDebtCollect', Source={x:Reference dummyElement}, UpdateSourceTrigger=PropertyChanged}">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Label>

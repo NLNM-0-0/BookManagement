@@ -1,0 +1,296 @@
+﻿<UserControl x:Class="BookManagement.DebtDetail"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BookManagement"
+             xmlns:materialDesign ="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" >
+    <ScrollViewer PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
+        <Grid
+            Margin="40 0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="30"/>
+            </Grid.RowDefinitions>
+            <StackPanel 
+                Grid.Row="1"
+                Orientation="Horizontal"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+                DockPanel.Dock="Top">
+                <TextBlock 
+                    Text="{Binding KhachHang.TenKhachHang}"
+                    VerticalAlignment="Center"
+                    FontSize="{StaticResource FontSize34}"/>
+                <TextBlock 
+                    Text="-"
+                    Margin="15 0"
+                    VerticalAlignment="Center"
+                    FontSize="{StaticResource FontSize34}"
+                    HorizontalAlignment="Center"/>
+                <TextBlock 
+                    Text="{Binding KhachHang.MaKhachHang}"
+                    FontSize="{StaticResource FontSize34}"
+                    VerticalAlignment="Center"/>
+            </StackPanel>
+            <StackPanel
+                Grid.Row="3"
+                Orientation="Horizontal">
+                <Grid
+                    Background="{DynamicResource PrimaryHueMidBrush}"
+                    Width="10"
+                    Margin="0 0 10 0"/>
+                <TextBlock
+                    Text="Thông tin cơ bản"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Left"
+                    FontWeight="SemiBold"
+                    FontSize="{StaticResource FontSize24}"/>
+            </StackPanel>
+            <Grid
+                Grid.Row="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <TextBox 
+                    Grid.Column="0"
+                    Text="{Binding KhachHang.DienThoai, UpdateSourceTrigger=PropertyChanged}"
+                    Width="auto"
+                    FontSize="{StaticResource FontSize16}"
+                    Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                    materialDesign:HintAssist.Hint="Số điện thoại"
+                    IsReadOnly="True"/>
+                <TextBox 
+                    Grid.Column="2"
+                    Text="{Binding KhachHang.DiaChi, UpdateSourceTrigger=PropertyChanged}"
+                    Width="auto"
+                    FontSize="{StaticResource FontSize16}"
+                    Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                    materialDesign:HintAssist.Hint="Địa chỉ"
+                    IsReadOnly="True"/>
+                <TextBox 
+                    Grid.Column="4"
+                    Text="{Binding KhachHang.TienNo, UpdateSourceTrigger=PropertyChanged,Converter={x:Static local:DecimalToMoneyWithoutCurrencyConverter.Instance}}"
+                    Width="auto"
+                    FontSize="{StaticResource FontSize16}"
+                    Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                    materialDesign:HintAssist.Hint="Tổng tiền nợ"
+                    materialDesign:TextFieldAssist.SuffixText=" VND"
+                    IsReadOnly="True"/>
+            </Grid>
+            <StackPanel
+                Grid.Row="7"
+                Orientation="Horizontal">
+                <Grid
+                    Background="{DynamicResource PrimaryHueMidBrush}"
+                    Width="10"
+                    Margin="0 0 10 0"/>
+                <TextBlock
+                    Text="Danh sách các phiếu nợ"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Left"
+                    FontWeight="SemiBold"
+                    FontSize="{StaticResource FontSize24}"/>
+            </StackPanel>
+            <Grid 
+                Grid.Row="9">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBox
+                    Margin="0 0 5 0"
+                    Grid.Column="0"
+                    Text="{Binding SearchMaNV, UpdateSourceTrigger=PropertyChanged}"
+                    Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                    materialDesign:HintAssist.Hint="Mã nhân viên"
+                    FontSize="{StaticResource FontSize16}"/>
+                <TextBox    
+                    Margin="0 0 5 0"
+                    Grid.Column="1"
+                    Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                    MaxWidth="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Grid}, Path=ActualWidth}"
+                    materialDesign:HintAssist.Hint="Giá từ"
+                    materialDesign:TextFieldAssist.SuffixText=" VND"
+                    Width="auto"
+                    FontSize="{StaticResource FontSize16}">
+                    <TextBox.Text>
+                        <Binding
+                            Path="MinPriceSearch"
+                            UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <local:NumberTextBoxValidation
+                                    IsCanEmpty="True"
+                                    Min="0"/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+                <TextBox    
+                    Margin="0 0 5 0"
+                    Grid.Column="2"
+                    Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                    MaxWidth="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Grid}, Path=ActualWidth}"
+                    materialDesign:HintAssist.Hint="Giá đến"
+                    materialDesign:TextFieldAssist.SuffixText=" VND"
+                    Width="auto"
+                    FontSize="{StaticResource FontSize16}">
+                    <TextBox.Text>
+                        <Binding
+                            Path="MaxPriceSearch"
+                            UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <local:NumberTextBoxValidation
+                                    IsCanEmpty="True"
+                                    Min="0"/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+                <DatePicker 
+                    Margin="0 0 5 0"
+                    Grid.Column="3"
+                    Style="{StaticResource OurDatePicker}"
+                    materialDesign:HintAssist.Hint="Ngày thu từ"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Stretch"
+                    Width="auto"
+                    Background="{StaticResource WhiteColorBrush}"
+                    FontSize="{StaticResource FontSize16}"
+                    SelectedDate="{Binding SearchFromDate, UpdateSourceTrigger=PropertyChanged}">
+                </DatePicker>
+                <DatePicker 
+                    Margin="0 0 5 0"
+                    Grid.Column="4"
+                    Style="{StaticResource OurDatePicker}"
+                    materialDesign:HintAssist.Hint="Ngày thu đến"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Stretch"
+                    Width="auto"
+                    Background="{StaticResource WhiteColorBrush}"
+                    FontSize="{StaticResource FontSize16}"
+                    SelectedDate="{Binding SearchToDate, UpdateSourceTrigger=PropertyChanged}">
+                </DatePicker>
+                <Button 
+                    Margin="0 0 5 0"
+                    x:Name="searchButton"
+                    Grid.Column="5"
+                    Content="Tìm"
+                    Command="{Binding SearchCommand}">
+                </Button>
+                <Button
+                    Grid.Column="6"
+                    Command="{Binding ResetCommand}"
+                    Style="{StaticResource WhiteButton}"
+                    Content="Khôi phục" HorizontalAlignment="Right" Width="100">
+                </Button>
+            </Grid>
+            <DataGrid 
+                Grid.Row="11"
+                ItemsSource="{Binding ListPhieuThu}" 
+                VerticalScrollBarVisibility="Disabled"
+                AutoGenerateColumns="False"
+                ScrollViewer.CanContentScroll="False"
+                CanUserReorderColumns="False" CanUserAddRows="False"
+                CanUserDeleteRows="False" IsReadOnly="True">
+                <DataGrid.Columns>
+                    <DataGridTextColumn 
+                        Header="Mã phiếu thu" 
+                        HeaderStyle="{StaticResource CenterHeader}"
+                        CellStyle="{StaticResource CenterCell}"
+                        MinWidth="100" MaxWidth="500" Width="200"
+                        Binding="{Binding MaPhieuThu}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style>
+                                <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn 
+                        Header="Mã nhân viên" 
+                        HeaderStyle="{StaticResource CenterHeader}"
+                        CellStyle="{StaticResource CenterCell}"
+                        MinWidth="100" MaxWidth="500" Width="200" 
+                        Binding="{Binding MaNhanVien}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style>
+                                <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn 
+                        Header="Số tiền thu" 
+                        HeaderStyle="{StaticResource RightHeader}"
+                        CellStyle="{StaticResource RightCell}"
+                        Width="*" MinWidth="100" MaxWidth="600"
+                        Binding="{Binding SoTienThu,  Converter={x:Static local:DecimalToMoneyConveter.Instance}}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style>
+                                <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn 
+                        Header="Ngày thu" 
+                        HeaderStyle="{StaticResource CenterHeader}"
+                        CellStyle="{StaticResource CenterCell}"
+                        Width="*" MinWidth="100" MaxWidth="600" 
+                        Binding="{Binding NgayThu,  Converter={x:Static local:DateTimeToShortConverter.Instance}}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style>
+                                <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTemplateColumn 
+                        Header="In" 
+                        Width="100"
+                        MinWidth="50"
+                        HeaderStyle="{StaticResource CenterHeader}"
+                        CellStyle="{StaticResource CenterCell}">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Label>
+                                    <Hyperlink
+                                        Foreground="#4B8CDE"
+                                        Command="{Binding RelativeSource={RelativeSource AncestorType=local:DebtDetail}, Path=DataContext.PrintPhieuThuCommand}"
+                                        CommandParameter="{Binding}">
+                                        <TextBlock
+                                            Text="In">
+                                        </TextBlock>
+                                    </Hyperlink>
+                                </Label>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </ScrollViewer>
+    <UserControl.InputBindings>
+        <KeyBinding
+            Key="Enter"
+            Command="{Binding SearchCommand,UpdateSourceTrigger=PropertyChanged}"/>
+    </UserControl.InputBindings>
+</UserControl>

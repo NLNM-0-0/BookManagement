@@ -256,9 +256,7 @@ namespace BookManagement {
                 buttonItems.Add(new ButtonItem("PageLayoutFooter", "Hóa đơn", 3, 
                     isExistAccess(accessList, AppEnum.TraCuuHoaDonBanSach)));
                 buttonItems.Add(new ButtonItem("CashRefund", "Khách hàng", 4, 
-                    isExistAccess(accessList, AppEnum.LapPhieuThuTien) || 
-                    isExistAccess(accessList, AppEnum.TraCuuPhieuThuTien) || 
-                    isExistAccess(accessList, AppEnum.LuuThongTinKhachHang)));
+                    isExistAccess(accessList, AppEnum.TraCuukhachHang)));
                 buttonItems.Add(new ButtonItem("CalendarText", "Báo cáo", 5,
                     isExistAccess(accessList, AppEnum.LapBaoCaoThang)));
                 buttonItems.Add(new ButtonItem("Cog", "Cài đặt", 6, 

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BookManagement"
         xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
-        Icon="..\..\..\Assets\Icons\BUKU.png"
+        Icon="..\..\..\Assets\Icons\BUUK.png"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
@@ -56,11 +56,11 @@
                     <StackPanel 
                             x:Name="RightColumnContainer">
 
-                        <Label Content="Welcome back" FontSize="40" FontWeight="Bold" Margin="0,220,0,20" Foreground="{DynamicResource PrimaryHueMidBrush}"/>
+                        <Label Content="Chào mừng trở lại" FontSize="40" FontWeight="Bold" Margin="0,220,0,20" Foreground="{DynamicResource PrimaryHueMidBrush}"/>
                         <TextBox
                             x:Name="Username"
                             Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                            materialDesign:HintAssist.Hint="Username"
+                            materialDesign:HintAssist.Hint="Tên đăng nhập"
                             Width="auto"
                             HorizontalContentAlignment="Stretch"
                             Margin="0 30"
@@ -73,7 +73,7 @@
                         <PasswordBox
                             x:Name="Password"
                             Style="{StaticResource MaterialDesignOutlinedRevealPasswordBox}"            
-                            materialDesign:HintAssist.Hint="Password"
+                            materialDesign:HintAssist.Hint="Mật khẩu"
                             materialDesign:TextFieldAssist.HasClearButton="True"
                             Width="auto"
                             Margin="0 0 0 30"
@@ -94,7 +94,9 @@
                         </PasswordBox>
 
                         <Button x:Name="LoginButton"
-                                Content="Login"
+                                Content="Đăng nhập"
+                                Padding="15 0"
+                                Width="auto"
                                 FontSize="{StaticResource FontSize16}"
                                 HorizontalAlignment="Right"
                                 Command="{Binding OnLogin}"

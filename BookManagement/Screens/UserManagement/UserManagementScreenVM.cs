@@ -30,7 +30,7 @@ namespace BookManagement
         public ICommand RemoveUserCommand { get; set; }
         public ICommand SearchCommand { get; set; }
         public ICommand CloseSearchCommand { get; set; }
-        public ICommand ShowPasswordCommand { get; set; }
+        public ICommand ResetPasswordCommand { get; set; }
         public ICommand SavePasswordCommand { get; set; }
         #endregion
 
@@ -142,7 +142,6 @@ namespace BookManagement
         #region Constructor
         public UserManagementScreenVM()
         {
-            MainViewModel.SetLoading(true);
             Task.Run(async () =>
             {
                 MainViewModel.SetLoading(true);
@@ -196,7 +195,7 @@ namespace BookManagement
                         return;
                     }
                     dl.ContentString = "Mật khẩu đã được thay đổi!";
-                    dl.Header = "Success";
+                    dl.Header = "Thông báo";
 
                     user.Password = NewPassword;
                     await userRepo.Update(user);
@@ -206,19 +205,19 @@ namespace BookManagement
                     ConfirmNewPassword = "";
                 });
 
-                ShowPasswordCommand = new RelayCommand<NHANVIEN>(p => { return true; }, async p =>
+                ResetPasswordCommand = new RelayCommand<NHANVIEN>(p => { return true; }, async p =>
                 {
-                    var dl = new ConfirmDialog()
-                    {
-                        ContentString = $"Mật khẩu là: {p.Password}.",
-                        Header = "Password",
-                    };
-                    await DialogHost.Show(dl, "Main");
+                    ConfirmAccountDialog confirmAccountDialog = new ConfirmAccountDialog();
+                    ConfirmAccountDialogVM confirmAccountDialogVM = new ConfirmAccountDialogVM(AccountStore.instance.CurrentAccount, p);
+                    confirmAccountDialog.DataContext = confirmAccountDialogVM;
+                    await DialogHost.Show(confirmAccountDialog, "Main");
                 });
                 MainViewModel.SetLoading(false);
             });
         }
+        #endregion 
 
+        #region Command Methods
         private async Task Load()
         {
             NewUser = new NHANVIEN();
@@ -241,9 +240,7 @@ namespace BookManagement
                 FilteredUsers = new ObservableCollection<NHANVIEN>(FilteredUsers);
             }));
         }
-        #endregion
 
-        #region Command Methods
         public async Task RemoveUser(object obj)
         {
             MainViewModel.SetLoading(true);
