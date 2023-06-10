@@ -377,7 +377,8 @@
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectionChanged" SourceName="tabcontrol">
                     <i:InvokeCommandAction Command="{Binding TabSelected}" 
-                                           PassEventArgsToCommand="True"/>
+                                           PassEventArgsToCommand="True"
+                                           />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </TabControl>
