@@ -18,6 +18,8 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="20"/>
                 <RowDefinition Height="auto"/>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="auto"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
@@ -81,7 +83,55 @@
             </Grid>
 
             <Grid
-                Grid.Row="5"
+                Grid.Row="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <StackPanel
+                    Grid.Row="0"
+                    Orientation="Horizontal">
+                    <Grid
+                        Background="{DynamicResource PrimaryHueMidBrush}"
+                        Width="10"
+                        Margin="0 0 10 0"/>
+                    <TextBlock
+                        Text="Thông tin nhân viên"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Left"
+                        FontWeight="SemiBold"
+                        FontSize="{StaticResource FontSize24}"/>
+                </StackPanel>
+                <Grid
+                    Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox 
+                        Grid.Column="0"
+                        Text="{Binding HoaDon.MaNhanVien, UpdateSourceTrigger=PropertyChanged}"
+                        Width="auto"
+                        FontSize="{StaticResource FontSize16}"
+                        Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                        materialDesign:HintAssist.Hint="Mã nhân viên"
+                        IsReadOnly="True"/>
+                    <TextBox 
+                        Grid.Column="2"
+                        Text="{Binding HoaDon.NHANVIEN.TenNhanVien, UpdateSourceTrigger=PropertyChanged}"
+                        Width="auto"
+                        FontSize="{StaticResource FontSize16}"
+                        Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                        materialDesign:HintAssist.Hint="Tên nhân viên"
+                        IsReadOnly="True"/>
+                </Grid>
+            </Grid>
+            
+            <Grid
+                Grid.Row="7"
                 Margin="0 0 0 30"
                 Visibility="{c:Binding 'KhachHang != null'}">
                 <Grid.RowDefinitions>
@@ -109,10 +159,20 @@
                     Grid.Row="2">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="2*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <TextBox 
                         Grid.Column="0"
+                        Text="{Binding KhachHang.MaKhachHang, UpdateSourceTrigger=PropertyChanged}"
+                        Width="auto"
+                        FontSize="{StaticResource FontSize16}"
+                        Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                        materialDesign:HintAssist.Hint="Mã khách hàng"
+                        IsReadOnly="True"/>
+                    <TextBox 
+                        Grid.Column="2"
                         Text="{Binding KhachHang.TenKhachHang, UpdateSourceTrigger=PropertyChanged}"
                         Width="auto"
                         FontSize="{StaticResource FontSize16}"
@@ -126,7 +186,7 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="20"/>
                         <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="30"/>
+                        <ColumnDefinition Width="20"/>
                         <ColumnDefinition Width="2*"/>
                     </Grid.ColumnDefinitions>
                     
@@ -136,7 +196,7 @@
                         Width="auto"
                         FontSize="{StaticResource FontSize16}"
                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                        materialDesign:HintAssist.Hint="Ngày mua"
+                        materialDesign:HintAssist.Hint="Số điện thoại"
                         IsReadOnly="True"/>
                     <TextBox 
                         Grid.Column="2"
@@ -150,7 +210,7 @@
             </Grid>
 
             <Grid
-                Grid.Row="6">
+                Grid.Row="8">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="30"/>

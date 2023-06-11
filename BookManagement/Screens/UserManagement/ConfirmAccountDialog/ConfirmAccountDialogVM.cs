@@ -3,6 +3,7 @@ using MaterialDesignThemes.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -33,7 +34,8 @@ namespace BookManagement
                return !String.IsNullOrEmpty(Password);
             },async p =>
             {
-                if(Password != userHasAccessToReset.Password) 
+                string password = changePassword(Password);
+                if (password != userHasAccessToReset.Password) 
                 {
                     PreviousItem = MainViewModel.UpdateDialog("Main");
                     var dl = new ConfirmDialog()
@@ -53,7 +55,7 @@ namespace BookManagement
                 }
                 else
                 {
-                    userNeedToReset.Password = "BUUK123";
+                    userNeedToReset.Password = changePassword("BUUK123");
                     await userRepo.Update(userNeedToReset);
                     DialogHost.CloseDialogCommand.Execute(null, null);
                     var dl = new ConfirmDialog()
@@ -64,6 +66,19 @@ namespace BookManagement
                     await DialogHost.Show(dl, "Main");
                 }    
             });
+        }
+        private String changePassword(String password)
+        {
+            byte[] temp = ASCIIEncoding.ASCII.GetBytes(password);
+            byte[] hasData = new MD5CryptoServiceProvider().ComputeHash(temp);
+
+            string hasPass = "";
+
+            foreach (byte item in hasData)
+            {
+                hasPass += item;
+            }
+            return hasPass;
         }
     }
 }

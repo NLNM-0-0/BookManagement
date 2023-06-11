@@ -54,7 +54,7 @@ namespace BookManagement
 
         private async Task Load()
         {
-            HoaDon = await billRepo.GetSingleAsync(b => b.MaHoaDon.Equals(billId), b => b.KHACHHANG);
+            HoaDon = await billRepo.GetSingleAsync(b => b.MaHoaDon.Equals(billId), b => b.KHACHHANG, b => b.NHANVIEN);
             List<CHITIETHOADON> list = new List<CHITIETHOADON>((
                 await ctRepo.GetListAsync(
                     c => c.MaHoaDon == billId, 

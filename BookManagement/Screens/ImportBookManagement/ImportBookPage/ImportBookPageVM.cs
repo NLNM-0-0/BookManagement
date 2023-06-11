@@ -207,7 +207,7 @@ namespace BookManagement
                 allImportDetails.Insert(0, importDetail);
                 Search();
             }
-            else if(allImportDetails.Any(p => p.MaSach == book.MaSach))
+            else if(allImportDetails.Any(p => p.MaSach == book.MaSach || p.SACH.MaSach == book.MaSach))
             {
                 var dl = new ConfirmDialog()
                 {

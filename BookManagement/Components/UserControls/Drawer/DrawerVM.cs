@@ -262,7 +262,8 @@ namespace BookManagement {
                 buttonItems.Add(new ButtonItem("Cog", "Cài đặt", 6, true));
                 buttonItems.Add(new ButtonItem("Account", "Tài khoản", 7, 
                     isExistAccess(accessList, AppEnum.ThayDoiMatKhau) ||
-                    isExistAccess(accessList, AppEnum.TraCuuNhanVien)));
+                    isExistAccess(accessList, AppEnum.TraCuuNhanVien) ||
+                    isExistAccess(accessList, AppEnum.ThemNguoiDung)));
                 buttonItems.Add(new ButtonItem("Exclamation", "NoAccess", 8, false));
                 return buttonItems;
             }    
