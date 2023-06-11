@@ -261,8 +261,8 @@ namespace BookManagement
                 removeUser.isActive = true;
                 notBannedUsers.Insert(0, removeUser);
                 bannedUsers.Remove(removeUser);
-                FilteredUsers = usersToSearch = notBannedUsers;
-            }    
+                FilteredUsers = usersToSearch = bannedUsers;
+            }
 
             await userRepo.Update(removeUser);
             MainViewModel.SetLoading(false);
