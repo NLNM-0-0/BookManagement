@@ -1,6 +1,8 @@
 ﻿using BookManagement.Models;
 using MaterialDesignThemes.Wpf;
 using System.ComponentModel;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -53,7 +55,16 @@ namespace BookManagement {
 
         private async Task<bool> Login() {
             IsLoading = true;
-            var user = await userRepo.GetSingleAsync(u => u.UserName == UserName && u.Password == Password, u => u.NHOMNGUOIDUNG, u => u.NHOMNGUOIDUNG.CHUCNANGs);
+            byte[] temp = ASCIIEncoding.ASCII.GetBytes(Password);
+            byte[] hasData = new MD5CryptoServiceProvider().ComputeHash(temp);
+
+            string hasPass = "";
+
+            foreach (byte item in hasData)
+            {
+                hasPass += item;
+            }
+            var user = await userRepo.GetSingleAsync(u => u.UserName == UserName && u.Password == hasPass, u => u.NHOMNGUOIDUNG, u => u.NHOMNGUOIDUNG.CHUCNANGs);
             IsLoading = false;
             if (user != null)
             {

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -183,13 +184,16 @@ namespace BookManagement
                     ConfirmNewPassword == NewPassword;
                 }, async p =>
                 {
+                    string currentPassword = changePassword(CurrentPassword);
+                    string newPassword = changePassword(NewPassword);
+
                     var user = AccountStore.instance.CurrentAccount;
                     var dl = new ConfirmDialog()
                     {
                         ContentString = "Mật khẩu bạn nhập đã sai. Xin hãy nhập lại!",
                         Header = "Oops",
                     };
-                    if (CurrentPassword != user.Password)
+                    if (currentPassword != user.Password)
                     {
                         await DialogHost.Show(dl, "Main");
                         return;
@@ -197,7 +201,7 @@ namespace BookManagement
                     dl.ContentString = "Mật khẩu đã được thay đổi!";
                     dl.Header = "Thông báo";
 
-                    user.Password = NewPassword;
+                    user.Password = newPassword;
                     await userRepo.Update(user);
                     await DialogHost.Show(dl, "Main");
                     CurrentPassword = "";
@@ -338,6 +342,20 @@ namespace BookManagement
         public void CloseSearch()
         {
             SearchText = string.Empty;
+        }
+
+        private String changePassword(String password) 
+        {
+            byte[] temp = ASCIIEncoding.ASCII.GetBytes(password);
+            byte[] hasData = new MD5CryptoServiceProvider().ComputeHash(temp);
+
+            string hasPass = "";
+
+            foreach (byte item in hasData)
+            {
+                hasPass += item;
+            }
+            return hasPass;
         }
         #endregion
     }

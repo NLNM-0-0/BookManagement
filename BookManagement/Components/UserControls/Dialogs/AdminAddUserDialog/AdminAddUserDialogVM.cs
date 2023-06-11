@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -110,7 +111,16 @@ namespace BookManagement
                     NewUser.MaNhomNguoiDung = SelectedUserGroup.MaNhomNguoiDung;
                     NewUser.isActive = true;
                     NewUser.NgayVaoLam = DateTime.Now;
-                    NewUser.Password = "BUUK123";
+                    byte[] temp = ASCIIEncoding.ASCII.GetBytes("BUUK123");
+                    byte[] hasData = new MD5CryptoServiceProvider().ComputeHash(temp);
+
+                    string hasPass = "";
+
+                    foreach (byte item in hasData)
+                    {
+                        hasPass += item;
+                    }
+                    NewUser.Password = hasPass;
                     NewUser.DiaChi = NewUser.DiaChi ?? "";
 
                     await userRepo.Add(NewUser);
