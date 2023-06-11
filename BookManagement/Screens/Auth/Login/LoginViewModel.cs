@@ -62,7 +62,7 @@ namespace BookManagement {
                     var confirmDialog = new ConfirmDialog()
                     {
                         Header = "Whoops",
-                        ContentString = "Tài khoản này khôn còn hoạt động được nữa."
+                        ContentString = "Tài khoản này không còn hoạt động được nữa."
                     };
                     await DialogHost.Show(confirmDialog, "Login");
                     return false;

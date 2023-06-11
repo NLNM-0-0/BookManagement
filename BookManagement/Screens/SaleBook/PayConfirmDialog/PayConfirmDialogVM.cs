@@ -212,7 +212,7 @@ namespace BookManagement
                         var dl = new ConfirmDialog()
                         {
                             Header = "Oops",
-                            ContentString = $"Hệ thống chỉ bán các sách có lượng tồn sau khi bán lơn hoặc bằng {minInStockAfterSell}.",
+                            ContentString = $"Hệ thống chỉ bán các sách có lượng tồn sau khi bán lớn hoặc bằng {minInStockAfterSell}.",
                             CM = new RelayCommandWithNoParameter(() =>
                             {
                                 DialogHost.CloseDialogCommand.Execute(null, null);
