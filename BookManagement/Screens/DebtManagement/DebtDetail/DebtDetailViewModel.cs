@@ -11,7 +11,7 @@ using System.Windows.Input;
 
 namespace BookManagement
 {
-    public class DebtDetailViewModel:BaseViewModel
+    public class DebtDetailViewModel : BaseViewModel
     {
         #region Properties
         private GenericDataRepository<KHACHHANG> khRepo;
@@ -22,6 +22,12 @@ namespace BookManagement
         public KHACHHANG KhachHang { get; set; }
         private string maKH;
 
+        private string searchMaPhieuThu;
+        public string SearchMaPhieuThu
+        {
+            get => searchMaPhieuThu;
+            set { searchMaPhieuThu = value; OnPropertyChanged(); }
+        }
         private string searchMaNV;
         public string SearchMaNV
         {
@@ -75,7 +81,7 @@ namespace BookManagement
 
             SearchCommand = new RelayCommandWithNoParameter(async () => await SearchAsync());
             ResetCommand = new RelayCommandWithNoParameter(async () => await ResetSearch());
-            PrintPhieuThuCommand= new RelayCommand<object>((p) =>
+            PrintPhieuThuCommand = new RelayCommand<object>((p) =>
             {
                 return p != null;
             }, async (p) =>
@@ -98,7 +104,7 @@ namespace BookManagement
                         };
                         await DialogHost.Show(dl, "Main");
                     }
-                }         
+                }
             });
         }
 
@@ -127,20 +133,35 @@ namespace BookManagement
             }
             if (minPrice > maxPrice)
             {
-                MainViewModel.SetLoading(true);
                 ConfirmDialog notification = new ConfirmDialog()
                 {
                     Header = "Lỗi",
                     ContentString = "Giá tối thiểu đang lớn hơn giá tối đa."
                 };
-                MainViewModel.SetLoading(false);
                 await DialogHost.Show(notification, "Main");
 
                 return;
             }
-            List<PHIEUTHUNO> temp = allPhieuThu.Where(p => {
+            if (SearchFromDate > SearchToDate)
+            {
+                ConfirmDialog notification = new ConfirmDialog()
+                {
+                    Header = "Lỗi",
+                    ContentString = "Giá trị ngày không hợp lệ"
+                };
+                await DialogHost.Show(notification, "Main");
+
+                return;
+            }
+            List<PHIEUTHUNO> temp = allPhieuThu.Where(p =>
+            {
                 bool checkId = SearchMaNV == null || SearchMaNV == "" || p.MaNhanVien.ToLower().Contains(SearchMaNV.Trim().ToLower());
                 if (!checkId)
+                {
+                    return false;
+                }
+                bool checkPt = SearchMaPhieuThu == null || SearchMaPhieuThu == "" || p.MaPhieuThu.ToLower().Contains(SearchMaPhieuThu.Trim().ToLower());
+                if (!checkPt)
                 {
                     return false;
                 }
@@ -173,9 +194,9 @@ namespace BookManagement
         {
             KhachHang = await khRepo.GetSingleAsync(k => k.MaKhachHang == maKH, k => k.PHIEUTHUNOes);
             allPhieuThu = new List<PHIEUTHUNO>((await ptRepo.GetListAsync(
-                p=>p.MaKhachHang==maKH, 
-                p=>p.NHANVIEN, 
-                p=>p.KHACHHANG)).OrderByDescending(p => p.NgayThu));
+                p => p.MaKhachHang == maKH,
+                p => p.NHANVIEN,
+                p => p.KHACHHANG)).OrderByDescending(p => p.NgayThu));
             ListPhieuThu = new ObservableCollection<PHIEUTHUNO>(allPhieuThu);
         }
     }

@@ -187,7 +187,6 @@ namespace BookManagement
 
             SelectedDebtMonth = selected.Month.ToString();
             SelectedDebtYear = selected.Year.ToString();
-
             Task.Run(async () =>
             {
                 MainViewModel.SetLoading(true);
@@ -306,53 +305,60 @@ namespace BookManagement
                         { "Mã KH", "Tên khách hàng", "Nợ đầu", "Phát sinh", "Lượng thu", "Nợ cuối" };
 
                     var columnCount = columnHeaders.Count();
-                    ws.Cells[1, 1].Value = $"Báo cáo công nợ tháng {SelectedDebtMonth}/{SelectedDebtYear}";
-                    ws.Cells[1, 1, 1, columnCount].Merge = true;
-                    ws.Cells[1, 1, 1, columnCount].Style.Font.Bold = true;
-                    ws.Cells[1, 1, 1, columnCount / 2]
-                        .Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-
-                    int colIndex = 1;
-                    int rowIndex = 2;
-                    foreach (var item in columnHeaders)
+                    if (AllDebtReports == null || AllDebtReports.Count < 1)
                     {
-                        var cell = ws.Cells[rowIndex, colIndex];
-                        var fill = cell.Style.Fill;
-                        fill.PatternType = ExcelFillStyle.Solid;
-                        fill.BackgroundColor.SetColor(Color.FromArgb(218, 227, 227));
-
-                        var border = cell.Style.Border;
-                        border.Bottom.Style = border.Top.Style
-                            = border.Left.Style = border.Right.Style = ExcelBorderStyle.Thin;
-                        cell.Value = item;
-                        colIndex++;
+                        ws.Cells[1, 1].Value = $"Báo cáo chưa được load, vui lòng làm lại.";
                     }
-
-                    foreach (var report in AllDebtReports)
+                    else
                     {
-                        colIndex = 1;
-                        rowIndex++;
+                        ws.Cells[1, 1].Value = $"Báo cáo công nợ tháng {SelectedDebtMonth}/{SelectedDebtYear}";
+                        ws.Cells[1, 1, 1, columnCount].Merge = true;
+                        ws.Cells[1, 1, 1, columnCount].Style.Font.Bold = true;
+                        ws.Cells[1, 1, 1, columnCount / 2]
+                            .Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
-                        ws.Cells[rowIndex, colIndex++].Value = report.MaKhachHang;
-                        ws.Cells[rowIndex, colIndex++].Value = report.KHACHHANG.TenKhachHang;
-                        ws.Cells[rowIndex, colIndex++].Value = report.NoDau;
-                        ws.Cells[rowIndex, colIndex++].Value = report.PhatSinh;
-                        ws.Cells[rowIndex, colIndex++].Value = report.NoDau + report.PhatSinh - report.NoCuoi;
-                        ws.Cells[rowIndex, colIndex++].Value = report.NoCuoi;
-                    }
+                        int colIndex = 1;
+                        int rowIndex = 2;
+                        foreach (var item in columnHeaders)
+                        {
+                            var cell = ws.Cells[rowIndex, colIndex];
+                            var fill = cell.Style.Fill;
+                            fill.PatternType = ExcelFillStyle.Solid;
+                            fill.BackgroundColor.SetColor(Color.FromArgb(218, 227, 227));
 
-                    using (ExcelRange excelRange = ws.Cells[$"A1:F{rowIndex}"])
-                    {
-                        excelRange.Style.Border.Top.Style = ExcelBorderStyle.Thin;
-                        excelRange.Style.Border.Left.Style = ExcelBorderStyle.Thin;
-                        excelRange.Style.Border.Right.Style = ExcelBorderStyle.Thin;
-                        excelRange.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                    }
+                            var border = cell.Style.Border;
+                            border.Bottom.Style = border.Top.Style
+                                = border.Left.Style = border.Right.Style = ExcelBorderStyle.Thin;
+                            cell.Value = item;
+                            colIndex++;
+                        }
+                        foreach (var report in AllDebtReports)
+                        {
+                            colIndex = 1;
+                            rowIndex++;
 
-                    ws.Cells.AutoFitColumns();
-                    for (int i = 1; i <= 6; i++)
-                    {
-                        ws.Column(i).Width *= 1.2;
+                            ws.Cells[rowIndex, colIndex++].Value = report.MaKhachHang;
+                            ws.Cells[rowIndex, colIndex++].Value = report.KHACHHANG.TenKhachHang;
+                            ws.Cells[rowIndex, colIndex++].Value = report.NoDau;
+                            ws.Cells[rowIndex, colIndex++].Value = report.PhatSinh;
+                            ws.Cells[rowIndex, colIndex++].Value = report.NoDau + report.PhatSinh - report.NoCuoi;
+                            ws.Cells[rowIndex, colIndex++].Value = report.NoCuoi;
+                        }
+
+                        using (ExcelRange excelRange = ws.Cells[$"A1:F{rowIndex}"])
+                        {
+                            excelRange.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                            excelRange.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                            excelRange.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                            excelRange.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                        }
+
+                        ws.Cells.AutoFitColumns();
+                        for (int i = 1; i <= 6; i++)
+                        {
+                            ws.Column(i).Width *= 1.2;
+                        }
+
                     }
 
                     Byte[] bin = p.GetAsByteArray();
@@ -413,58 +419,63 @@ namespace BookManagement
 
                     string[] columnHeaders = 
                         { "Mã sách", "Tên sách", "Tồn đầu", "Nhập", "Xuất", "Tồn cuối" };
-
-                    var columnCount = columnHeaders.Count();
-                    ws.Cells[1, 1].Value = $"Báo cáo tồn tháng {SelectedStockMonth}/{SelectedStockYear}";
-                    ws.Cells[1, 1, 1, columnCount].Merge = true;
-                    ws.Cells[1, 1, 1, columnCount].Style.Font.Bold = true;
-                    ws.Cells[1, 1, 1, columnCount / 2]
-                        .Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-
-                    int colIndex = 1;
-                    int rowIndex = 2;
-                    foreach(var item in columnHeaders)
+                    if (AllStockReports == null || AllStockReports.Count < 1)
                     {
-                        var cell =ws.Cells[rowIndex, colIndex];
-                        var fill = cell.Style.Fill;
-                        fill.PatternType = ExcelFillStyle.Solid;
-                        fill.BackgroundColor.SetColor(Color.FromArgb(218, 227, 227));
-
-                        var border=cell.Style.Border;
-                        border.Bottom.Style = border.Top.Style
-                            = border.Left.Style = border.Right.Style = ExcelBorderStyle.Thin;
-                        cell.Value = item;
-                        colIndex++;
+                        ws.Cells[1, 1].Value = $"Báo cáo chưa được load, vui lòng làm lại.";
                     }
-
-                    foreach(var report in AllStockReports)
+                    else
                     {
-                        colIndex = 1;
-                        rowIndex++;
+                        var columnCount = columnHeaders.Count();
+                        ws.Cells[1, 1].Value = $"Báo cáo tồn tháng {SelectedStockMonth}/{SelectedStockYear}";
+                        ws.Cells[1, 1, 1, columnCount].Merge = true;
+                        ws.Cells[1, 1, 1, columnCount].Style.Font.Bold = true;
+                        ws.Cells[1, 1, 1, columnCount / 2]
+                            .Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
-                        ws.Cells[rowIndex, colIndex++].Value = report.MaSach;
-                        ws.Cells[rowIndex, colIndex++].Value = report.SACH.DAUSACH.TenSach;
-                        ws.Cells[rowIndex, colIndex++].Value = report.TonDau.ToString();
-                        ws.Cells[rowIndex, colIndex++].Value=report.PhatSinh.ToString();
-                        var converter = new StockConverter();
-                        ws.Cells[rowIndex, colIndex++].Value = converter.Convert(report, null, null, null);
-                        ws.Cells[rowIndex, colIndex++].Value = report.TonCuoi.ToString();
-                    }
+                        int colIndex = 1;
+                        int rowIndex = 2;
+                        foreach (var item in columnHeaders)
+                        {
+                            var cell = ws.Cells[rowIndex, colIndex];
+                            var fill = cell.Style.Fill;
+                            fill.PatternType = ExcelFillStyle.Solid;
+                            fill.BackgroundColor.SetColor(Color.FromArgb(218, 227, 227));
 
-                    using (ExcelRange excelRange = ws.Cells[$"A1:F{rowIndex}"])
-                    {
-                        excelRange.Style.Border.Top.Style = ExcelBorderStyle.Thin;
-                        excelRange.Style.Border.Left.Style = ExcelBorderStyle.Thin;
-                        excelRange.Style.Border.Right.Style = ExcelBorderStyle.Thin;
-                        excelRange.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                    }
+                            var border = cell.Style.Border;
+                            border.Bottom.Style = border.Top.Style
+                                = border.Left.Style = border.Right.Style = ExcelBorderStyle.Thin;
+                            cell.Value = item;
+                            colIndex++;
+                        }
 
-                    ws.Cells.AutoFitColumns();
-                    for (int i = 1; i <= 6; i++)
-                    {
-                        ws.Column(i).Width *= 1.2;
-                    }
+                        foreach (var report in AllStockReports)
+                        {
+                            colIndex = 1;
+                            rowIndex++;
 
+                            ws.Cells[rowIndex, colIndex++].Value = report.MaSach;
+                            ws.Cells[rowIndex, colIndex++].Value = report.SACH.DAUSACH.TenSach;
+                            ws.Cells[rowIndex, colIndex++].Value = report.TonDau.ToString();
+                            ws.Cells[rowIndex, colIndex++].Value = report.PhatSinh.ToString();
+                            var converter = new StockConverter();
+                            ws.Cells[rowIndex, colIndex++].Value = converter.Convert(report, null, null, null);
+                            ws.Cells[rowIndex, colIndex++].Value = report.TonCuoi.ToString();
+                        }
+
+                        using (ExcelRange excelRange = ws.Cells[$"A1:F{rowIndex}"])
+                        {
+                            excelRange.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                            excelRange.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                            excelRange.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                            excelRange.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                        }
+
+                        ws.Cells.AutoFitColumns();
+                        for (int i = 1; i <= 6; i++)
+                        {
+                            ws.Column(i).Width *= 1.2;
+                        }
+                    }                    
                     Byte[] bin = p.GetAsByteArray();
                     File.WriteAllBytes(filePath, bin);
                 }
