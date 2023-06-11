@@ -201,7 +201,7 @@ namespace BookManagement
                 allKhachHang = new List<KHACHHANG>(
                    await khRepo.GetAllAsync(k => k.CHITIETBAOCAOCONGNOes, k => k.PHIEUTHUNOes, k => k.HOADONs));
 
-                await ViewStock();
+                //await ViewStock();
             }).ContinueWith((first) =>
             {
                 MainViewModel.SetLoading(false);
