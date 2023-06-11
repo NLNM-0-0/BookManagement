@@ -116,19 +116,27 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
+                    <ColumnDefinition/>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
                 <TextBox
                     Margin="0 0 5 0"
                     Grid.Column="0"
+                    Text="{Binding SearchMaPhieuThu, UpdateSourceTrigger=PropertyChanged}"
+                    Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                    materialDesign:HintAssist.Hint="Mã phiếu thu"
+                    FontSize="{StaticResource FontSize16}"/>
+                <TextBox
+                    Margin="0 0 5 0"
+                    Grid.Column="1"
                     Text="{Binding SearchMaNV, UpdateSourceTrigger=PropertyChanged}"
                     Style="{StaticResource MaterialDesignOutlinedTextBox}"
                     materialDesign:HintAssist.Hint="Mã nhân viên"
                     FontSize="{StaticResource FontSize16}"/>
                 <TextBox    
                     Margin="0 0 5 0"
-                    Grid.Column="1"
+                    Grid.Column="2"
                     Style="{StaticResource MaterialDesignOutlinedTextBox}"
                     MaxWidth="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Grid}, Path=ActualWidth}"
                     materialDesign:HintAssist.Hint="Giá từ"
@@ -149,7 +157,7 @@
                 </TextBox>
                 <TextBox    
                     Margin="0 0 5 0"
-                    Grid.Column="2"
+                    Grid.Column="3"
                     Style="{StaticResource MaterialDesignOutlinedTextBox}"
                     MaxWidth="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Grid}, Path=ActualWidth}"
                     materialDesign:HintAssist.Hint="Giá đến"
@@ -170,7 +178,7 @@
                 </TextBox>
                 <DatePicker 
                     Margin="0 0 5 0"
-                    Grid.Column="3"
+                    Grid.Column="4"
                     Style="{StaticResource OurDatePicker}"
                     materialDesign:HintAssist.Hint="Ngày thu từ"
                     VerticalAlignment="Center"
@@ -182,7 +190,7 @@
                 </DatePicker>
                 <DatePicker 
                     Margin="0 0 5 0"
-                    Grid.Column="4"
+                    Grid.Column="5"
                     Style="{StaticResource OurDatePicker}"
                     materialDesign:HintAssist.Hint="Ngày thu đến"
                     VerticalAlignment="Center"
@@ -195,12 +203,12 @@
                 <Button 
                     Margin="0 0 5 0"
                     x:Name="searchButton"
-                    Grid.Column="5"
+                    Grid.Column="6"
                     Content="Tìm"
                     Command="{Binding SearchCommand}">
                 </Button>
                 <Button
-                    Grid.Column="6"
+                    Grid.Column="7"
                     Command="{Binding ResetCommand}"
                     Style="{StaticResource WhiteButton}"
                     Content="Khôi phục" HorizontalAlignment="Right" Width="100">
