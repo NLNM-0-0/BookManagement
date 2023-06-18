@@ -103,7 +103,7 @@
           <Property Name="TenKhachHang" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="GioiTinh" Type="nvarchar" MaxLength="4" />
           <Property Name="NgaySinh" Type="smalldatetime" />
-          <Property Name="DienThoai" Type="varchar" MaxLength="13" />
+          <Property Name="DienThoai" Type="varchar" MaxLength="13" Nullable="false" />
           <Property Name="DiaChi" Type="nvarchar" MaxLength="200" />
           <Property Name="Email" Type="varchar" MaxLength="200" />
           <Property Name="TienNo" Type="money" />
@@ -167,6 +167,7 @@
           <Property Name="NhaXuatBan" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="SoLuong" Type="int" />
           <Property Name="DonGiaNhapMoiNhat" Type="money" Nullable="false" />
+          <Property Name="IsActive" Type="bit" />
         </EntityType>
         <EntityType Name="TACGIA">
           <Key>
@@ -189,7 +190,7 @@
           <Property Name="MaTheLoai" Type="varchar" MaxLength="8" Nullable="false" />
           <Property Name="TenTheLoai" Type="nvarchar" MaxLength="100" />
         </EntityType>
-        <Association Name="FK__CHITIETBA__MaBao__693CA210">
+        <Association Name="FK__CHITIETBA__MaBao__571DF1D5">
           <End Role="BAOCAOTON" Type="Self.BAOCAOTON" Multiplicity="1" />
           <End Role="CHITIETBAOCAOTON" Type="Self.CHITIETBAOCAOTON" Multiplicity="*" />
           <ReferentialConstraint>
@@ -201,7 +202,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__CHITIETBA__MaBao__6EF57B66">
+        <Association Name="FK__CHITIETBA__MaBao__5CD6CB2B">
           <End Role="BAOCAOCONGNO" Type="Self.BAOCAOCONGNO" Multiplicity="1" />
           <End Role="CHITIETBAOCAOCONGNO" Type="Self.CHITIETBAOCAOCONGNO" Multiplicity="*" />
           <ReferentialConstraint>
@@ -213,7 +214,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__CHITIETBA__MaKha__6FE99F9F">
+        <Association Name="FK__CHITIETBA__MaKha__5DCAEF64">
           <End Role="KHACHHANG" Type="Self.KHACHHANG" Multiplicity="1" />
           <End Role="CHITIETBAOCAOCONGNO" Type="Self.CHITIETBAOCAOCONGNO" Multiplicity="*" />
           <ReferentialConstraint>
@@ -225,7 +226,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__CHITIETBA__MaSac__6A30C649">
+        <Association Name="FK__CHITIETBA__MaSac__5812160E">
           <End Role="SACH" Type="Self.SACH" Multiplicity="1" />
           <End Role="CHITIETBAOCAOTON" Type="Self.CHITIETBAOCAOTON" Multiplicity="*" />
           <ReferentialConstraint>
@@ -237,7 +238,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__CHITIETHO__MaHoa__6383C8BA">
+        <Association Name="FK__CHITIETHO__MaHoa__5165187F">
           <End Role="HOADON" Type="Self.HOADON" Multiplicity="1" />
           <End Role="CHITIETHOADON" Type="Self.CHITIETHOADON" Multiplicity="*" />
           <ReferentialConstraint>
@@ -249,7 +250,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__CHITIETHO__MaSac__6477ECF3">
+        <Association Name="FK__CHITIETHO__MaSac__52593CB8">
           <End Role="SACH" Type="Self.SACH" Multiplicity="1" />
           <End Role="CHITIETHOADON" Type="Self.CHITIETHOADON" Multiplicity="*" />
           <ReferentialConstraint>
@@ -261,7 +262,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__CHITIETPH__MaPhi__5CD6CB2B">
+        <Association Name="FK__CHITIETPH__MaPhi__4AB81AF0">
           <End Role="PHIEUNHAPSACH" Type="Self.PHIEUNHAPSACH" Multiplicity="1" />
           <End Role="CHITIETPHIEUNHAP" Type="Self.CHITIETPHIEUNHAP" Multiplicity="*" />
           <ReferentialConstraint>
@@ -273,7 +274,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__CHITIETPH__MaSac__5BE2A6F2">
+        <Association Name="FK__CHITIETPH__MaSac__49C3F6B7">
           <End Role="SACH" Type="Self.SACH" Multiplicity="1" />
           <End Role="CHITIETPHIEUNHAP" Type="Self.CHITIETPHIEUNHAP" Multiplicity="*" />
           <ReferentialConstraint>
@@ -285,7 +286,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__CHITIETTA__MaDau__52593CB8">
+        <Association Name="FK__CHITIETTA__MaDau__403A8C7D">
           <End Role="DAUSACH" Type="Self.DAUSACH" Multiplicity="1" />
           <End Role="CHITIETTACGIA" Type="Self.CHITIETTACGIA" Multiplicity="*" />
           <ReferentialConstraint>
@@ -297,7 +298,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__CHITIETTA__MaTac__5165187F">
+        <Association Name="FK__CHITIETTA__MaTac__3F466844">
           <End Role="TACGIA" Type="Self.TACGIA" Multiplicity="1" />
           <End Role="CHITIETTACGIA" Type="Self.CHITIETTACGIA" Multiplicity="*" />
           <ReferentialConstraint>
@@ -309,7 +310,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__DAUSACH__MaTheLo__4E88ABD4">
+        <Association Name="FK__DAUSACH__MaTheLo__3C69FB99">
           <End Role="THELOAI" Type="Self.THELOAI" Multiplicity="0..1" />
           <End Role="DAUSACH" Type="Self.DAUSACH" Multiplicity="*" />
           <ReferentialConstraint>
@@ -321,7 +322,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__HOADON__MaKhachH__60A75C0F">
+        <Association Name="FK__HOADON__MaKhachH__4E88ABD4">
           <End Role="KHACHHANG" Type="Self.KHACHHANG" Multiplicity="0..1" />
           <End Role="HOADON" Type="Self.HOADON" Multiplicity="*" />
           <ReferentialConstraint>
@@ -333,7 +334,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__HOADON__MaNhanVi__5FB337D6">
+        <Association Name="FK__HOADON__MaNhanVi__4D94879B">
           <End Role="NHANVIEN" Type="Self.NHANVIEN" Multiplicity="0..1" />
           <End Role="HOADON" Type="Self.HOADON" Multiplicity="*" />
           <ReferentialConstraint>
@@ -345,7 +346,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__NHANVIEN__MaNhom__412EB0B6">
+        <Association Name="FK__NHANVIEN__MaNhom__2E1BDC42">
           <End Role="NHOMNGUOIDUNG" Type="Self.NHOMNGUOIDUNG" Multiplicity="0..1" />
           <End Role="NHANVIEN" Type="Self.NHANVIEN" Multiplicity="*" />
           <ReferentialConstraint>
@@ -357,7 +358,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__PHANQUYEN__MaChu__3C69FB99">
+        <Association Name="FK__PHANQUYEN__MaChu__29572725">
           <End Role="CHUCNANG" Type="Self.CHUCNANG" Multiplicity="1" />
           <End Role="PHANQUYEN" Type="Self.PHANQUYEN" Multiplicity="*" />
           <ReferentialConstraint>
@@ -369,7 +370,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__PHANQUYEN__MaNho__3B75D760">
+        <Association Name="FK__PHANQUYEN__MaNho__286302EC">
           <End Role="NHOMNGUOIDUNG" Type="Self.NHOMNGUOIDUNG" Multiplicity="1" />
           <End Role="PHANQUYEN" Type="Self.PHANQUYEN" Multiplicity="*" />
           <ReferentialConstraint>
@@ -381,7 +382,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__PHIEUNHAP__MaNha__59063A47">
+        <Association Name="FK__PHIEUNHAP__MaNha__46E78A0C">
           <End Role="NHANVIEN" Type="Self.NHANVIEN" Multiplicity="0..1" />
           <End Role="PHIEUNHAPSACH" Type="Self.PHIEUNHAPSACH" Multiplicity="*" />
           <ReferentialConstraint>
@@ -393,7 +394,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__PHIEUTHUN__MaKha__73BA3083">
+        <Association Name="FK__PHIEUTHUN__MaKha__619B8048">
           <End Role="KHACHHANG" Type="Self.KHACHHANG" Multiplicity="0..1" />
           <End Role="PHIEUTHUNO" Type="Self.PHIEUTHUNO" Multiplicity="*" />
           <ReferentialConstraint>
@@ -405,7 +406,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__PHIEUTHUN__MaNha__72C60C4A">
+        <Association Name="FK__PHIEUTHUN__MaNha__60A75C0F">
           <End Role="NHANVIEN" Type="Self.NHANVIEN" Multiplicity="0..1" />
           <End Role="PHIEUTHUNO" Type="Self.PHIEUTHUNO" Multiplicity="*" />
           <ReferentialConstraint>
@@ -417,7 +418,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__SACH__MaDauSach__5535A963">
+        <Association Name="FK__SACH__MaDauSach__4316F928">
           <End Role="DAUSACH" Type="Self.DAUSACH" Multiplicity="0..1" />
           <End Role="SACH" Type="Self.SACH" Multiplicity="*" />
           <ReferentialConstraint>
@@ -450,83 +451,83 @@
           <EntitySet Name="TACGIA" EntityType="Self.TACGIA" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="THAMSO" EntityType="Self.THAMSO" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="THELOAI" EntityType="Self.THELOAI" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK__CHITIETBA__MaBao__693CA210" Association="Self.FK__CHITIETBA__MaBao__693CA210">
+          <AssociationSet Name="FK__CHITIETBA__MaBao__571DF1D5" Association="Self.FK__CHITIETBA__MaBao__571DF1D5">
             <End Role="BAOCAOTON" EntitySet="BAOCAOTON" />
             <End Role="CHITIETBAOCAOTON" EntitySet="CHITIETBAOCAOTON" />
           </AssociationSet>
-          <AssociationSet Name="FK__CHITIETBA__MaBao__6EF57B66" Association="Self.FK__CHITIETBA__MaBao__6EF57B66">
+          <AssociationSet Name="FK__CHITIETBA__MaBao__5CD6CB2B" Association="Self.FK__CHITIETBA__MaBao__5CD6CB2B">
             <End Role="BAOCAOCONGNO" EntitySet="BAOCAOCONGNO" />
             <End Role="CHITIETBAOCAOCONGNO" EntitySet="CHITIETBAOCAOCONGNO" />
           </AssociationSet>
-          <AssociationSet Name="FK__CHITIETBA__MaKha__6FE99F9F" Association="Self.FK__CHITIETBA__MaKha__6FE99F9F">
+          <AssociationSet Name="FK__CHITIETBA__MaKha__5DCAEF64" Association="Self.FK__CHITIETBA__MaKha__5DCAEF64">
             <End Role="KHACHHANG" EntitySet="KHACHHANG" />
             <End Role="CHITIETBAOCAOCONGNO" EntitySet="CHITIETBAOCAOCONGNO" />
           </AssociationSet>
-          <AssociationSet Name="FK__CHITIETBA__MaSac__6A30C649" Association="Self.FK__CHITIETBA__MaSac__6A30C649">
+          <AssociationSet Name="FK__CHITIETBA__MaSac__5812160E" Association="Self.FK__CHITIETBA__MaSac__5812160E">
             <End Role="SACH" EntitySet="SACH" />
             <End Role="CHITIETBAOCAOTON" EntitySet="CHITIETBAOCAOTON" />
           </AssociationSet>
-          <AssociationSet Name="FK__CHITIETHO__MaHoa__6383C8BA" Association="Self.FK__CHITIETHO__MaHoa__6383C8BA">
+          <AssociationSet Name="FK__CHITIETHO__MaHoa__5165187F" Association="Self.FK__CHITIETHO__MaHoa__5165187F">
             <End Role="HOADON" EntitySet="HOADON" />
             <End Role="CHITIETHOADON" EntitySet="CHITIETHOADON" />
           </AssociationSet>
-          <AssociationSet Name="FK__CHITIETHO__MaSac__6477ECF3" Association="Self.FK__CHITIETHO__MaSac__6477ECF3">
+          <AssociationSet Name="FK__CHITIETHO__MaSac__52593CB8" Association="Self.FK__CHITIETHO__MaSac__52593CB8">
             <End Role="SACH" EntitySet="SACH" />
             <End Role="CHITIETHOADON" EntitySet="CHITIETHOADON" />
           </AssociationSet>
-          <AssociationSet Name="FK__CHITIETPH__MaPhi__5CD6CB2B" Association="Self.FK__CHITIETPH__MaPhi__5CD6CB2B">
+          <AssociationSet Name="FK__CHITIETPH__MaPhi__4AB81AF0" Association="Self.FK__CHITIETPH__MaPhi__4AB81AF0">
             <End Role="PHIEUNHAPSACH" EntitySet="PHIEUNHAPSACH" />
             <End Role="CHITIETPHIEUNHAP" EntitySet="CHITIETPHIEUNHAP" />
           </AssociationSet>
-          <AssociationSet Name="FK__CHITIETPH__MaSac__5BE2A6F2" Association="Self.FK__CHITIETPH__MaSac__5BE2A6F2">
+          <AssociationSet Name="FK__CHITIETPH__MaSac__49C3F6B7" Association="Self.FK__CHITIETPH__MaSac__49C3F6B7">
             <End Role="SACH" EntitySet="SACH" />
             <End Role="CHITIETPHIEUNHAP" EntitySet="CHITIETPHIEUNHAP" />
           </AssociationSet>
-          <AssociationSet Name="FK__CHITIETTA__MaDau__52593CB8" Association="Self.FK__CHITIETTA__MaDau__52593CB8">
+          <AssociationSet Name="FK__CHITIETTA__MaDau__403A8C7D" Association="Self.FK__CHITIETTA__MaDau__403A8C7D">
             <End Role="DAUSACH" EntitySet="DAUSACH" />
             <End Role="CHITIETTACGIA" EntitySet="CHITIETTACGIA" />
           </AssociationSet>
-          <AssociationSet Name="FK__CHITIETTA__MaTac__5165187F" Association="Self.FK__CHITIETTA__MaTac__5165187F">
+          <AssociationSet Name="FK__CHITIETTA__MaTac__3F466844" Association="Self.FK__CHITIETTA__MaTac__3F466844">
             <End Role="TACGIA" EntitySet="TACGIA" />
             <End Role="CHITIETTACGIA" EntitySet="CHITIETTACGIA" />
           </AssociationSet>
-          <AssociationSet Name="FK__DAUSACH__MaTheLo__4E88ABD4" Association="Self.FK__DAUSACH__MaTheLo__4E88ABD4">
+          <AssociationSet Name="FK__DAUSACH__MaTheLo__3C69FB99" Association="Self.FK__DAUSACH__MaTheLo__3C69FB99">
             <End Role="THELOAI" EntitySet="THELOAI" />
             <End Role="DAUSACH" EntitySet="DAUSACH" />
           </AssociationSet>
-          <AssociationSet Name="FK__HOADON__MaKhachH__60A75C0F" Association="Self.FK__HOADON__MaKhachH__60A75C0F">
+          <AssociationSet Name="FK__HOADON__MaKhachH__4E88ABD4" Association="Self.FK__HOADON__MaKhachH__4E88ABD4">
             <End Role="KHACHHANG" EntitySet="KHACHHANG" />
             <End Role="HOADON" EntitySet="HOADON" />
           </AssociationSet>
-          <AssociationSet Name="FK__HOADON__MaNhanVi__5FB337D6" Association="Self.FK__HOADON__MaNhanVi__5FB337D6">
+          <AssociationSet Name="FK__HOADON__MaNhanVi__4D94879B" Association="Self.FK__HOADON__MaNhanVi__4D94879B">
             <End Role="NHANVIEN" EntitySet="NHANVIEN" />
             <End Role="HOADON" EntitySet="HOADON" />
           </AssociationSet>
-          <AssociationSet Name="FK__NHANVIEN__MaNhom__412EB0B6" Association="Self.FK__NHANVIEN__MaNhom__412EB0B6">
+          <AssociationSet Name="FK__NHANVIEN__MaNhom__2E1BDC42" Association="Self.FK__NHANVIEN__MaNhom__2E1BDC42">
             <End Role="NHOMNGUOIDUNG" EntitySet="NHOMNGUOIDUNG" />
             <End Role="NHANVIEN" EntitySet="NHANVIEN" />
           </AssociationSet>
-          <AssociationSet Name="FK__PHANQUYEN__MaChu__3C69FB99" Association="Self.FK__PHANQUYEN__MaChu__3C69FB99">
+          <AssociationSet Name="FK__PHANQUYEN__MaChu__29572725" Association="Self.FK__PHANQUYEN__MaChu__29572725">
             <End Role="CHUCNANG" EntitySet="CHUCNANG" />
             <End Role="PHANQUYEN" EntitySet="PHANQUYEN" />
           </AssociationSet>
-          <AssociationSet Name="FK__PHANQUYEN__MaNho__3B75D760" Association="Self.FK__PHANQUYEN__MaNho__3B75D760">
+          <AssociationSet Name="FK__PHANQUYEN__MaNho__286302EC" Association="Self.FK__PHANQUYEN__MaNho__286302EC">
             <End Role="NHOMNGUOIDUNG" EntitySet="NHOMNGUOIDUNG" />
             <End Role="PHANQUYEN" EntitySet="PHANQUYEN" />
           </AssociationSet>
-          <AssociationSet Name="FK__PHIEUNHAP__MaNha__59063A47" Association="Self.FK__PHIEUNHAP__MaNha__59063A47">
+          <AssociationSet Name="FK__PHIEUNHAP__MaNha__46E78A0C" Association="Self.FK__PHIEUNHAP__MaNha__46E78A0C">
             <End Role="NHANVIEN" EntitySet="NHANVIEN" />
             <End Role="PHIEUNHAPSACH" EntitySet="PHIEUNHAPSACH" />
           </AssociationSet>
-          <AssociationSet Name="FK__PHIEUTHUN__MaKha__73BA3083" Association="Self.FK__PHIEUTHUN__MaKha__73BA3083">
+          <AssociationSet Name="FK__PHIEUTHUN__MaKha__619B8048" Association="Self.FK__PHIEUTHUN__MaKha__619B8048">
             <End Role="KHACHHANG" EntitySet="KHACHHANG" />
             <End Role="PHIEUTHUNO" EntitySet="PHIEUTHUNO" />
           </AssociationSet>
-          <AssociationSet Name="FK__PHIEUTHUN__MaNha__72C60C4A" Association="Self.FK__PHIEUTHUN__MaNha__72C60C4A">
+          <AssociationSet Name="FK__PHIEUTHUN__MaNha__60A75C0F" Association="Self.FK__PHIEUTHUN__MaNha__60A75C0F">
             <End Role="NHANVIEN" EntitySet="NHANVIEN" />
             <End Role="PHIEUTHUNO" EntitySet="PHIEUTHUNO" />
           </AssociationSet>
-          <AssociationSet Name="FK__SACH__MaDauSach__5535A963" Association="Self.FK__SACH__MaDauSach__5535A963">
+          <AssociationSet Name="FK__SACH__MaDauSach__4316F928" Association="Self.FK__SACH__MaDauSach__4316F928">
             <End Role="DAUSACH" EntitySet="DAUSACH" />
             <End Role="SACH" EntitySet="SACH" />
           </AssociationSet>
@@ -554,67 +555,67 @@
           <EntitySet Name="TACGIAs" EntityType="WPFBookManagementModel.TACGIA" />
           <EntitySet Name="THAMSOes" EntityType="WPFBookManagementModel.THAMSO" />
           <EntitySet Name="THELOAIs" EntityType="WPFBookManagementModel.THELOAI" />
-          <AssociationSet Name="FK__CHITIETBA__MaBao__6EF57B66" Association="WPFBookManagementModel.FK__CHITIETBA__MaBao__6EF57B66">
+          <AssociationSet Name="FK__CHITIETBA__MaBao__5CD6CB2B" Association="WPFBookManagementModel.FK__CHITIETBA__MaBao__5CD6CB2B">
             <End Role="BAOCAOCONGNO" EntitySet="BAOCAOCONGNOes" />
             <End Role="CHITIETBAOCAOCONGNO" EntitySet="CHITIETBAOCAOCONGNOes" />
           </AssociationSet>
-          <AssociationSet Name="FK__CHITIETBA__MaBao__693CA210" Association="WPFBookManagementModel.FK__CHITIETBA__MaBao__693CA210">
+          <AssociationSet Name="FK__CHITIETBA__MaBao__571DF1D5" Association="WPFBookManagementModel.FK__CHITIETBA__MaBao__571DF1D5">
             <End Role="BAOCAOTON" EntitySet="BAOCAOTONs" />
             <End Role="CHITIETBAOCAOTON" EntitySet="CHITIETBAOCAOTONs" />
           </AssociationSet>
-          <AssociationSet Name="FK__CHITIETBA__MaKha__6FE99F9F" Association="WPFBookManagementModel.FK__CHITIETBA__MaKha__6FE99F9F">
+          <AssociationSet Name="FK__CHITIETBA__MaKha__5DCAEF64" Association="WPFBookManagementModel.FK__CHITIETBA__MaKha__5DCAEF64">
             <End Role="KHACHHANG" EntitySet="KHACHHANGs" />
             <End Role="CHITIETBAOCAOCONGNO" EntitySet="CHITIETBAOCAOCONGNOes" />
           </AssociationSet>
-          <AssociationSet Name="FK__CHITIETBA__MaSac__6A30C649" Association="WPFBookManagementModel.FK__CHITIETBA__MaSac__6A30C649">
+          <AssociationSet Name="FK__CHITIETBA__MaSac__5812160E" Association="WPFBookManagementModel.FK__CHITIETBA__MaSac__5812160E">
             <End Role="SACH" EntitySet="SACHes" />
             <End Role="CHITIETBAOCAOTON" EntitySet="CHITIETBAOCAOTONs" />
           </AssociationSet>
-          <AssociationSet Name="FK__CHITIETHO__MaHoa__6383C8BA" Association="WPFBookManagementModel.FK__CHITIETHO__MaHoa__6383C8BA">
+          <AssociationSet Name="FK__CHITIETHO__MaHoa__5165187F" Association="WPFBookManagementModel.FK__CHITIETHO__MaHoa__5165187F">
             <End Role="HOADON" EntitySet="HOADONs" />
             <End Role="CHITIETHOADON" EntitySet="CHITIETHOADONs" />
           </AssociationSet>
-          <AssociationSet Name="FK__CHITIETHO__MaSac__6477ECF3" Association="WPFBookManagementModel.FK__CHITIETHO__MaSac__6477ECF3">
+          <AssociationSet Name="FK__CHITIETHO__MaSac__52593CB8" Association="WPFBookManagementModel.FK__CHITIETHO__MaSac__52593CB8">
             <End Role="SACH" EntitySet="SACHes" />
             <End Role="CHITIETHOADON" EntitySet="CHITIETHOADONs" />
           </AssociationSet>
-          <AssociationSet Name="FK__CHITIETPH__MaPhi__5CD6CB2B" Association="WPFBookManagementModel.FK__CHITIETPH__MaPhi__5CD6CB2B">
+          <AssociationSet Name="FK__CHITIETPH__MaPhi__4AB81AF0" Association="WPFBookManagementModel.FK__CHITIETPH__MaPhi__4AB81AF0">
             <End Role="PHIEUNHAPSACH" EntitySet="PHIEUNHAPSACHes" />
             <End Role="CHITIETPHIEUNHAP" EntitySet="CHITIETPHIEUNHAPs" />
           </AssociationSet>
-          <AssociationSet Name="FK__CHITIETPH__MaSac__5BE2A6F2" Association="WPFBookManagementModel.FK__CHITIETPH__MaSac__5BE2A6F2">
+          <AssociationSet Name="FK__CHITIETPH__MaSac__49C3F6B7" Association="WPFBookManagementModel.FK__CHITIETPH__MaSac__49C3F6B7">
             <End Role="SACH" EntitySet="SACHes" />
             <End Role="CHITIETPHIEUNHAP" EntitySet="CHITIETPHIEUNHAPs" />
           </AssociationSet>
-          <AssociationSet Name="FK__DAUSACH__MaTheLo__4E88ABD4" Association="WPFBookManagementModel.FK__DAUSACH__MaTheLo__4E88ABD4">
+          <AssociationSet Name="FK__DAUSACH__MaTheLo__3C69FB99" Association="WPFBookManagementModel.FK__DAUSACH__MaTheLo__3C69FB99">
             <End Role="THELOAI" EntitySet="THELOAIs" />
             <End Role="DAUSACH" EntitySet="DAUSACHes" />
           </AssociationSet>
-          <AssociationSet Name="FK__SACH__MaDauSach__5535A963" Association="WPFBookManagementModel.FK__SACH__MaDauSach__5535A963">
+          <AssociationSet Name="FK__SACH__MaDauSach__4316F928" Association="WPFBookManagementModel.FK__SACH__MaDauSach__4316F928">
             <End Role="DAUSACH" EntitySet="DAUSACHes" />
             <End Role="SACH" EntitySet="SACHes" />
           </AssociationSet>
-          <AssociationSet Name="FK__HOADON__MaKhachH__60A75C0F" Association="WPFBookManagementModel.FK__HOADON__MaKhachH__60A75C0F">
+          <AssociationSet Name="FK__HOADON__MaKhachH__4E88ABD4" Association="WPFBookManagementModel.FK__HOADON__MaKhachH__4E88ABD4">
             <End Role="KHACHHANG" EntitySet="KHACHHANGs" />
             <End Role="HOADON" EntitySet="HOADONs" />
           </AssociationSet>
-          <AssociationSet Name="FK__HOADON__MaNhanVi__5FB337D6" Association="WPFBookManagementModel.FK__HOADON__MaNhanVi__5FB337D6">
+          <AssociationSet Name="FK__HOADON__MaNhanVi__4D94879B" Association="WPFBookManagementModel.FK__HOADON__MaNhanVi__4D94879B">
             <End Role="NHANVIEN" EntitySet="NHANVIENs" />
             <End Role="HOADON" EntitySet="HOADONs" />
           </AssociationSet>
-          <AssociationSet Name="FK__PHIEUTHUN__MaKha__73BA3083" Association="WPFBookManagementModel.FK__PHIEUTHUN__MaKha__73BA3083">
+          <AssociationSet Name="FK__PHIEUTHUN__MaKha__619B8048" Association="WPFBookManagementModel.FK__PHIEUTHUN__MaKha__619B8048">
             <End Role="KHACHHANG" EntitySet="KHACHHANGs" />
             <End Role="PHIEUTHUNO" EntitySet="PHIEUTHUNOes" />
           </AssociationSet>
-          <AssociationSet Name="FK__NHANVIEN__MaNhom__412EB0B6" Association="WPFBookManagementModel.FK__NHANVIEN__MaNhom__412EB0B6">
+          <AssociationSet Name="FK__NHANVIEN__MaNhom__2E1BDC42" Association="WPFBookManagementModel.FK__NHANVIEN__MaNhom__2E1BDC42">
             <End Role="NHOMNGUOIDUNG" EntitySet="NHOMNGUOIDUNGs" />
             <End Role="NHANVIEN" EntitySet="NHANVIENs" />
           </AssociationSet>
-          <AssociationSet Name="FK__PHIEUNHAP__MaNha__59063A47" Association="WPFBookManagementModel.FK__PHIEUNHAP__MaNha__59063A47">
+          <AssociationSet Name="FK__PHIEUNHAP__MaNha__46E78A0C" Association="WPFBookManagementModel.FK__PHIEUNHAP__MaNha__46E78A0C">
             <End Role="NHANVIEN" EntitySet="NHANVIENs" />
             <End Role="PHIEUNHAPSACH" EntitySet="PHIEUNHAPSACHes" />
           </AssociationSet>
-          <AssociationSet Name="FK__PHIEUTHUN__MaNha__72C60C4A" Association="WPFBookManagementModel.FK__PHIEUTHUN__MaNha__72C60C4A">
+          <AssociationSet Name="FK__PHIEUTHUN__MaNha__60A75C0F" Association="WPFBookManagementModel.FK__PHIEUTHUN__MaNha__60A75C0F">
             <End Role="NHANVIEN" EntitySet="NHANVIENs" />
             <End Role="PHIEUTHUNO" EntitySet="PHIEUTHUNOes" />
           </AssociationSet>
@@ -633,7 +634,7 @@
           </Key>
           <Property Name="MaBaoCaoCongNo" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="false" />
           <Property Name="Thang" Type="DateTime" Nullable="false" Precision="0" />
-          <NavigationProperty Name="CHITIETBAOCAOCONGNOes" Relationship="WPFBookManagementModel.FK__CHITIETBA__MaBao__6EF57B66" FromRole="BAOCAOCONGNO" ToRole="CHITIETBAOCAOCONGNO" />
+          <NavigationProperty Name="CHITIETBAOCAOCONGNOes" Relationship="WPFBookManagementModel.FK__CHITIETBA__MaBao__5CD6CB2B" FromRole="BAOCAOCONGNO" ToRole="CHITIETBAOCAOCONGNO" />
         </EntityType>
         <EntityType Name="BAOCAOTON">
           <Key>
@@ -641,7 +642,7 @@
           </Key>
           <Property Name="MaBaoCaoTon" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="false" />
           <Property Name="Thang" Type="DateTime" Nullable="false" Precision="0" />
-          <NavigationProperty Name="CHITIETBAOCAOTONs" Relationship="WPFBookManagementModel.FK__CHITIETBA__MaBao__693CA210" FromRole="BAOCAOTON" ToRole="CHITIETBAOCAOTON" />
+          <NavigationProperty Name="CHITIETBAOCAOTONs" Relationship="WPFBookManagementModel.FK__CHITIETBA__MaBao__571DF1D5" FromRole="BAOCAOTON" ToRole="CHITIETBAOCAOTON" />
         </EntityType>
         <EntityType Name="CHITIETBAOCAOCONGNO">
           <Key>
@@ -653,8 +654,8 @@
           <Property Name="NoDau" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
           <Property Name="PhatSinh" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
           <Property Name="NoCuoi" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
-          <NavigationProperty Name="BAOCAOCONGNO" Relationship="WPFBookManagementModel.FK__CHITIETBA__MaBao__6EF57B66" FromRole="CHITIETBAOCAOCONGNO" ToRole="BAOCAOCONGNO" />
-          <NavigationProperty Name="KHACHHANG" Relationship="WPFBookManagementModel.FK__CHITIETBA__MaKha__6FE99F9F" FromRole="CHITIETBAOCAOCONGNO" ToRole="KHACHHANG" />
+          <NavigationProperty Name="BAOCAOCONGNO" Relationship="WPFBookManagementModel.FK__CHITIETBA__MaBao__5CD6CB2B" FromRole="CHITIETBAOCAOCONGNO" ToRole="BAOCAOCONGNO" />
+          <NavigationProperty Name="KHACHHANG" Relationship="WPFBookManagementModel.FK__CHITIETBA__MaKha__5DCAEF64" FromRole="CHITIETBAOCAOCONGNO" ToRole="KHACHHANG" />
         </EntityType>
         <EntityType Name="CHITIETBAOCAOTON">
           <Key>
@@ -666,8 +667,8 @@
           <Property Name="TonDau" Type="Int32" Nullable="false" />
           <Property Name="PhatSinh" Type="Int32" Nullable="false" />
           <Property Name="TonCuoi" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="BAOCAOTON" Relationship="WPFBookManagementModel.FK__CHITIETBA__MaBao__693CA210" FromRole="CHITIETBAOCAOTON" ToRole="BAOCAOTON" />
-          <NavigationProperty Name="SACH" Relationship="WPFBookManagementModel.FK__CHITIETBA__MaSac__6A30C649" FromRole="CHITIETBAOCAOTON" ToRole="SACH" />
+          <NavigationProperty Name="BAOCAOTON" Relationship="WPFBookManagementModel.FK__CHITIETBA__MaBao__571DF1D5" FromRole="CHITIETBAOCAOTON" ToRole="BAOCAOTON" />
+          <NavigationProperty Name="SACH" Relationship="WPFBookManagementModel.FK__CHITIETBA__MaSac__5812160E" FromRole="CHITIETBAOCAOTON" ToRole="SACH" />
         </EntityType>
         <EntityType Name="CHITIETHOADON">
           <Key>
@@ -678,8 +679,8 @@
           <Property Name="MaSach" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="false" />
           <Property Name="SoLuong" Type="Int32" Nullable="false" />
           <Property Name="DonGia" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
-          <NavigationProperty Name="HOADON" Relationship="WPFBookManagementModel.FK__CHITIETHO__MaHoa__6383C8BA" FromRole="CHITIETHOADON" ToRole="HOADON" />
-          <NavigationProperty Name="SACH" Relationship="WPFBookManagementModel.FK__CHITIETHO__MaSac__6477ECF3" FromRole="CHITIETHOADON" ToRole="SACH" />
+          <NavigationProperty Name="HOADON" Relationship="WPFBookManagementModel.FK__CHITIETHO__MaHoa__5165187F" FromRole="CHITIETHOADON" ToRole="HOADON" />
+          <NavigationProperty Name="SACH" Relationship="WPFBookManagementModel.FK__CHITIETHO__MaSac__52593CB8" FromRole="CHITIETHOADON" ToRole="SACH" />
         </EntityType>
         <EntityType Name="CHITIETPHIEUNHAP">
           <Key>
@@ -690,8 +691,8 @@
           <Property Name="MaPhieuNhap" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="false" />
           <Property Name="SoLuong" Type="Int32" Nullable="false" />
           <Property Name="DonGiaNhap" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
-          <NavigationProperty Name="PHIEUNHAPSACH" Relationship="WPFBookManagementModel.FK__CHITIETPH__MaPhi__5CD6CB2B" FromRole="CHITIETPHIEUNHAP" ToRole="PHIEUNHAPSACH" />
-          <NavigationProperty Name="SACH" Relationship="WPFBookManagementModel.FK__CHITIETPH__MaSac__5BE2A6F2" FromRole="CHITIETPHIEUNHAP" ToRole="SACH" />
+          <NavigationProperty Name="PHIEUNHAPSACH" Relationship="WPFBookManagementModel.FK__CHITIETPH__MaPhi__4AB81AF0" FromRole="CHITIETPHIEUNHAP" ToRole="PHIEUNHAPSACH" />
+          <NavigationProperty Name="SACH" Relationship="WPFBookManagementModel.FK__CHITIETPH__MaSac__49C3F6B7" FromRole="CHITIETPHIEUNHAP" ToRole="SACH" />
         </EntityType>
         <EntityType Name="CHUCNANG">
           <Key>
@@ -708,8 +709,8 @@
           <Property Name="MaDauSach" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="false" />
           <Property Name="TenSach" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="MaTheLoai" Type="String" MaxLength="8" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="THELOAI" Relationship="WPFBookManagementModel.FK__DAUSACH__MaTheLo__4E88ABD4" FromRole="DAUSACH" ToRole="THELOAI" />
-          <NavigationProperty Name="SACHes" Relationship="WPFBookManagementModel.FK__SACH__MaDauSach__5535A963" FromRole="DAUSACH" ToRole="SACH" />
+          <NavigationProperty Name="THELOAI" Relationship="WPFBookManagementModel.FK__DAUSACH__MaTheLo__3C69FB99" FromRole="DAUSACH" ToRole="THELOAI" />
+          <NavigationProperty Name="SACHes" Relationship="WPFBookManagementModel.FK__SACH__MaDauSach__4316F928" FromRole="DAUSACH" ToRole="SACH" />
           <NavigationProperty Name="TACGIAs" Relationship="WPFBookManagementModel.CHITIETTACGIA" FromRole="DAUSACH" ToRole="TACGIA" />
         </EntityType>
         <EntityType Name="HOADON">
@@ -722,9 +723,9 @@
           <Property Name="NgayLapHoaDon" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="TongTien" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
           <Property Name="SoTienNo" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
-          <NavigationProperty Name="CHITIETHOADONs" Relationship="WPFBookManagementModel.FK__CHITIETHO__MaHoa__6383C8BA" FromRole="HOADON" ToRole="CHITIETHOADON" />
-          <NavigationProperty Name="KHACHHANG" Relationship="WPFBookManagementModel.FK__HOADON__MaKhachH__60A75C0F" FromRole="HOADON" ToRole="KHACHHANG" />
-          <NavigationProperty Name="NHANVIEN" Relationship="WPFBookManagementModel.FK__HOADON__MaNhanVi__5FB337D6" FromRole="HOADON" ToRole="NHANVIEN" />
+          <NavigationProperty Name="CHITIETHOADONs" Relationship="WPFBookManagementModel.FK__CHITIETHO__MaHoa__5165187F" FromRole="HOADON" ToRole="CHITIETHOADON" />
+          <NavigationProperty Name="KHACHHANG" Relationship="WPFBookManagementModel.FK__HOADON__MaKhachH__4E88ABD4" FromRole="HOADON" ToRole="KHACHHANG" />
+          <NavigationProperty Name="NHANVIEN" Relationship="WPFBookManagementModel.FK__HOADON__MaNhanVi__4D94879B" FromRole="HOADON" ToRole="NHANVIEN" />
         </EntityType>
         <EntityType Name="KHACHHANG">
           <Key>
@@ -734,13 +735,13 @@
           <Property Name="TenKhachHang" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="GioiTinh" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
           <Property Name="NgaySinh" Type="DateTime" Precision="0" />
-          <Property Name="DienThoai" Type="String" MaxLength="13" FixedLength="false" Unicode="false" />
+          <Property Name="DienThoai" Type="String" Nullable="false" MaxLength="13" FixedLength="false" Unicode="false" />
           <Property Name="DiaChi" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="Email" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="TienNo" Type="Decimal" Precision="19" Scale="4" />
-          <NavigationProperty Name="CHITIETBAOCAOCONGNOes" Relationship="WPFBookManagementModel.FK__CHITIETBA__MaKha__6FE99F9F" FromRole="KHACHHANG" ToRole="CHITIETBAOCAOCONGNO" />
-          <NavigationProperty Name="HOADONs" Relationship="WPFBookManagementModel.FK__HOADON__MaKhachH__60A75C0F" FromRole="KHACHHANG" ToRole="HOADON" />
-          <NavigationProperty Name="PHIEUTHUNOes" Relationship="WPFBookManagementModel.FK__PHIEUTHUN__MaKha__73BA3083" FromRole="KHACHHANG" ToRole="PHIEUTHUNO" />
+          <NavigationProperty Name="CHITIETBAOCAOCONGNOes" Relationship="WPFBookManagementModel.FK__CHITIETBA__MaKha__5DCAEF64" FromRole="KHACHHANG" ToRole="CHITIETBAOCAOCONGNO" />
+          <NavigationProperty Name="HOADONs" Relationship="WPFBookManagementModel.FK__HOADON__MaKhachH__4E88ABD4" FromRole="KHACHHANG" ToRole="HOADON" />
+          <NavigationProperty Name="PHIEUTHUNOes" Relationship="WPFBookManagementModel.FK__PHIEUTHUN__MaKha__619B8048" FromRole="KHACHHANG" ToRole="PHIEUTHUNO" />
         </EntityType>
         <EntityType Name="NHANVIEN">
           <Key>
@@ -757,10 +758,10 @@
           <Property Name="Password" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="MaNhomNguoiDung" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
           <Property Name="isActive" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="HOADONs" Relationship="WPFBookManagementModel.FK__HOADON__MaNhanVi__5FB337D6" FromRole="NHANVIEN" ToRole="HOADON" />
-          <NavigationProperty Name="NHOMNGUOIDUNG" Relationship="WPFBookManagementModel.FK__NHANVIEN__MaNhom__412EB0B6" FromRole="NHANVIEN" ToRole="NHOMNGUOIDUNG" />
-          <NavigationProperty Name="PHIEUNHAPSACHes" Relationship="WPFBookManagementModel.FK__PHIEUNHAP__MaNha__59063A47" FromRole="NHANVIEN" ToRole="PHIEUNHAPSACH" />
-          <NavigationProperty Name="PHIEUTHUNOes" Relationship="WPFBookManagementModel.FK__PHIEUTHUN__MaNha__72C60C4A" FromRole="NHANVIEN" ToRole="PHIEUTHUNO" />
+          <NavigationProperty Name="HOADONs" Relationship="WPFBookManagementModel.FK__HOADON__MaNhanVi__4D94879B" FromRole="NHANVIEN" ToRole="HOADON" />
+          <NavigationProperty Name="NHOMNGUOIDUNG" Relationship="WPFBookManagementModel.FK__NHANVIEN__MaNhom__2E1BDC42" FromRole="NHANVIEN" ToRole="NHOMNGUOIDUNG" />
+          <NavigationProperty Name="PHIEUNHAPSACHes" Relationship="WPFBookManagementModel.FK__PHIEUNHAP__MaNha__46E78A0C" FromRole="NHANVIEN" ToRole="PHIEUNHAPSACH" />
+          <NavigationProperty Name="PHIEUTHUNOes" Relationship="WPFBookManagementModel.FK__PHIEUTHUN__MaNha__60A75C0F" FromRole="NHANVIEN" ToRole="PHIEUTHUNO" />
         </EntityType>
         <EntityType Name="NHOMNGUOIDUNG">
           <Key>
@@ -768,7 +769,7 @@
           </Key>
           <Property Name="MaNhomNguoiDung" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
           <Property Name="TenNhomNguoiDung" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="NHANVIENs" Relationship="WPFBookManagementModel.FK__NHANVIEN__MaNhom__412EB0B6" FromRole="NHOMNGUOIDUNG" ToRole="NHANVIEN" />
+          <NavigationProperty Name="NHANVIENs" Relationship="WPFBookManagementModel.FK__NHANVIEN__MaNhom__2E1BDC42" FromRole="NHOMNGUOIDUNG" ToRole="NHANVIEN" />
           <NavigationProperty Name="CHUCNANGs" Relationship="WPFBookManagementModel.PHANQUYEN" FromRole="NHOMNGUOIDUNG" ToRole="CHUCNANG" />
         </EntityType>
         <EntityType Name="PHIEUNHAPSACH">
@@ -779,8 +780,8 @@
           <Property Name="NgayNhap" Type="DateTime" Precision="0" />
           <Property Name="MaNhanVien" Type="String" MaxLength="8" FixedLength="false" Unicode="false" />
           <Property Name="TongTien" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
-          <NavigationProperty Name="CHITIETPHIEUNHAPs" Relationship="WPFBookManagementModel.FK__CHITIETPH__MaPhi__5CD6CB2B" FromRole="PHIEUNHAPSACH" ToRole="CHITIETPHIEUNHAP" />
-          <NavigationProperty Name="NHANVIEN" Relationship="WPFBookManagementModel.FK__PHIEUNHAP__MaNha__59063A47" FromRole="PHIEUNHAPSACH" ToRole="NHANVIEN" />
+          <NavigationProperty Name="CHITIETPHIEUNHAPs" Relationship="WPFBookManagementModel.FK__CHITIETPH__MaPhi__4AB81AF0" FromRole="PHIEUNHAPSACH" ToRole="CHITIETPHIEUNHAP" />
+          <NavigationProperty Name="NHANVIEN" Relationship="WPFBookManagementModel.FK__PHIEUNHAP__MaNha__46E78A0C" FromRole="PHIEUNHAPSACH" ToRole="NHANVIEN" />
         </EntityType>
         <EntityType Name="PHIEUTHUNO">
           <Key>
@@ -791,8 +792,8 @@
           <Property Name="SoTienThu" Type="Decimal" Precision="19" Scale="4" />
           <Property Name="MaNhanVien" Type="String" MaxLength="8" FixedLength="false" Unicode="false" />
           <Property Name="MaKhachHang" Type="String" MaxLength="8" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="KHACHHANG" Relationship="WPFBookManagementModel.FK__PHIEUTHUN__MaKha__73BA3083" FromRole="PHIEUTHUNO" ToRole="KHACHHANG" />
-          <NavigationProperty Name="NHANVIEN" Relationship="WPFBookManagementModel.FK__PHIEUTHUN__MaNha__72C60C4A" FromRole="PHIEUTHUNO" ToRole="NHANVIEN" />
+          <NavigationProperty Name="KHACHHANG" Relationship="WPFBookManagementModel.FK__PHIEUTHUN__MaKha__619B8048" FromRole="PHIEUTHUNO" ToRole="KHACHHANG" />
+          <NavigationProperty Name="NHANVIEN" Relationship="WPFBookManagementModel.FK__PHIEUTHUN__MaNha__60A75C0F" FromRole="PHIEUTHUNO" ToRole="NHANVIEN" />
         </EntityType>
         <EntityType Name="SACH">
           <Key>
@@ -803,10 +804,11 @@
           <Property Name="NhaXuatBan" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="SoLuong" Type="Int32" />
           <Property Name="DonGiaNhapMoiNhat" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
-          <NavigationProperty Name="CHITIETBAOCAOTONs" Relationship="WPFBookManagementModel.FK__CHITIETBA__MaSac__6A30C649" FromRole="SACH" ToRole="CHITIETBAOCAOTON" />
-          <NavigationProperty Name="CHITIETHOADONs" Relationship="WPFBookManagementModel.FK__CHITIETHO__MaSac__6477ECF3" FromRole="SACH" ToRole="CHITIETHOADON" />
-          <NavigationProperty Name="CHITIETPHIEUNHAPs" Relationship="WPFBookManagementModel.FK__CHITIETPH__MaSac__5BE2A6F2" FromRole="SACH" ToRole="CHITIETPHIEUNHAP" />
-          <NavigationProperty Name="DAUSACH" Relationship="WPFBookManagementModel.FK__SACH__MaDauSach__5535A963" FromRole="SACH" ToRole="DAUSACH" />
+          <Property Name="IsActive" Type="Boolean" />
+          <NavigationProperty Name="CHITIETBAOCAOTONs" Relationship="WPFBookManagementModel.FK__CHITIETBA__MaSac__5812160E" FromRole="SACH" ToRole="CHITIETBAOCAOTON" />
+          <NavigationProperty Name="CHITIETHOADONs" Relationship="WPFBookManagementModel.FK__CHITIETHO__MaSac__52593CB8" FromRole="SACH" ToRole="CHITIETHOADON" />
+          <NavigationProperty Name="CHITIETPHIEUNHAPs" Relationship="WPFBookManagementModel.FK__CHITIETPH__MaSac__49C3F6B7" FromRole="SACH" ToRole="CHITIETPHIEUNHAP" />
+          <NavigationProperty Name="DAUSACH" Relationship="WPFBookManagementModel.FK__SACH__MaDauSach__4316F928" FromRole="SACH" ToRole="DAUSACH" />
         </EntityType>
         <EntityType Name="TACGIA">
           <Key>
@@ -829,9 +831,9 @@
           </Key>
           <Property Name="MaTheLoai" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="false" />
           <Property Name="TenTheLoai" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="DAUSACHes" Relationship="WPFBookManagementModel.FK__DAUSACH__MaTheLo__4E88ABD4" FromRole="THELOAI" ToRole="DAUSACH" />
+          <NavigationProperty Name="DAUSACHes" Relationship="WPFBookManagementModel.FK__DAUSACH__MaTheLo__3C69FB99" FromRole="THELOAI" ToRole="DAUSACH" />
         </EntityType>
-        <Association Name="FK__CHITIETBA__MaBao__6EF57B66">
+        <Association Name="FK__CHITIETBA__MaBao__5CD6CB2B">
           <End Type="WPFBookManagementModel.BAOCAOCONGNO" Role="BAOCAOCONGNO" Multiplicity="1" />
           <End Type="WPFBookManagementModel.CHITIETBAOCAOCONGNO" Role="CHITIETBAOCAOCONGNO" Multiplicity="*" />
           <ReferentialConstraint>
@@ -843,7 +845,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__CHITIETBA__MaBao__693CA210">
+        <Association Name="FK__CHITIETBA__MaBao__571DF1D5">
           <End Type="WPFBookManagementModel.BAOCAOTON" Role="BAOCAOTON" Multiplicity="1" />
           <End Type="WPFBookManagementModel.CHITIETBAOCAOTON" Role="CHITIETBAOCAOTON" Multiplicity="*" />
           <ReferentialConstraint>
@@ -855,7 +857,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__CHITIETBA__MaKha__6FE99F9F">
+        <Association Name="FK__CHITIETBA__MaKha__5DCAEF64">
           <End Type="WPFBookManagementModel.KHACHHANG" Role="KHACHHANG" Multiplicity="1" />
           <End Type="WPFBookManagementModel.CHITIETBAOCAOCONGNO" Role="CHITIETBAOCAOCONGNO" Multiplicity="*" />
           <ReferentialConstraint>
@@ -867,7 +869,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__CHITIETBA__MaSac__6A30C649">
+        <Association Name="FK__CHITIETBA__MaSac__5812160E">
           <End Type="WPFBookManagementModel.SACH" Role="SACH" Multiplicity="1" />
           <End Type="WPFBookManagementModel.CHITIETBAOCAOTON" Role="CHITIETBAOCAOTON" Multiplicity="*" />
           <ReferentialConstraint>
@@ -879,7 +881,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__CHITIETHO__MaHoa__6383C8BA">
+        <Association Name="FK__CHITIETHO__MaHoa__5165187F">
           <End Type="WPFBookManagementModel.HOADON" Role="HOADON" Multiplicity="1" />
           <End Type="WPFBookManagementModel.CHITIETHOADON" Role="CHITIETHOADON" Multiplicity="*" />
           <ReferentialConstraint>
@@ -891,7 +893,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__CHITIETHO__MaSac__6477ECF3">
+        <Association Name="FK__CHITIETHO__MaSac__52593CB8">
           <End Type="WPFBookManagementModel.SACH" Role="SACH" Multiplicity="1" />
           <End Type="WPFBookManagementModel.CHITIETHOADON" Role="CHITIETHOADON" Multiplicity="*" />
           <ReferentialConstraint>
@@ -903,7 +905,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__CHITIETPH__MaPhi__5CD6CB2B">
+        <Association Name="FK__CHITIETPH__MaPhi__4AB81AF0">
           <End Type="WPFBookManagementModel.PHIEUNHAPSACH" Role="PHIEUNHAPSACH" Multiplicity="1" />
           <End Type="WPFBookManagementModel.CHITIETPHIEUNHAP" Role="CHITIETPHIEUNHAP" Multiplicity="*" />
           <ReferentialConstraint>
@@ -915,7 +917,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__CHITIETPH__MaSac__5BE2A6F2">
+        <Association Name="FK__CHITIETPH__MaSac__49C3F6B7">
           <End Type="WPFBookManagementModel.SACH" Role="SACH" Multiplicity="1" />
           <End Type="WPFBookManagementModel.CHITIETPHIEUNHAP" Role="CHITIETPHIEUNHAP" Multiplicity="*" />
           <ReferentialConstraint>
@@ -927,7 +929,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__DAUSACH__MaTheLo__4E88ABD4">
+        <Association Name="FK__DAUSACH__MaTheLo__3C69FB99">
           <End Type="WPFBookManagementModel.THELOAI" Role="THELOAI" Multiplicity="0..1" />
           <End Type="WPFBookManagementModel.DAUSACH" Role="DAUSACH" Multiplicity="*" />
           <ReferentialConstraint>
@@ -939,7 +941,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__SACH__MaDauSach__5535A963">
+        <Association Name="FK__SACH__MaDauSach__4316F928">
           <End Type="WPFBookManagementModel.DAUSACH" Role="DAUSACH" Multiplicity="0..1" />
           <End Type="WPFBookManagementModel.SACH" Role="SACH" Multiplicity="*" />
           <ReferentialConstraint>
@@ -951,7 +953,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__HOADON__MaKhachH__60A75C0F">
+        <Association Name="FK__HOADON__MaKhachH__4E88ABD4">
           <End Type="WPFBookManagementModel.KHACHHANG" Role="KHACHHANG" Multiplicity="0..1" />
           <End Type="WPFBookManagementModel.HOADON" Role="HOADON" Multiplicity="*" />
           <ReferentialConstraint>
@@ -963,7 +965,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__HOADON__MaNhanVi__5FB337D6">
+        <Association Name="FK__HOADON__MaNhanVi__4D94879B">
           <End Type="WPFBookManagementModel.NHANVIEN" Role="NHANVIEN" Multiplicity="0..1" />
           <End Type="WPFBookManagementModel.HOADON" Role="HOADON" Multiplicity="*" />
           <ReferentialConstraint>
@@ -975,7 +977,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__PHIEUTHUN__MaKha__73BA3083">
+        <Association Name="FK__PHIEUTHUN__MaKha__619B8048">
           <End Type="WPFBookManagementModel.KHACHHANG" Role="KHACHHANG" Multiplicity="0..1" />
           <End Type="WPFBookManagementModel.PHIEUTHUNO" Role="PHIEUTHUNO" Multiplicity="*" />
           <ReferentialConstraint>
@@ -987,7 +989,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__NHANVIEN__MaNhom__412EB0B6">
+        <Association Name="FK__NHANVIEN__MaNhom__2E1BDC42">
           <End Type="WPFBookManagementModel.NHOMNGUOIDUNG" Role="NHOMNGUOIDUNG" Multiplicity="0..1" />
           <End Type="WPFBookManagementModel.NHANVIEN" Role="NHANVIEN" Multiplicity="*" />
           <ReferentialConstraint>
@@ -999,7 +1001,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__PHIEUNHAP__MaNha__59063A47">
+        <Association Name="FK__PHIEUNHAP__MaNha__46E78A0C">
           <End Type="WPFBookManagementModel.NHANVIEN" Role="NHANVIEN" Multiplicity="0..1" />
           <End Type="WPFBookManagementModel.PHIEUNHAPSACH" Role="PHIEUNHAPSACH" Multiplicity="*" />
           <ReferentialConstraint>
@@ -1011,7 +1013,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__PHIEUTHUN__MaNha__72C60C4A">
+        <Association Name="FK__PHIEUTHUN__MaNha__60A75C0F">
           <End Type="WPFBookManagementModel.NHANVIEN" Role="NHANVIEN" Multiplicity="0..1" />
           <End Type="WPFBookManagementModel.PHIEUTHUNO" Role="PHIEUTHUNO" Multiplicity="*" />
           <ReferentialConstraint>
@@ -1187,6 +1189,7 @@
           <EntitySetMapping Name="SACHes">
             <EntityTypeMapping TypeName="WPFBookManagementModel.SACH">
               <MappingFragment StoreEntitySet="SACH">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
                 <ScalarProperty Name="DonGiaNhapMoiNhat" ColumnName="DonGiaNhapMoiNhat" />
                 <ScalarProperty Name="SoLuong" ColumnName="SoLuong" />
                 <ScalarProperty Name="NhaXuatBan" ColumnName="NhaXuatBan" />

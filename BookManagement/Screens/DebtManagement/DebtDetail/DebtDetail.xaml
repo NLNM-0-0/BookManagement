@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BookManagement"
              xmlns:materialDesign ="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
              mc:Ignorable="d" >
     <ScrollViewer PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
         <Grid
@@ -44,6 +45,18 @@
                     Text="{Binding KhachHang.MaKhachHang}"
                     FontSize="{StaticResource FontSize34}"
                     VerticalAlignment="Center"/>
+                <Button Style="{StaticResource TransparentButton}"
+                        Margin="10 0 0 0"
+                        Height="40"
+                        Width="40"
+                        Command="{Binding EditCustomerCommand}">
+                    <Button.Content>
+                        <fa:ImageAwesome Height="20"
+                                         Width="20"
+                                    Icon="Pencil"
+                                    Foreground="{DynamicResource PrimaryHueMidBrush }"/>
+                    </Button.Content>
+                </Button>
             </StackPanel>
             <StackPanel
                 Grid.Row="3"

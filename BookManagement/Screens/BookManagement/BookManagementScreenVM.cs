@@ -16,6 +16,8 @@ namespace BookManagement
         private GenericDataRepository<SACH> sachRepo;
         private GenericDataRepository<DAUSACH> dauSachRepo;
         public List<SACH> BookList { get; set; }
+        private List<SACH> bannedList;
+        private List<SACH> notbannedList;
         public ObservableCollection<SACH> FilteredBooks { get; set; }
 
         private string _searchName;
@@ -88,12 +90,49 @@ namespace BookManagement
                 OnPropertyChanged();
             }
         }
-        #endregion
 
+        private bool _isChecked;
+        public bool IsChecked
+        {
+            get => _isChecked;
+            set
+            {
+                if (value)
+                {
+                    StatusText = "Đang bán";
+                    BookList = notbannedList;
+                    FilteredBooks = new ObservableCollection<SACH>(BookList);
+                    RemoveOrUnBanned = "Dừng bán";
+                }
+                else
+                {
+                    StatusText = "Dừng bán";
+                    BookList = bannedList;
+                    FilteredBooks = new ObservableCollection<SACH>(BookList);
+                    RemoveOrUnBanned = "Bán tiếp";
+                }
+                _isChecked = value;
+            }
+        }
+        private string _removeOrUnBanned;
+        public string RemoveOrUnBanned
+        {
+            get => _removeOrUnBanned;
+            set { _removeOrUnBanned = value; OnPropertyChanged(); }
+        }
+
+        private string _statusText;
+        public string StatusText
+        {
+            get => _statusText;
+            set { _statusText = value; OnPropertyChanged(); }
+        }
+        #endregion
 
         #region Commands
         public ICommand SearchCommand { get; set; }
         public ICommand ResetCommand { get; set; }
+        public ICommand BanBookCommand { get; set; }
         #endregion
 
         #region Constructor
@@ -114,6 +153,7 @@ namespace BookManagement
                 MinQuantitySearch = string.Empty;
                 await Search();
             });
+            BanBookCommand = new RelayCommand<object>((p) => p != null, async (p) => await BanBook(p));
             Task.Run(async () =>
             {
                 MainViewModel.SetLoading(true);
@@ -125,16 +165,47 @@ namespace BookManagement
             });
 
         }
+        private async Task BanBook(object obj)
+        {
+            MainViewModel.SetLoading(true);
 
+            var removeBook = obj as SACH;
+            if (removeBook == null)
+                return;
+
+            if (removeBook.IsActive == true)
+            {
+                removeBook.IsActive = false;
+                notbannedList.Remove(removeBook);
+                bannedList.Insert(0, removeBook);
+                BookList = notbannedList;
+                FilteredBooks = new ObservableCollection<SACH>(BookList);
+            }
+            else
+            {
+                removeBook.IsActive = true;
+                notbannedList.Insert(0, removeBook);
+                bannedList.Remove(removeBook);
+                BookList = bannedList;
+                FilteredBooks =new ObservableCollection<SACH>(BookList);
+            }
+
+            await sachRepo.Update(removeBook);
+            MainViewModel.SetLoading(false);
+        }
         private async Task Load()
         {
             BookList = new List<SACH>(
                 await sachRepo.GetListAsync(s => s.SoLuong > 0, s => s.DAUSACH, s=>s.DAUSACH.TACGIAs, s=>s.DAUSACH.THELOAI))
                 .OrderBy(p=>p.DAUSACH.TenSach).ThenBy(p=>p.NhaXuatBan).ToList();
-
+            bannedList = BookList.Where(b => b.IsActive == false).ToList();
+            notbannedList = BookList.Where(b => b.IsActive == true).ToList();
+            RemoveOrUnBanned = "Dừng bán";
+            StatusText = "Đang bán";
+            IsChecked = true;
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                FilteredBooks = new ObservableCollection<SACH>(BookList);
+                FilteredBooks = new ObservableCollection<SACH>(notbannedList);
             }));
         }
         #endregion

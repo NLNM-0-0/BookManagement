@@ -63,6 +63,7 @@ namespace BookManagement
         public ICommand SearchCommand { get; set; }
         public ICommand ResetCommand { get; set; }
         public ICommand PrintPhieuThuCommand { get; set; }
+        public ICommand EditCustomerCommand { get; set; }
         #endregion
         public DebtDetailViewModel(string maKH)
         {
@@ -81,6 +82,7 @@ namespace BookManagement
 
             SearchCommand = new RelayCommandWithNoParameter(async () => await SearchAsync());
             ResetCommand = new RelayCommandWithNoParameter(async () => await ResetSearch());
+            EditCustomerCommand = new RelayCommandWithNoParameter(async () => await EditCustomer());
             PrintPhieuThuCommand = new RelayCommand<object>((p) =>
             {
                 return p != null;
@@ -110,6 +112,7 @@ namespace BookManagement
 
         private async Task ResetSearch()
         {
+            SearchMaPhieuThu = string.Empty;
             SearchMaNV = string.Empty;
             MaxPriceSearch = string.Empty;
             MinPriceSearch = string.Empty;
@@ -198,6 +201,14 @@ namespace BookManagement
                 p => p.NHANVIEN,
                 p => p.KHACHHANG)).OrderByDescending(p => p.NgayThu));
             ListPhieuThu = new ObservableCollection<PHIEUTHUNO>(allPhieuThu);
+        }
+
+        private async Task EditCustomer ()
+        {
+            var dl = new EditCustomer();
+            dl.DataContext=new EditCustomerVM(KhachHang);
+            await DialogHost.Show(dl, "Main");
+            await Load();
         }
     }
 }

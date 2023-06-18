@@ -208,6 +208,10 @@
       <DependentUpon>DebtDetail.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\DebtManagement\DebtDetail\DebtDetailViewModel.cs" />
+    <Compile Include="Screens\DebtManagement\DebtDetail\EditCustomer.xaml.cs">
+      <DependentUpon>EditCustomer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\DebtManagement\DebtDetail\EditCustomerVM.cs" />
     <Compile Include="Screens\DebtManagement\DebtManagementScreen.xaml.cs">
       <DependentUpon>DebtManagementScreen.xaml</DependentUpon>
     </Compile>
@@ -453,6 +457,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Screens\DebtManagement\DebtDetail\DebtDetail.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\DebtManagement\DebtDetail\EditCustomer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
