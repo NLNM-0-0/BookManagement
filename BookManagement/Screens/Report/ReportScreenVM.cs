@@ -227,16 +227,19 @@ namespace BookManagement
         }
         private void SearchStock()
         {
-            if(StockSearchBy == "Mã sách")
+            if(AllStockReports!=null)
             {
-                FilterStockReports = new ObservableCollection<CHITIETBAOCAOTON>(
-                    AllStockReports.Where(p => p.MaSach.ToLower().Contains(StockSearchByValue.Trim().ToLower())));
-            }
-            else if (StockSearchBy == "Tên sách")
-            {
-                FilterStockReports = new ObservableCollection<CHITIETBAOCAOTON>(
-                    AllStockReports.Where(p => Helpers.convertToUnSign3(p.SACH.DAUSACH.TenSach).ToLower().Contains(Helpers.convertToUnSign3(StockSearchByValue.Trim()).ToLower())));
-            }
+                if (StockSearchBy == "Mã sách")
+                {
+                    FilterStockReports = new ObservableCollection<CHITIETBAOCAOTON>(
+                        AllStockReports.Where(p => p.MaSach.ToLower().Contains(StockSearchByValue.Trim().ToLower())));
+                }
+                else if (StockSearchBy == "Tên sách")
+                {
+                    FilterStockReports = new ObservableCollection<CHITIETBAOCAOTON>(
+                        AllStockReports.Where(p => Helpers.convertToUnSign3(p.SACH.DAUSACH.TenSach).ToLower().Contains(Helpers.convertToUnSign3(StockSearchByValue.Trim()).ToLower())));
+                }
+            }    
         }
         private void ResetSearchStock()
         {
@@ -246,16 +249,19 @@ namespace BookManagement
         }
         private void SearchDebt()
         {
-            if (DebtSearchBy == "Mã KH")
+            if(AllDebtReports!=null)
             {
-                FilterDebtReports = new ObservableCollection<CHITIETBAOCAOCONGNO>(
-                    AllDebtReports.Where(p => p.MaKhachHang.ToLower().Contains(DebtSearchByValue.Trim().ToLower())));
-            }
-            else if (DebtSearchBy == "Tên KH")
-            {
-                FilterDebtReports = new ObservableCollection<CHITIETBAOCAOCONGNO>(
-                    AllDebtReports.Where(p => Helpers.convertToUnSign3(p.KHACHHANG.TenKhachHang).ToLower().Contains(Helpers.convertToUnSign3(DebtSearchByValue.Trim()).ToLower())));
-            }
+                if (DebtSearchBy == "Mã KH")
+                {
+                    FilterDebtReports = new ObservableCollection<CHITIETBAOCAOCONGNO>(
+                        AllDebtReports.Where(p => p.MaKhachHang.ToLower().Contains(DebtSearchByValue.Trim().ToLower())));
+                }
+                else if (DebtSearchBy == "Tên KH")
+                {
+                    FilterDebtReports = new ObservableCollection<CHITIETBAOCAOCONGNO>(
+                        AllDebtReports.Where(p => Helpers.convertToUnSign3(p.KHACHHANG.TenKhachHang).ToLower().Contains(Helpers.convertToUnSign3(DebtSearchByValue.Trim()).ToLower())));
+                }
+            }  
         }
         private void ResetSearchDebt()
         {

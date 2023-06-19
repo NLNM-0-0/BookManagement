@@ -179,37 +179,39 @@ namespace BookManagement
                     worksheet.Cells[5, 1].Value = "Mã sách";
                     worksheet.Cells[5, 2].Value = "Tên sách";
                     worksheet.Cells[5, 3].Value = "Nhà xuất bản";
-                    worksheet.Cells[5, 4].Value = "Đơn giá";
-                    worksheet.Cells[5, 5].Value = "Số lượng";
-                    worksheet.Cells[5, 6].Value = "Tổng";
+                    worksheet.Cells[5, 4].Value = "Lần tái bản";
+                    worksheet.Cells[5, 5].Value = "Đơn giá";
+                    worksheet.Cells[5, 6].Value = "Số lượng";
+                    worksheet.Cells[5, 7].Value = "Tổng";
                     for (int i = 0; i < import.CHITIETPHIEUNHAPs.Count; i++)
                     {
                         CHITIETPHIEUNHAP importDetail = import.CHITIETPHIEUNHAPs.ElementAt(i);
                         worksheet.Cells[6 + i, 1].Value = importDetail.SACH.MaSach;
                         worksheet.Cells[6 + i, 2].Value = importDetail.SACH.DAUSACH.TenSach;
                         worksheet.Cells[6 + i, 3].Value = importDetail.SACH.NhaXuatBan;
-                        worksheet.Cells[6 + i, 4].Value = importDetail.SACH.DonGiaNhapMoiNhat;
-                        worksheet.Cells[6 + i, 5].Value = importDetail.SoLuong;
-                        worksheet.Cells[6 + i, 6].Value = importDetail.SoLuong * importDetail.SACH.DonGiaNhapMoiNhat;
+                        worksheet.Cells[6 + i, 4].Value = importDetail.SACH.LanTaiBan;
+                        worksheet.Cells[6 + i, 5].Value = importDetail.SACH.DonGiaNhapMoiNhat;
+                        worksheet.Cells[6 + i, 6].Value = importDetail.SoLuong;
+                        worksheet.Cells[6 + i, 7].Value = importDetail.SoLuong * importDetail.SACH.DonGiaNhapMoiNhat;
                     }
-                    using (ExcelRange excelRange = worksheet.Cells[$"A5:F{5 + import.CHITIETPHIEUNHAPs.Count}"])
+                    using (ExcelRange excelRange = worksheet.Cells[$"A5:G{5 + import.CHITIETPHIEUNHAPs.Count}"])
                     {
                         excelRange.Style.Border.Top.Style = ExcelBorderStyle.Thin;
                         excelRange.Style.Border.Left.Style = ExcelBorderStyle.Thin;
                         excelRange.Style.Border.Right.Style = ExcelBorderStyle.Thin;
                         excelRange.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
                     }
-                    using (ExcelRange excelRange = worksheet.Cells[$"A{6 + import.CHITIETPHIEUNHAPs.Count}:F{6 + import.CHITIETPHIEUNHAPs.Count}"])
+                    using (ExcelRange excelRange = worksheet.Cells[$"A{6 + import.CHITIETPHIEUNHAPs.Count}:G{6 + import.CHITIETPHIEUNHAPs.Count}"])
                     {
                         excelRange.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
                     }
-                    worksheet.Cells[6 + import.CHITIETPHIEUNHAPs.Count, 5].Value = "Tổng tiền";
-                    worksheet.Cells[6 + import.CHITIETPHIEUNHAPs.Count, 5].Style.Font.Bold = true;
-
-                    worksheet.Cells[6 + import.CHITIETPHIEUNHAPs.Count, 6].Value = import.TongTien;
-                    worksheet.Cells[6 + import.CHITIETPHIEUNHAPs.Count, 6].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-                    worksheet.Cells[6 + import.CHITIETPHIEUNHAPs.Count, 6].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                    worksheet.Cells[6 + import.CHITIETPHIEUNHAPs.Count, 6].Value = "Tổng tiền";
                     worksheet.Cells[6 + import.CHITIETPHIEUNHAPs.Count, 6].Style.Font.Bold = true;
+
+                    worksheet.Cells[6 + import.CHITIETPHIEUNHAPs.Count, 7].Value = import.TongTien;
+                    worksheet.Cells[6 + import.CHITIETPHIEUNHAPs.Count, 7].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                    worksheet.Cells[6 + import.CHITIETPHIEUNHAPs.Count, 7].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                    worksheet.Cells[6 + import.CHITIETPHIEUNHAPs.Count, 7].Style.Font.Bold = true;
 
 
 
@@ -218,7 +220,7 @@ namespace BookManagement
                     cellFont.SetFromFont("Times New Roman", 13);
 
                     worksheet.Cells.AutoFitColumns();
-                    for (int i = 1; i <= 6; i++)
+                    for (int i = 1; i <= 7; i++)
                     {
                         worksheet.Column(i).Width *= 1.2;
                     }

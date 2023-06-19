@@ -116,7 +116,7 @@ namespace BookManagement
         #region Command Define
         public async Task Load(String idUser)
         {
-            UserGroups = new ObservableCollection<NHOMNGUOIDUNG>(await userGroupRepo.GetAllAsync());
+            UserGroups = new ObservableCollection<NHOMNGUOIDUNG>(await userGroupRepo.GetListAsync(p=>p.MaNhomNguoiDung!=AppEnum.Admin));
             User = await userRepo.GetSingleAsync(p => p.MaNhanVien == idUser);
         }
         #endregion

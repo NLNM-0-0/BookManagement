@@ -12,6 +12,8 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.IO.Packaging;
 using System.Reflection;
+using OfficeOpenXml.FormulaParsing.ExpressionGraph.FunctionCompilers;
+using DocumentFormat.OpenXml.Office2016.Drawing.Command;
 
 namespace BookManagement
 {
@@ -82,7 +84,7 @@ namespace BookManagement
                                 var dl = new ConfirmDialog()
                                 {
                                     Header = "Lỗi",
-                                    ContentString = "File bạn vừa nhập không đúng dạng dữ liệu tiêu chuẩn. Xin hãy sửa lại.",
+                                    ContentString = "File bạn vừa nhập không đúng dạng dữ liệu tiêu chuẩn. Xin hãy xem lại qui định phía trên file và kiểm tra lại.",
                                 };
                                 MainViewModel.IsLoading = false;
                                 await DialogHost.Show(dl, "Main");
@@ -178,20 +180,21 @@ namespace BookManagement
             for (int i = 0; i < importExcelObjects.Count; i++)
             {
                 ImportExcelObject firstImportExcelObject = importExcelObjects[i];
+                List<String> authorNames = firstImportExcelObject.Authors;
                 for(int j = i + 1; j < importExcelObjects.Count; j++)
                 {
                     ImportExcelObject secondImportExcelObect = importExcelObjects[j];
-                    if(firstImportExcelObject.BookName == secondImportExcelObect.BookName)
+                    List<String> tempAuthorNames = secondImportExcelObect.Authors;
+                    if (firstImportExcelObject.BookName == secondImportExcelObect.BookName &&
+                        authorNames.Count() == tempAuthorNames.Count() &&
+                        authorNames.Intersect(tempAuthorNames).ToList().Count() == authorNames.Count())
                     {
-                        if(firstImportExcelObject.NXB == secondImportExcelObect.NXB)
-                        {
-                            return false;
-                        }    
                         if(firstImportExcelObject.TheLoai != secondImportExcelObect.TheLoai)
                         {
                             return false;
-                        }    
-                        if(firstImportExcelObject.Authors.Count != secondImportExcelObect.Authors.Count || firstImportExcelObject.Authors.Intersect(secondImportExcelObect.Authors).ToList().Count != firstImportExcelObject.Authors.Count)
+                        }      
+                        if(firstImportExcelObject.NXB == secondImportExcelObect.NXB &&
+                            firstImportExcelObject.TimeRepublish == secondImportExcelObect.TimeRepublish)
                         {
                             return false;
                         }    
@@ -213,13 +216,45 @@ namespace BookManagement
             for (int i = 0; i < importExcelObjects.Count; i++)
             {
                 ImportExcelObject importExcelObject = importExcelObjects[i];
-                SACH book = await bookRepo.GetSingleAsync(p => p.DAUSACH.TenSach == importExcelObject.BookName && p.NhaXuatBan == importExcelObject.NXB);
+                List<String> authorNames = importExcelObject.Authors;
+                SACH book = await bookRepo.GetSingleAsync(p => {
+                    if(p.DAUSACH.TenSach!=importExcelObject.BookName)
+                    {
+                        return false;
+                    }    
+                    if(p.NhaXuatBan != importExcelObject.NXB)
+                    {
+                        return false;
+                    }    
+                    if(p.LanTaiBan != importExcelObject.TimeRepublish)
+                    {
+                        return false;
+                    }
+                    List<String> tempAuthorNames = p.DAUSACH.TACGIAs.Select(a => a.TenTacGia).ToList();
+                    if(tempAuthorNames.Count != authorNames.Count)
+                    {
+                        return false;
+                    }    
+                    return tempAuthorNames.Intersect(authorNames).ToList().Count() == authorNames.Count();
+                });
                 if(book == null)
                 {
                     book = new SACH();
 
                     //book header handle
-                    DAUSACH bookHeader = await bookHeaderRepo.GetSingleAsync(p=>p.TenSach == importExcelObject.BookName);
+                    DAUSACH bookHeader = await bookHeaderRepo.GetSingleAsync(p =>
+                    {
+                        if (p.TenSach != importExcelObject.BookName)
+                        {
+                            return false;
+                        }
+                        List<String> tempAuthorNames = p.TACGIAs.Select(a => a.TenTacGia).ToList();
+                        if (tempAuthorNames.Count != authorNames.Count)
+                        {
+                            return false;
+                        }
+                        return tempAuthorNames.Intersect(authorNames).ToList().Count() == authorNames.Count();
+                    });
                     if (bookHeader == null)
                     {
                         bookHeader = new DAUSACH();
@@ -236,6 +271,13 @@ namespace BookManagement
                         }
                         bookHeader.MaTheLoai = bookCategory.MaTheLoai;
 
+                        //book's name handle
+                        bookHeader.TenSach = importExcelObject.BookName;
+
+                        //add to db
+                        bookHeader.MaDauSach = await GenerateId.Gen(typeof(DAUSACH), "MaDauSach");
+                        await bookHeaderRepo.Add(bookHeader);
+
                         //author handle
                         for (int j = 0; j < importExcelObject.Authors.Count; j++)
                         {
@@ -248,29 +290,18 @@ namespace BookManagement
                                 author.MaTacGia = await GenerateId.Gen(typeof(TACGIA), "MaTacGia");
                                 await authorRepo.Add(author);
                             }
+
+                            //add to db relation with DAUSACH and TACGIA
+                            await AuthorDetailAPI.Add(author.MaTacGia, bookHeader.MaDauSach);
                         }
-
-                        //book's name handle
-                        bookHeader.TenSach = importExcelObject.BookName;
-
-                        //add to db
-                        bookHeader.MaDauSach = await GenerateId.Gen(typeof(DAUSACH), "MaDauSach");
-                        await bookHeaderRepo.Add(bookHeader);
                     }
-
-
-                    //change author name to author Id and add to db
-                    for (int j = 0; j < importExcelObject.Authors.Count; j++)
-                    {
-                        TACGIA author = await authorRepo.GetSingleAsync(p=>p.TenTacGia == importExcelObject.Authors[j]);
-                        await AuthorDetailAPI.Add(author.MaTacGia, bookHeader.MaDauSach);
-                    }
-
                     book.MaDauSach = bookHeader.MaDauSach;
                     book.MaSach = await GenerateId.Gen(typeof(SACH), "MaSach");
                     book.DonGiaNhapMoiNhat = importExcelObject.UnitPrice;
                     book.SoLuong = importExcelObject.Amount;
                     book.NhaXuatBan = importExcelObject.NXB;
+                    book.LanTaiBan = importExcelObject.TimeRepublish;
+                    book.IsActive = true;
                     await bookRepo.Add(book);
                 }
                 else
@@ -318,23 +349,27 @@ namespace BookManagement
                     {
                         return 0;
                     }
-                    if (worksheet.Cells[6, 2].Value == null || worksheet.Cells[6, 2].Value.ToString() != "Nhà xuất bản")
+                    if (worksheet.Cells[6, 2].Value == null || worksheet.Cells[6, 2].Value.ToString() != "Tác giả")
                     {
                         return 0;
                     }
-                    if (worksheet.Cells[6, 3].Value == null || worksheet.Cells[6, 3].Value.ToString() != "Tác giả")
+                    if (worksheet.Cells[6, 3].Value == null || worksheet.Cells[6, 3].Value.ToString() != "Thể loại")
                     {
                         return 0;
                     }
-                    if (worksheet.Cells[6, 4].Value == null || worksheet.Cells[6, 4].Value.ToString() != "Thể loại")
+                    if (worksheet.Cells[6, 4].Value == null || worksheet.Cells[6, 4].Value.ToString() != "Nhà xuất bản")
                     {
                         return 0;
                     }
-                    if (worksheet.Cells[6, 5].Value == null || worksheet.Cells[6, 5].Value.ToString() != "Đơn giá")
+                    if (worksheet.Cells[6, 5].Value == null || worksheet.Cells[6, 5].Value.ToString() != "Lần tái bản")
                     {
                         return 0;
                     }
-                    if (worksheet.Cells[6, 6].Value == null || worksheet.Cells[6, 6].Value.ToString() != "Số lượng")
+                    if (worksheet.Cells[6, 6].Value == null || worksheet.Cells[6, 6].Value.ToString() != "Đơn giá")
+                    {
+                        return 0;
+                    }
+                    if (worksheet.Cells[6, 7].Value == null || worksheet.Cells[6, 7].Value.ToString() != "Số lượng")
                     {
                         return 0;
                     }
@@ -342,23 +377,27 @@ namespace BookManagement
                     int row = 7;
                     while (worksheet.Cells[row,1].Value != null && worksheet.Cells[row, 1].Value.ToString() != "")
                     {
-                        if (worksheet.Cells[row, 2].Value == null || worksheet.Cells[6, 2].Value.ToString() == "")
+                        if (worksheet.Cells[row, 2].Value == null || worksheet.Cells[row, 2].Value.ToString() == "")
                         {
                             return 0;
                         }
-                        if (worksheet.Cells[row, 3].Value == null || worksheet.Cells[6, 3].Value.ToString() == "")
+                        if (worksheet.Cells[row, 3].Value == null || worksheet.Cells[row, 3].Value.ToString() == "")
                         {
                             return 0;
                         }
-                        if (worksheet.Cells[row, 4].Value == null || worksheet.Cells[6, 4].Value.ToString() == "")
+                        if (worksheet.Cells[row, 4].Value == null || worksheet.Cells[row, 4].Value.ToString() == "")
                         {
                             return 0;
                         }
-                        if (worksheet.Cells[row, 5].Value == null || worksheet.Cells[6, 5].Value.ToString() == "")
+                        if (worksheet.Cells[row, 5].Value == null || worksheet.Cells[row, 5].Value.ToString() == "")
                         {
                             return 0;
                         }
-                        if (worksheet.Cells[row, 6].Value == null || worksheet.Cells[6, 6].Value.ToString() == "")
+                        if (worksheet.Cells[row, 6].Value == null || worksheet.Cells[row, 6].Value.ToString() == "")
+                        {
+                            return 0;
+                        }
+                        if (worksheet.Cells[row, 7].Value == null || worksheet.Cells[row, 7].Value.ToString() == "")
                         {
                             return 0;
                         }
@@ -366,63 +405,62 @@ namespace BookManagement
                         ImportExcelObject importExcelObject = new ImportExcelObject();
 
                         String bookName = worksheet.Cells[row, 1].Value.ToString();
+                        if(bookName.Length > 100)
+                        {
+                            return 0;
+                        }    
                         importExcelObject.BookName = bookName;
 
-                        String NXB = worksheet.Cells[row, 2].Value.ToString();
+                        String bookAuthors = worksheet.Cells[row, 2].Value.ToString();
+                        List<string> authorNames = bookAuthors.Split(',').ToList();
+                        if (authorNames.Any(p => String.IsNullOrEmpty(p) || p.Length > 100) ||
+                            authorNames.Distinct().Count() != authorNames.Count())
+                        {
+                            return 0;
+                        }    
+                        else
+                        {
+                            importExcelObject.Authors = authorNames.ToList();
+                        }
+
+                        String category = worksheet.Cells[row, 3].Value.ToString();
+                        if(category.Length > 100)
+                        {
+                            return 0;
+                        }    
+                        importExcelObject.TheLoai = category;
+                        
+
+                        String NXB = worksheet.Cells[row, 4].Value.ToString();
+                        if(NXB.Length > 100)
+                        {
+                            return 0;
+                        }    
                         importExcelObject.NXB = NXB;
 
-                        String bookAuthors = worksheet.Cells[row, 3].Value.ToString();
-                        List<string> authorNames = bookAuthors.Split(',').ToList();
-                        if (authorNames.Any(p => String.IsNullOrEmpty(p)))
+                        String LanTaiBan = worksheet.Cells[row, 5].Value.ToString();
+                        if(LanTaiBan.Length > 4)
                         {
                             return 0;
-                        }    
-                        else
+                        }
+                        try
                         {
-                            if (!bookHeaders.Any(p=>p.TenSach == bookName) || bookHeaders.Any(p =>
-                            {
-                                if(p.TenSach!=bookName)
-                                    { return false; }
-
-                                List<string> tempAuthors = p.TACGIAs.Select(a => a.TenTacGia).ToList();
-                                if(tempAuthors.Count != authorNames.Count)
-                                {
-                                    return false;
-                                }    
-                                tempAuthors.Sort();
-                                authorNames.Sort();
-                                for(int i = 0; i < tempAuthors.Count;i++)
-                                {
-                                    if (tempAuthors[i] != authorNames[i])
-                                    {
-                                        return false;
-                                    }    
-                                }
-                                return true;
-                            }))
-                            {
-                                importExcelObject.Authors = authorNames.ToList();
-                            }
-                            else
+                            importExcelObject.TimeRepublish = int.Parse(LanTaiBan);
+                            if (importExcelObject.TimeRepublish < 0)
                             {
                                 return 0;
-                            }    
+                            }
+                        }
+                        catch
+                        {
+                            return 0;
                         }
 
-                        String category = worksheet.Cells[row, 4].Value.ToString();
-                        if (!bookHeaders.Any(p=>p.TenSach == bookName) || bookHeaders.Any(p =>
-                        {
-                            return p.TenSach == bookName && p.THELOAI.TenTheLoai == category;
-                        }))
-                        {
-                            importExcelObject.TheLoai = category;
-                        }
-                        else
+                        String unitPrice = worksheet.Cells[row, 6].Value.ToString();
+                        if(unitPrice.Length > 9)
                         {
                             return 0;
                         }    
-
-                        String unitPrice = worksheet.Cells[row, 5].Value.ToString();
                         try
                         {
                             importExcelObject.UnitPrice = decimal.Parse(unitPrice);
@@ -436,7 +474,11 @@ namespace BookManagement
                             return 0;
                         }
 
-                        String amount = worksheet.Cells[row, 6].Value.ToString();
+                        String amount = worksheet.Cells[row, 7].Value.ToString();
+                        if (amount.Length > 9)
+                        {
+                            return 0;
+                        }
                         try
                         {
                             importExcelObject.Amount = int.Parse(amount);
@@ -506,22 +548,23 @@ namespace BookManagement
                     worksheetMain.Cells["A4:F4"].Merge = true;
                     worksheetMain.Cells["A5:F5"].Merge = true;
                     worksheetMain.Cells[1, 1].Value = "//Các dòng này chỉ để giới thiệu với bạn. Bạn có thể xóa tùy bạn.";
-                    worksheetMain.Cells[2, 1].Value = "//Bạn có thể chuyển sheet để có thể thấy rõ hơn các thông tin cần điền.";
-                    worksheetMain.Cells[3, 1].Value = "//Bạn không thể điền cùng lúc 2 sách có cùng tên và nhà xuất bản.";
+                    worksheetMain.Cells[2, 1].Value = "//Bạn không thể điền cùng lúc 2 sách có cùng tên, cùng nhóm tác giả nhưng khác thể loại.";
+                    worksheetMain.Cells[3, 1].Value = "//Số ký tự tối đa: Tên sách: 100, Mỗi tên tác giả: 100, Thể loại: 100, NXB: 100, Lần tái bản: 4, Đơn giá: 9, Số Lượng: 9";
                     worksheetMain.Cells[4, 1].Value = "//Sách gồm nhiều tác giả, giữa tên các tác tác giả cần thêm \",\".";
-                    worksheetMain.Cells[5, 1].Value = "//Mỗi tên sách chỉ ứng với 1 thể loại và 1 nhóm tác giả tương ứng.";
-                    using (ExcelRange excelRange = worksheetMain.Cells[$"A1:F5"])
+                    worksheetMain.Cells[5, 1].Value = "//Mỗi sách sẽ được phân biệt bởi tên, nhóm tác giả, nhà sản xuất và lần tái bản.";
+                    using (ExcelRange excelRange = worksheetMain.Cells[$"A1:G5"])
                     {
                         excelRange.Style.Font.Color.SetColor(Color.FromArgb(42, 169, 82));
                     }
 
                     worksheetMain.Cells[6, 1].Value = "Tên sách";
-                    worksheetMain.Cells[6, 2].Value = "Nhà xuất bản";
-                    worksheetMain.Cells[6, 3].Value = "Tác giả";
-                    worksheetMain.Cells[6, 4].Value = "Thể loại";
-                    worksheetMain.Cells[6, 5].Value = "Đơn giá";
-                    worksheetMain.Cells[6, 6].Value = "Số lượng";
-                    using (ExcelRange excelRange = worksheetMain.Cells[$"A6:F1000"])
+                    worksheetMain.Cells[6, 2].Value = "Tác giả";
+                    worksheetMain.Cells[6, 3].Value = "Thể loại";
+                    worksheetMain.Cells[6, 4].Value = "Nhà xuất bản";
+                    worksheetMain.Cells[6, 5].Value = "Lần tái bản";
+                    worksheetMain.Cells[6, 6].Value = "Đơn giá";
+                    worksheetMain.Cells[6, 7].Value = "Số lượng";
+                    using (ExcelRange excelRange = worksheetMain.Cells[$"A6:G1000"])
                     {
                         excelRange.Style.Border.Top.Style = ExcelBorderStyle.Thin;
                         excelRange.Style.Border.Left.Style = ExcelBorderStyle.Thin;
@@ -534,7 +577,7 @@ namespace BookManagement
                     cellFontMain.SetFromFont("Times New Roman", 13);
 
                     worksheetMain.Cells.AutoFitColumns();
-                    for (int i = 1; i <= 6; i++)
+                    for (int i = 1; i <= 7; i++)
                     {
                         worksheetMain.Column(i).Width *= 1.2;
                     }
@@ -542,10 +585,11 @@ namespace BookManagement
                     //Book template
                     ExcelWorksheet worksheetBook = package.Workbook.Worksheets.Add("BookData");
                     worksheetBook.Cells[1, 1].Value = "Tên sách";
-                    worksheetBook.Cells[1, 2].Value = "Thể loại";
-                    worksheetBook.Cells[1, 3].Value = "Tác giả";
+                    worksheetBook.Cells[1, 2].Value = "Tác giả";
+                    worksheetBook.Cells[1, 3].Value = "Thể loại";
                     worksheetBook.Cells[1, 4].Value = "Nhà xuất bản";
-                    worksheetBook.Cells[1, 5].Value = "Đơn giá nhập mới nhất";
+                    worksheetBook.Cells[1, 5].Value = "Lần tái bản";
+                    worksheetBook.Cells[1, 6].Value = "Đơn giá nhập mới nhất";
                     int row = 0;
                     for (int i = 0; i < bookHeaders.Count; i++)
                     {
@@ -553,10 +597,11 @@ namespace BookManagement
                         for (int j = 0; j < bookHeader.SACHes.Count; j++)
                         {
                             worksheetBook.Cells[2 + row, 1].Value = bookHeader.TenSach;
-                            worksheetBook.Cells[2 + row, 2].Value = bookHeader.THELOAI.TenTheLoai;
-                            worksheetBook.Cells[2 + row, 3].Value = string.Join(",", bookHeader.TACGIAs.Select(p => p.TenTacGia).ToList());
+                            worksheetBook.Cells[2 + row, 2].Value = string.Join(",", bookHeader.TACGIAs.Select(p => p.TenTacGia).ToList());
+                            worksheetBook.Cells[2 + row, 3].Value = bookHeader.THELOAI.TenTheLoai;
                             worksheetBook.Cells[2 + row, 4].Value = bookHeader.SACHes.ElementAt(j).NhaXuatBan;
-                            worksheetBook.Cells[2 + row, 5].Value = bookHeader.SACHes.ElementAt(j).DonGiaNhapMoiNhat;
+                            worksheetBook.Cells[2 + row, 5].Value = bookHeader.SACHes.ElementAt(j).LanTaiBan;
+                            worksheetBook.Cells[2 + row, 6].Value = bookHeader.SACHes.ElementAt(j).DonGiaNhapMoiNhat;
                             row++;
                         }
                     }
@@ -566,12 +611,12 @@ namespace BookManagement
                     cellFontBook.SetFromFont("Times New Roman", 13);
 
                     worksheetBook.Cells.AutoFitColumns();
-                    for (int i = 1; i <= 4; i++)
+                    for (int i = 1; i <= 6; i++)
                     {
                         worksheetBook.Column(i).Width *= 1.2;
                     }
 
-                    using (ExcelRange excelRange = worksheetBook.Cells[$"A1:E{row + 1}"])
+                    using (ExcelRange excelRange = worksheetBook.Cells[$"A1:F{row + 1}"])
                     {
                         excelRange.Style.Border.Top.Style = ExcelBorderStyle.Thin;
                         excelRange.Style.Border.Left.Style = ExcelBorderStyle.Thin;
@@ -678,6 +723,7 @@ namespace BookManagement
             public string NXB { get; set; }
             public List<string> Authors { get; set; }
             public string TheLoai { get; set; }
+            public int TimeRepublish { get; set; }
             public decimal UnitPrice { get; set; }
             public int Amount { set; get; }
         }

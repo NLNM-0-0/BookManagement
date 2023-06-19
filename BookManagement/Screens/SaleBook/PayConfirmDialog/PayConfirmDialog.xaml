@@ -63,7 +63,8 @@
                     <RadioButton
                         FontSize="{StaticResource FontSize16}"
                         Style="{StaticResource MaterialDesignRadioButton}"
-                        GroupName="comboBox">
+                        GroupName="comboBox"
+                        IsChecked="{Binding IsBillNotHasDebt, UpdateSourceTrigger=PropertyChanged}">
                         Đã nhận đủ tiền
                     </RadioButton>
                     <RadioButton
@@ -71,8 +72,7 @@
                         FontSize="{StaticResource FontSize16}"
                          Style="{StaticResource MaterialDesignRadioButton}"
                         GroupName="comboBox"
-                        IsChecked="{Binding IsBillHasDebt, UpdateSourceTrigger=PropertyChanged}"
-                        IsEnabled="{c:Binding IsAllowSaveBillWithDebt, UpdateSourceTrigger=PropertyChanged, FalseToVisibility=Collapsed}">
+                        IsChecked="{Binding IsBillHasDebt, UpdateSourceTrigger=PropertyChanged}">
                         Ghi nợ cho khách
                     </RadioButton>
                 </Grid>

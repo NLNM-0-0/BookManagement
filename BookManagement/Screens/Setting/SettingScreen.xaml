@@ -183,6 +183,7 @@
                                         Width="auto"
                                         Height="auto"
                                         FontSize="{StaticResource FontSize16}"
+                                        material:TextFieldAssist.SuffixText="VND"
                                         Style="{StaticResource MaterialDesignOutlinedTextBox}"
                                         material:HintAssist.Hint=""
                                         material:HintAssist.IsFloating="False">
@@ -192,7 +193,6 @@
                                                 UpdateSourceTrigger="PropertyChanged">
                                                 <Binding.ValidationRules>
                                                     <local:NumberTextBoxValidation
-                                                        Min="0"
                                                         Type="IntergerType"
                                                         ValidatesOnTargetUpdated="True"/>
                                                 </Binding.ValidationRules>

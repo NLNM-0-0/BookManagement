@@ -86,7 +86,8 @@
                     VerticalAlignment="Stretch"
                     Style="{StaticResource ButtonRectangle}"
                     HorizontalAlignment="Right"
-                    Command="{Binding AddAuthorGroupSuccessCommand, UpdateSourceTrigger=PropertyChanged}">
+                    Command="{Binding AddAuthorGroupSuccessCommand, UpdateSourceTrigger=PropertyChanged}"
+                    CommandParameter="">
                 </Button>
             </Grid>
             <!-- This to make column in Datagrid collapsed -->
