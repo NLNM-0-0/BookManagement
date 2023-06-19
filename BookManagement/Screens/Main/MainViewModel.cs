@@ -104,7 +104,7 @@ namespace BookManagement {
                     (t as Window).Close();
                     App.Current.Shutdown();
                 }),
-                Header = "Bạn có chắc?",
+                Header = "Bạn có chắc ?",
                 ContentString = "Quy trình của bạn có thể không được lưu nếu bạn đóng ứng dụng. Vui lòng kiểm tra trước khi đóng ứng dụng!"
             };
 

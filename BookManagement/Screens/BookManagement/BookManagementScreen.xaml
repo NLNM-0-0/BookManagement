@@ -7,6 +7,7 @@
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       xmlns:fa="http://schemas.fontawesome.io/icons/"
+      xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -17,17 +18,18 @@
 
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0"
                    Margin="0 20 0 20"
                 x:Name="Header"
-                Text="Sách"
+                Text="Tra cứu sách"
                 VerticalAlignment="Center"
                 HorizontalAlignment="Center"
                 FontSize="{StaticResource FontSize34}"/>
-        
+
         <Border Padding="40 20" Grid.Row="1"
                 Background="{StaticResource BackgroundColorBrush}">
             <Grid Grid.Row="0">
@@ -227,8 +229,32 @@
             </Grid>
         </Border>
 
-
-        <DataGrid Grid.Row="2"
+        <DockPanel 
+            Visibility="{c:Binding IsAllowChangeStatusOfBook, UpdateSourceTrigger=PropertyChanged}"
+            Margin="0 15 0 0" 
+            Grid.Row="2" 
+            LastChildFill="False">
+            <Button Style="{StaticResource ButtonRectangle}"
+                            DockPanel.Dock="Right" 
+                            Margin="0 0 40 0"
+                            Width="120"
+                            FontSize="{StaticResource FontSize16}"
+                            Content="{Binding RemoveOrUnBanned}"
+                            Command="{Binding BanBookCommand}"
+                            CommandParameter="{Binding ElementName=datagrid, Path=SelectedItem}"/>
+            <ToggleButton Grid.Row="2"
+                          VerticalAlignment="Center"
+                          DockPanel.Dock="Right"
+                        Margin="20 0 20 0"
+                        Style="{StaticResource MaterialDesignSwitchToggleButton}"
+                        materialDesign:ToggleButtonAssist.SwitchTrackOnBackground="{StaticResource BlackColorBrush}"
+                        IsChecked="{Binding IsChecked, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock DockPanel.Dock="Right"
+                       VerticalAlignment="Center"
+                    Text="{Binding StatusText}" Margin="5 0 5 0"
+                    FontSize="{StaticResource FontSize14}"/>
+        </DockPanel>
+        <DataGrid Grid.Row="3"
                     Margin="40 20"
                     ItemsSource="{Binding FilteredBooks}" x:Name="datagrid" 
                     AutoGenerateColumns="False" Grid.ColumnSpan="2"
@@ -243,7 +269,7 @@
                 <DataGridTextColumn Header="Tên sách" 
                                     HeaderStyle="{StaticResource LeftHeader}"
                                     CellStyle="{StaticResource LeftCell}"
-                                    Width="300" MinWidth="200" MaxWidth="700" 
+                                    Width="300" MinWidth="200" MaxWidth="400" 
                                     Binding="{Binding DAUSACH.TenSach}">
                     <DataGridTextColumn.ElementStyle>
                         <Style>
@@ -251,21 +277,11 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="NXB" 
-                                    HeaderStyle="{StaticResource LeftHeader}"
-                                    CellStyle="{StaticResource LeftCell}"
-                                    Width="auto" MinWidth="100" MaxWidth="700" 
-                                    Binding="{Binding NhaXuatBan}">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style>
-                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
+                
                 <DataGridTextColumn Header="Tác giả" 
                                     HeaderStyle="{StaticResource LeftHeader}"
                                     CellStyle="{StaticResource LeftCell}"
-                                    Width="300" MinWidth="200" MaxWidth="700" 
+                                    Width="300" MinWidth="200" MaxWidth="400" 
                                     Binding="{Binding DAUSACH, Converter={StaticResource DauSachToTacGiaStringConverter}}">
                     <DataGridTextColumn.ElementStyle>
                         <Style>
@@ -284,12 +300,28 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
+                <DataGridTextColumn Header="NXB" 
+                                    HeaderStyle="{StaticResource LeftHeader}"
+                                    CellStyle="{StaticResource LeftCell}"
+                                    Width="auto" MinWidth="100" MaxWidth="300" 
+                                    Binding="{Binding NhaXuatBan}">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style>
+                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Lần tái bản" 
+                                    HeaderStyle="{StaticResource RightHeader}"
+                                    CellStyle="{StaticResource RightCell}"
+                                    Width="auto" MinWidth="100" MaxWidth="200" 
+                                    Binding="{Binding LanTaiBan}"/>
                 <DataGridTextColumn Header="Số lượng" 
                                     HeaderStyle="{StaticResource RightHeader}"
                                     CellStyle="{StaticResource RightCell}"
                                     Width="auto" MinWidth="100" MaxWidth="200" 
                                     Binding="{Binding SoLuong}"/>
-                <DataGridTextColumn Header="Giá" 
+                <DataGridTextColumn Header="Giá nhập" 
                                     HeaderStyle="{StaticResource RightHeader}"
                                     CellStyle="{StaticResource RightCell}"
                                     Width="auto" MinWidth="100" MaxWidth="200" 

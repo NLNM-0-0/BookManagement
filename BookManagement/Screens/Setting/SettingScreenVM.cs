@@ -163,6 +163,7 @@ namespace BookManagement
         public ICommand BackToPreviousRuleCommand { get; set; }
         public ICommand SaveAccessCommand { get; set; }
         public ICommand BackToPreviousAccessCommand { get; set; }
+        public ICommand AddNewUserGroup { get; set; }
         #endregion
 
         public SettingScreenVM()
@@ -260,7 +261,21 @@ namespace BookManagement
                     }
                     MainViewModel.SetLoading(false);
                 });
+                AddNewUserGroup = new RelayCommandWithNoParameter(() =>
+                {
+                    AddNewUserGroup addNewUserGroup = new AddNewUserGroup();
+                    AddNewUserGroupVM addNewUserGroupVM = new AddNewUserGroupVM();
+                    addNewUserGroupVM.AddNewUserGroupSuccess += OnAddNewUserGroupSuccess;
+                    addNewUserGroup.DataContext = addNewUserGroupVM;
+                    DialogHost.Show(addNewUserGroup, "Main");
+                });
             });
+        }
+        #region Function
+        private void OnAddNewUserGroupSuccess(NHOMNGUOIDUNG userGroup)
+        {
+            UserGroupList.Insert(0, userGroup);
+            UserGroup = userGroup;
         }
         public override void Dispose()
         {
@@ -338,5 +353,6 @@ namespace BookManagement
             }
             return false;
         }*/
+        #endregion
     }
 }

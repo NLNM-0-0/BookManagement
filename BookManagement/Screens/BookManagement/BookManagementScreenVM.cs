@@ -12,10 +12,16 @@ namespace BookManagement
 {
     internal class BookManagementScreenVM : BaseViewModel
     {
+        #region Access property
+        public bool IsAllowChangeStatusOfBook =>
+            AccountStore.instance.CurrentAccount.NHOMNGUOIDUNG.CHUCNANGs.Any(p => p.MaChucNang == AppEnum.DoiTrangThaiBanCuaSach);
+        #endregion
         #region Public Properties
         private GenericDataRepository<SACH> sachRepo;
         private GenericDataRepository<DAUSACH> dauSachRepo;
         public List<SACH> BookList { get; set; }
+        private List<SACH> bannedList;
+        private List<SACH> notbannedList;
         public ObservableCollection<SACH> FilteredBooks { get; set; }
 
         private string _searchName;
@@ -88,12 +94,49 @@ namespace BookManagement
                 OnPropertyChanged();
             }
         }
-        #endregion
 
+        private bool _isChecked;
+        public bool IsChecked
+        {
+            get => _isChecked;
+            set
+            {
+                if (value)
+                {
+                    StatusText = "Đang bán";
+                    BookList = notbannedList;
+                    FilteredBooks = new ObservableCollection<SACH>(BookList);
+                    RemoveOrUnBanned = "Dừng bán";
+                }
+                else
+                {
+                    StatusText = "Dừng bán";
+                    BookList = bannedList;
+                    FilteredBooks = new ObservableCollection<SACH>(BookList);
+                    RemoveOrUnBanned = "Bán tiếp";
+                }
+                _isChecked = value;
+            }
+        }
+        private string _removeOrUnBanned;
+        public string RemoveOrUnBanned
+        {
+            get => _removeOrUnBanned;
+            set { _removeOrUnBanned = value; OnPropertyChanged(); }
+        }
+
+        private string _statusText;
+        public string StatusText
+        {
+            get => _statusText;
+            set { _statusText = value; OnPropertyChanged(); }
+        }
+        #endregion
 
         #region Commands
         public ICommand SearchCommand { get; set; }
         public ICommand ResetCommand { get; set; }
+        public ICommand BanBookCommand { get; set; }
         #endregion
 
         #region Constructor
@@ -114,6 +157,7 @@ namespace BookManagement
                 MinQuantitySearch = string.Empty;
                 await Search();
             });
+            BanBookCommand = new RelayCommand<object>((p) => p != null, async (p) => await BanBook(p));
             Task.Run(async () =>
             {
                 MainViewModel.SetLoading(true);
@@ -125,16 +169,47 @@ namespace BookManagement
             });
 
         }
+        private async Task BanBook(object obj)
+        {
+            MainViewModel.SetLoading(true);
 
+            var removeBook = obj as SACH;
+            if (removeBook == null)
+                return;
+
+            if (removeBook.IsActive == true)
+            {
+                removeBook.IsActive = false;
+                notbannedList.Remove(removeBook);
+                bannedList.Insert(0, removeBook);
+                BookList = notbannedList;
+                FilteredBooks = new ObservableCollection<SACH>(BookList);
+            }
+            else
+            {
+                removeBook.IsActive = true;
+                notbannedList.Insert(0, removeBook);
+                bannedList.Remove(removeBook);
+                BookList = bannedList;
+                FilteredBooks = new ObservableCollection<SACH>(BookList);
+            }
+
+            await sachRepo.Update(removeBook);
+            MainViewModel.SetLoading(false);
+        }
         private async Task Load()
         {
             BookList = new List<SACH>(
-                await sachRepo.GetListAsync(s => s.SoLuong > 0, s => s.DAUSACH, s=>s.DAUSACH.TACGIAs, s=>s.DAUSACH.THELOAI))
-                .OrderBy(p=>p.DAUSACH.TenSach).ThenBy(p=>p.NhaXuatBan).ToList();
-
+                await sachRepo.GetListAsync(s => s.SoLuong > 0, s => s.DAUSACH, s => s.DAUSACH.TACGIAs, s => s.DAUSACH.THELOAI))
+                .OrderBy(p => p.DAUSACH.TenSach).ThenBy(p => p.NhaXuatBan).ToList();
+            bannedList = BookList.Where(b => b.IsActive == false).ToList();
+            notbannedList = BookList.Where(b => b.IsActive == true).ToList();
+            RemoveOrUnBanned = "Dừng bán";
+            StatusText = "Đang bán";
+            IsChecked = true;
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                FilteredBooks = new ObservableCollection<SACH>(BookList);
+                FilteredBooks = new ObservableCollection<SACH>(notbannedList);
             }));
         }
         #endregion
@@ -145,62 +220,64 @@ namespace BookManagement
         {
             MainViewModel.SetLoading(true);
 
-                double maxPrice = double.MaxValue;
-                double minPrice = 0;
-                int maxQuantity = int.MaxValue;
-                int minQuantity = 0;
-                if (!String.IsNullOrEmpty(MaxPriceSearch))
+            double maxPrice = double.MaxValue;
+            double minPrice = 0;
+            int maxQuantity = int.MaxValue;
+            int minQuantity = 0;
+            if (!String.IsNullOrEmpty(MaxPriceSearch))
+            {
+                double.TryParse(MaxPriceSearch, out maxPrice);
+            }
+            if (!String.IsNullOrEmpty(MinPriceSearch))
+            {
+                double.TryParse(MinPriceSearch, out minPrice);
+            }
+            if (!String.IsNullOrEmpty(MaxQuantitySearch))
+            {
+                int.TryParse(MaxQuantitySearch, out maxQuantity);
+            }
+            if (!String.IsNullOrEmpty(MinQuantitySearch))
+            {
+                int.TryParse(MinQuantitySearch, out minQuantity);
+            }
+            if (minPrice > maxPrice)
+            {
+                MainViewModel.SetLoading(true);
+                ConfirmDialog notification = new ConfirmDialog()
                 {
-                    double.TryParse(MaxPriceSearch, out maxPrice);
-                }
-                if (!String.IsNullOrEmpty(MinPriceSearch))
-                {
-                    double.TryParse(MinPriceSearch, out minPrice);
-                }
-                if (!String.IsNullOrEmpty(MaxQuantitySearch))
-                {
-                    int.TryParse(MaxQuantitySearch, out maxQuantity);
-                }
-                if (!String.IsNullOrEmpty(MinQuantitySearch))
-                {
-                    int.TryParse(MinQuantitySearch, out minQuantity);
-                }
-                if (minPrice > maxPrice)
-                {
-                    MainViewModel.SetLoading(true);
-                        ConfirmDialog notification = new ConfirmDialog()
-                        {
-                            Header = "Lỗi",
-                            ContentString = "Giá tối thiểu đang lớn hơn giá tối đa."
-                        };
-                        MainViewModel.SetLoading(false);
-                        await DialogHost.Show(notification, "Main");
+                    Header = "Lỗi",
+                    ContentString = "Giá tối thiểu đang lớn hơn giá tối đa."
+                };
+                MainViewModel.SetLoading(false);
+                await DialogHost.Show(notification, "Main");
 
-                    return;
-                }
-                else if (minQuantity > maxQuantity)
+                return;
+            }
+            else if (minQuantity > maxQuantity)
+            {
+                MainViewModel.SetLoading(true);
+                ConfirmDialog notification = new ConfirmDialog()
                 {
-                    MainViewModel.SetLoading(true);
-                    ConfirmDialog notification = new ConfirmDialog() {
-                    Header="Lỗi",
-                    ContentString="Số lượng tối thiểu đang lớn hơn số lượng tối đa."};
-                    MainViewModel.SetLoading(false);
-                    await DialogHost.Show(notification, "Main");
+                    Header = "Lỗi",
+                    ContentString = "Số lượng tối thiểu đang lớn hơn số lượng tối đa."
+                };
+                MainViewModel.SetLoading(false);
+                await DialogHost.Show(notification, "Main");
 
-                    return;
-                }
-                else
-                {
-                    MainViewModel.SetLoading(true);
-                    FilteredBooks = new ObservableCollection<SACH>(BookList.Where(s => isContainSearch(s, maxPrice, minPrice, maxQuantity, minQuantity)).ToList());
-                    
-                    MainViewModel.SetLoading(false);
-                }
+                return;
+            }
+            else
+            {
+                MainViewModel.SetLoading(true);
+                FilteredBooks = new ObservableCollection<SACH>(BookList.Where(s => isContainSearch(s, maxPrice, minPrice, maxQuantity, minQuantity)).ToList());
 
-                App.Current.Dispatcher.Invoke((Action)(() =>
-                {
-                    FilteredBooks = new ObservableCollection<SACH>(FilteredBooks);
-                }));
+                MainViewModel.SetLoading(false);
+            }
+
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                FilteredBooks = new ObservableCollection<SACH>(FilteredBooks);
+            }));
             MainViewModel.SetLoading(false);
         }
 
@@ -211,7 +288,7 @@ namespace BookManagement
         {
             var isContain = true;
 
-            if(s.SoLuong>=minQuantity&&s.SoLuong<=maxQuantity
+            if (s.SoLuong >= minQuantity && s.SoLuong <= maxQuantity
                 && (double)s.DonGiaNhapMoiNhat >= minPrice && (double)s.DonGiaNhapMoiNhat <= maxPrice)
             {
                 isContain = true;
@@ -223,7 +300,7 @@ namespace BookManagement
 
             if (!string.IsNullOrEmpty(SearchName))
             {
-                isContain = isContain 
+                isContain = isContain
                     && (Helpers.convertToUnSign3(s.DAUSACH.TenSach)).ToLower().Trim()
                     .Contains(Helpers.convertToUnSign3(SearchName).ToLower().Trim());
 
@@ -233,13 +310,14 @@ namespace BookManagement
                 }
             }
 
-            if(!string.IsNullOrEmpty(SearchAuthor)){
-                if(s.DAUSACH!=null&& s.DAUSACH.TACGIAs != null)
+            if (!string.IsNullOrEmpty(SearchAuthor))
+            {
+                if (s.DAUSACH != null && s.DAUSACH.TACGIAs != null)
                 {
                     var temp = false;
                     foreach (var t in s.DAUSACH.TACGIAs)
                     {
-                        if((Helpers.convertToUnSign3(t.TenTacGia)).ToLower().Trim()
+                        if ((Helpers.convertToUnSign3(t.TenTacGia)).ToLower().Trim()
                             .Contains(Helpers.convertToUnSign3(SearchAuthor).ToLower().Trim()))
                         {
                             temp = true;

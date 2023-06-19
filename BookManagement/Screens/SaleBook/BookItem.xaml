@@ -4,7 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BookManagement"
-             xmlns:behavior="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              Width="200"
              x:Name="bookItem"
@@ -28,6 +29,22 @@
                         FontWeight="DemiBold"
                         TextWrapping="Wrap">
                     </TextBlock>
+                    <StackPanel
+                        Margin="0 5 0 0"
+                        Orientation="Horizontal"
+                        Visibility="{c:Binding 'LanTaiBan != 0', UpdateSourceTrigger=PropertyChanged}"
+                        HorizontalAlignment="Center">
+                        <TextBlock
+                            Text="Tái bản lần thứ "
+                            FontSize="{StaticResource FontSize14}"
+                            FontWeight="Normal"
+                            Foreground="{StaticResource BlurColorBrush}"/>
+                        <TextBlock
+                            Text="{Binding LanTaiBan, UpdateSourceTrigger=PropertyChanged}"
+                            FontSize="{StaticResource FontSize14}"
+                            FontWeight="Normal"
+                            Foreground="{StaticResource BlurColorBrush}"/>
+                    </StackPanel>
                     <TextBlock 
                         Text="{Binding NhaXuatBan, UpdateSourceTrigger=PropertyChanged}"
                         FontSize="{StaticResource FontSize16}"
@@ -39,20 +56,49 @@
                         TextWrapping="Wrap">
                     </TextBlock>
                 </StackPanel>
-                <TextBlock 
-                    Grid.Row="1"
-                    FontSize="{StaticResource FontSize16}"
-                    HorizontalAlignment="Center"
-                    Margin="0 15 0 0"
-                    Foreground="{DynamicResource PrimaryHueMidBrush}"
-                    TextWrapping="Wrap">
-                    <TextBlock.Text>
-                        <MultiBinding Converter="{x:Static local:MultiDecimalToMoneyConverter.Instance}">
-                            <Binding ElementName="bookItem" Path="DataContext.DonGiaNhapMoiNhat" />
-                            <Binding RelativeSource="{RelativeSource AncestorType=local:SaleBookScreen}" Path="DataContext.PercentProfit"/>
-                        </MultiBinding>
-                    </TextBlock.Text>
-                </TextBlock>
+                <Grid
+                    Margin="0 15 0 5"
+                    Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Button
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+                        HorizontalAlignment="Left"
+                        materialDesign:ElevationAssist.Elevation="Dp0"
+                        ToolTip="Xem"
+                        Height="24"
+                        Width="24"
+                        Foreground="{DynamicResource PrimaryHueMidBrush}"
+                        Background="Transparent"
+                        BorderBrush="Transparent"
+                        Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:SaleBookScreen}, Path=DataContext.SeeDetalCommand}" 
+                        CommandParameter="{Binding ElementName=bookItem, Path=DataContext}">
+                        <materialDesign:PackIcon
+                            Kind="OpenInNew"
+                            Height="18"
+                            Width="18" />
+                    </Button>
+                    <TextBlock 
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        VerticalAlignment="Center"
+                        FontSize="{StaticResource FontSize16}"
+                        HorizontalAlignment="Center"
+                        Foreground="{DynamicResource PrimaryHueMidBrush}"
+                        TextWrapping="Wrap">
+                        <TextBlock.Text>
+                            <MultiBinding Converter="{x:Static local:MultiDecimalToMoneyConverter.Instance}">
+                                <Binding ElementName="bookItem" Path="DataContext.DonGiaNhapMoiNhat" />
+                                <Binding RelativeSource="{RelativeSource AncestorType=local:SaleBookScreen}" Path="DataContext.PercentProfit"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </Grid>
+                
             </Grid>
         </Grid>
         <Grid.InputBindings>

@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
              xmlns:local="clr-namespace:BookManagement"
              mc:Ignorable="d">
     <StackPanel 
@@ -18,7 +19,8 @@
                 Margin="0 7 0 0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
-                    <RowDefinition Height="5"/>              
+                    <RowDefinition Height="5"/>
+                    <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
                 <TextBlock 
@@ -27,8 +29,26 @@
                     FontSize="{StaticResource FontSize16}"
                     FontWeight="SemiBold"
                     TextWrapping="Wrap"/>
-                <TextBlock 
+                <StackPanel
+                    Visibility="{c:Binding 'BillDetail.SACH.LanTaiBan != 0', UpdateSourceTrigger=PropertyChanged}"
                     Grid.Row="2"
+                    Orientation="Horizontal"
+                    Margin="0 0 0 5">
+                    <TextBlock 
+                        Grid.Row="3"
+                        Text="Tái bản lần thứ "
+                        FontSize="{StaticResource FontSize14}"
+                        Foreground="{StaticResource BlurColorBrush}"/>
+                    <TextBlock 
+                        Margin="0 0 0 5"
+                        Grid.Row="3"
+                        Text="{Binding BillDetail.SACH.LanTaiBan, UpdateSourceTrigger=PropertyChanged}"
+                        FontSize="{StaticResource FontSize14}"
+                        Foreground="{StaticResource BlurColorBrush}"/>
+                </StackPanel>
+                
+                <TextBlock 
+                    Grid.Row="3"
                     Text="{Binding BillDetail.SACH.NhaXuatBan,UpdateSourceTrigger=PropertyChanged}"
                     FontSize="{StaticResource FontSize16}"
                     Foreground="{StaticResource BlurColorBrush}"

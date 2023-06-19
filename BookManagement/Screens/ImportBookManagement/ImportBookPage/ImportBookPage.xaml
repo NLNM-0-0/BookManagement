@@ -258,7 +258,7 @@
             </Grid>
             <TextBlock
                 Grid.Row="12"
-                Text="Lưu ý: Hệ thống cho phép tồn tại sách có cùng tên và nhà xuất bản. Mỗi đầu sách chỉ tương ứng 1 thể loại và 1 nhóm tác giả."
+                Text="Lưu ý: Hệ thống không cho phép 2 sách cùng tên, cùng nhóm tác giả nhưng khác thể loại. Mỗi sách sẽ được xác định bởi tên, nhóm tác giả, nhà xuất bản và lần tái bản."
                 FontSize="{StaticResource FontSize16}"
                 TextWrapping="Wrap"
                 Margin="0 0 0 15"
@@ -304,18 +304,6 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
                     <DataGridTextColumn 
-                        Header="NXB" 
-                        Width="2*" 
-                        HeaderStyle="{StaticResource LeftHeader}"
-                        CellStyle="{StaticResource LeftCell}"
-                        Binding="{Binding SACH.NhaXuatBan}">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style>
-                                <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn 
                         Header="Tác giả" 
                         Width="2*" 
                         HeaderStyle="{StaticResource LeftHeader}"
@@ -333,6 +321,30 @@
                         Binding="{Binding SACH.DAUSACH.THELOAI.TenTheLoai}"
                         HeaderStyle="{StaticResource LeftHeader}"
                         CellStyle="{StaticResource LeftCell}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style>
+                                <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn 
+                        Header="NXB" 
+                        Width="2*" 
+                        HeaderStyle="{StaticResource LeftHeader}"
+                        CellStyle="{StaticResource LeftCell}"
+                        Binding="{Binding SACH.NhaXuatBan}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style>
+                                <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn 
+                        Header="Lần tái bản" 
+                        Width="2*" 
+                        Binding="{Binding SACH.LanTaiBan}"
+                        HeaderStyle="{StaticResource RightHeader}"
+                        CellStyle="{StaticResource RightCell}">
                         <DataGridTextColumn.ElementStyle>
                             <Style>
                                 <Setter Property="TextBlock.TextWrapping" Value="Wrap" />

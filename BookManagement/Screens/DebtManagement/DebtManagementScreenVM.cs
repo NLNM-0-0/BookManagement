@@ -16,6 +16,8 @@ namespace BookManagement
             AccountStore.instance.CurrentAccount.NHOMNGUOIDUNG.CHUCNANGs.Any(p => p.MaChucNang == AppEnum.LapPhieuThuTien);
         public bool IsAllowSearchDebtCollect=>
             AccountStore.instance.CurrentAccount.NHOMNGUOIDUNG.CHUCNANGs.Any(p => p.MaChucNang == AppEnum.TraCuuPhieuThuTien);
+        public bool IsAllowChangeCustomerInfo =>
+            AccountStore.instance.CurrentAccount.NHOMNGUOIDUNG.CHUCNANGs.Any(p => p.MaChucNang == AppEnum.ThayDoiThongTinKhachHang);
         #endregion
 
         #region GenericDataRepository
@@ -27,6 +29,7 @@ namespace BookManagement
         public ICommand ResetCommand { get; set; }
         public ICommand ShowCustomerCommand { get; set; }
         public ICommand CollectMoneyCommand { get; set; }
+        public ICommand EditCustomerCommand { get; set; }
         #endregion
 
         #region Properties
@@ -98,6 +101,7 @@ namespace BookManagement
                     debtCollect.DataContext = debtCollectVM;
                     await DialogHost.Show(debtCollect, "Main");
                 });
+                EditCustomerCommand = new RelayCommand<KHACHHANG>(p=>p!=null, async (p) => await EditCustomer(p));
                 MainViewModel.IsLoading = false;
             });
         }
@@ -156,5 +160,28 @@ namespace BookManagement
         {
             FilterCustomers = new ObservableCollection<KHACHHANG>(FilterCustomers);
         }
+
+        private async Task EditCustomer(KHACHHANG customer)
+        {
+            var dl = new EditCustomer();
+            EditCustomerVM editCustomerVM = new EditCustomerVM(customer);
+            editCustomerVM.EditCustomerSuccess += OnEditCustomerSuccess;
+            dl.DataContext = editCustomerVM;
+            await DialogHost.Show(dl, "Main");
+        }
+
+        private void OnEditCustomerSuccess()
+        {
+            Task.Run(async () => 
+            {
+                MainViewModel.IsLoading = true;
+                await Load();
+                App.Current.Dispatcher.Invoke((Action)(() =>
+                {
+                    FilterCustomers = new ObservableCollection<KHACHHANG>(FilterCustomers);
+                }));
+                MainViewModel.IsLoading = false;
+            });
+        }    
     }
 }

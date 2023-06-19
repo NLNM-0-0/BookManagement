@@ -59,7 +59,6 @@ namespace BookManagement
         #region Constructor
         public AdminAddUserDialogVM() {
             Task.Run(async() => {
-                MainViewModel.SetLoading(true);
                 NewUser.GioiTinh = "Nữ";
                 NewUser.DienThoai = "";
                 NewUser.TenNhanVien = "";
@@ -76,7 +75,8 @@ namespace BookManagement
                     !String.IsNullOrEmpty(NewUser.TenNhanVien) &&
                     !String.IsNullOrEmpty(NewUser.UserName) &&
                     !String.IsNullOrEmpty(NewUser.DiaChi) &&
-                    NewUser.NgaySinh!=null;
+                    NewUser.NgaySinh != null &&
+                    SelectedUserGroup != null;
                 }
                 , async (_) =>
                 {
@@ -129,7 +129,6 @@ namespace BookManagement
                     DialogHost.CloseDialogCommand.Execute(null, null);
                     OnClosedDialog();
                 });
-                MainViewModel.SetLoading(false);
             });
             
         }
@@ -138,7 +137,7 @@ namespace BookManagement
         #region Command Define
         public async Task Load()
         {
-            UserGroups = new ObservableCollection<NHOMNGUOIDUNG>(await userGroupRepo.GetAllAsync());
+            UserGroups = new ObservableCollection<NHOMNGUOIDUNG>(await userGroupRepo.GetListAsync(p => p.MaNhomNguoiDung != AppEnum.Admin));
         }
         #endregion
     }

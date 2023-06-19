@@ -1,0 +1,200 @@
+﻿<UserControl x:Class="BookManagement.ChangeUserInfoDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BookManagement"
+             mc:Ignorable="d" 
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
+    <UserControl.Resources>
+        <local:FalsesToTrueConverters x:Key="FalsesToTrueConverters"/>
+    </UserControl.Resources>
+    <Border 
+        Background="{StaticResource WhiteColorBrush}" 
+        BorderThickness="0" 
+        CornerRadius="20" 
+        Padding="40" 
+        Width="590" 
+        Height="auto">
+        <StackPanel x:Name="content">
+            <Grid>
+                <TextBlock Text="Đổi thông tin nhân viên" HorizontalAlignment="Left" FontSize="{StaticResource FontSize24}"/>
+                <Button HorizontalAlignment="Right"
+                        Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                        x:Name="ButtonClose"
+                        Margin="0 0 10 0"
+                        Height="30"
+                        Width="30"
+                        Background="Transparent"
+                        BorderBrush="{StaticResource NotAvailableColorBrush}"
+                        BorderThickness="3">
+
+                    <fa:ImageAwesome
+                            x:Name="IconButtonClose"
+                            Icon="Close"
+                            Opacity="1"
+                            Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=BorderBrush}"
+                            Width="10"
+                            Height="10"/>
+                </Button>
+            </Grid>
+            <Grid
+                Height="30"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="3*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid 
+                    Grid.Column="0">
+                    <StackPanel>
+                        <ComboBox 
+                            x:Name="userGroupComboBox"
+                            Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                            materialDesign:TextFieldAssist.TextFieldCornerRadius="5"
+                            SelectedItem="{Binding SelectedUserGroup, UpdateSourceTrigger=PropertyChanged}"
+                            DisplayMemberPath="TenNhomNguoiDung"
+                            ItemsSource="{Binding UserGroups, UpdateSourceTrigger=PropertyChanged}"
+                            materialDesign:HintAssist.Hint="Nhóm người dùng"
+                            FontSize="{StaticResource FontSize16}"/>
+                        <Grid
+                            Height="30"/>
+                        <ComboBox 
+                            x:Name="genderComboBox"
+                            Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                            materialDesign:TextFieldAssist.TextFieldCornerRadius="5"
+                            SelectedItem="{Binding User.GioiTinh, UpdateSourceTrigger=PropertyChanged}"
+                            materialDesign:HintAssist.Hint="Giới tính"
+                            FontSize="{StaticResource FontSize16}"/>
+                        <Grid
+                            Height="30"/>
+                        <DatePicker 
+                            Width="auto"
+                            SelectedDate="{Binding User.NgaySinh}"
+                            Style="{StaticResource OurDatePicker}"
+                            materialDesign:HintAssist.Hint="Ngày sinh"
+                            FontSize="{StaticResource FontSize16}"/>
+                        <Grid
+                            Height="30"/>
+                        <TextBox 
+                            x:Name="phonenumber"
+                            Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                            materialDesign:HintAssist.Hint="Số điện thoại"
+                            MaxLength="13"
+                            FontSize="{StaticResource FontSize16}">
+                            <Binding
+                                    Path="User.DienThoai"
+                                    UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <local:PhoneValidateRule
+                                            ValidatesOnTargetUpdated="True"/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox>
+                    </StackPanel>
+                </Grid>
+
+                <Grid Grid.Column="2">
+                    <StackPanel>
+                        <TextBox
+                            x:Name="username"
+                            DockPanel.Dock="Left"    
+                            Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                            materialDesign:HintAssist.Hint="Tên đăng nhập"
+                            MaxLength="50"
+                            IsEnabled="False"
+                            FontSize="{StaticResource FontSize16}">
+                            <Binding
+                                Path="User.UserName"
+                                UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <local:NotEmptyValidationRule
+                                        IsNotCheckFirstTime="False"
+                                        ValidatesOnTargetUpdated="True"/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox>
+                        <Grid
+                            Height="30"/>
+                        <TextBox
+                            x:Name="name"
+                            Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                            materialDesign:HintAssist.Hint="Tên nhân viên"
+                            MaxLength="100"
+                            FontSize="{StaticResource FontSize16}">
+                            <Binding
+                                    Path="User.TenNhanVien"
+                                    UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <local:NotEmptyValidationRule
+                                        IsNotCheckFirstTime="False"
+                                        ValidatesOnTargetUpdated="True"/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox>
+                        <Grid
+                            Height="30"/>
+                        <TextBox 
+                            x:Name="address"
+                            Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                            materialDesign:HintAssist.Hint="Địa chỉ"
+                            MaxLength="200"
+                            TextWrapping="Wrap"
+                            Height="100"
+                            VerticalContentAlignment="Top"
+                            materialDesign:TextFieldAssist.CharacterCounterVisibility="Visible"
+                            FontSize="{StaticResource FontSize16}">
+                            <Binding
+                                    Path="User.DiaChi"
+                                    UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <local:NotEmptyValidationRule
+                                        IsNotCheckFirstTime="False"
+                                        ValidatesOnTargetUpdated="True"/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+            <Grid
+                Height="30"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="15"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <Button
+                    Grid.Column="1"
+                    FontSize="{StaticResource FontSize16}"
+                    Style="{StaticResource WhiteButton}"
+                    Content="Khôi phục"
+                    Command="{Binding ResetEditCommand,UpdateSourceTrigger=PropertyChanged}">
+                </Button>
+                <Button 
+                    Grid.Column="3"
+                    Content="Lưu" 
+                    HorizontalAlignment="Right" 
+                    Command="{Binding SaveUserCommand, UpdateSourceTrigger=PropertyChanged}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
+                    <Button.IsEnabled>
+                        <MultiBinding Converter="{StaticResource FalsesToTrueConverters}">
+                            <Binding ElementName="phonenumber" Path="(Validation.HasError)"/>
+                            <Binding ElementName="username" Path="(Validation.HasError)"/>
+                            <Binding ElementName="name" Path="(Validation.HasError)"/>
+                            <Binding ElementName="address" Path="(Validation.HasError)"/>
+                        </MultiBinding>
+                    </Button.IsEnabled>
+                </Button>
+            </Grid>
+            
+        </StackPanel>
+    </Border>
+</UserControl>

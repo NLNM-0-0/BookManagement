@@ -32,6 +32,7 @@ namespace BookManagement
         public ICommand DeleteCommand { get; set; }
         public ICommand DeleteAllCommand { get; set; }
         public ICommand PayCommand { get; set; }
+        public ICommand SeeDetalCommand { get; set; }
         #endregion
 
         #region Properties
@@ -101,6 +102,8 @@ namespace BookManagement
                 OnPropertyChanged();
             }
         }
+        private int minAmountBookCanSell;
+        private System.Windows.Controls.UserControl PreviousItem;
         #endregion
 
         #region Constructor
@@ -154,15 +157,56 @@ namespace BookManagement
                     }
                     else
                     {
-                        billDetail.SoLuong++;
-                        Total += billDetail.BillDetail.DonGia;
+                        if(billDetail.BillDetail.SACH.SoLuong - billDetail.SoLuong <= minAmountBookCanSell)
+                        {
+                            PreviousItem = MainViewModel.UpdateDialog("Main");
+                            var dl = new ConfirmDialog() {
+                                Header = "Lỗi",
+                                ContentString = $"Số lượng sách tồn ít nhất trong kho là {minAmountBookCanSell}.",
+                                CM = new RelayCommandWithNoParameter(() =>
+                                {
+                                    DialogHost.CloseDialogCommand.Execute(null, null);
+                                    if (PreviousItem != null)
+                                    {
+                                        DialogHost.Show(PreviousItem, "Main");
+                                    }
+                                })
+                            };
+                            DialogHost.Show(dl, "Main");
+                        }       
+                        else
+                        {
+                            billDetail.SoLuong++;
+                            Total += billDetail.BillDetail.DonGia;
+                        }    
                     }
 
                 });
-                IncreaseAmountCommand = new RelayCommand<BillDetailCanPropertyChange>(p => p != null, p =>
+                IncreaseAmountCommand = new RelayCommand<BillDetailCanPropertyChange>(billDetail => billDetail != null, billDetail =>
                 {
-                    p.SoLuong++;
-                    Total += p.BillDetail.DonGia;
+                    if (billDetail.BillDetail.SACH.SoLuong - billDetail.SoLuong <= minAmountBookCanSell)
+                    {
+                        PreviousItem = MainViewModel.UpdateDialog("Main");
+                        var dl = new ConfirmDialog()
+                        {
+                            Header = "Lỗi",
+                            ContentString = $"Số lượng sách tồn ít nhất trong kho là {minAmountBookCanSell}.",
+                            CM = new RelayCommandWithNoParameter(() =>
+                            {
+                                DialogHost.CloseDialogCommand.Execute(null, null);
+                                if (PreviousItem != null)
+                                {
+                                    DialogHost.Show(PreviousItem, "Main");
+                                }
+                            })
+                        };
+                        DialogHost.Show(dl, "Main");
+                    }
+                    else
+                    { 
+                        billDetail.SoLuong++;
+                        Total += billDetail.BillDetail.DonGia;
+                    }    
                 });
                 DecreaseAmountCommand = new RelayCommand<BillDetailCanPropertyChange>(p => p != null, p =>
                 {
@@ -198,11 +242,20 @@ namespace BookManagement
                 });
                 SearchCommand = new RelayCommandWithNoParameter(() => Search());
                 CloseSearchCommand = new RelayCommandWithNoParameter(CloseSearch);
+                SeeDetalCommand = new RelayCommand<SACH>(p => p != null, p =>
+                {
+                    BookDetail bookDetail = new BookDetail();
+                    BookDetailVM bookDetailVM = new BookDetailVM(p);
+                    bookDetail.DataContext = bookDetailVM;
+                    DialogHost.Show(bookDetail, "Main");
+                });
             });
             
 
         }
         #endregion
+
+        #region function
         private void AddBillSuccesProcess()
         {
             BillDetails.Clear();
@@ -233,9 +286,10 @@ namespace BookManagement
             allCategory.TenTheLoai = "Tất cả";
             Categories.Insert(0, allCategory);
 
-            allBooks.Add(allCategoryId, new List<SACH>());   
+            allBooks.Add(allCategoryId, new List<SACH>());
 
-            List<SACH> books = (await bookRepo.GetListAsync(p=>p.SoLuong > 0, p=>p.DAUSACH, p=>p.DAUSACH.THELOAI))
+            minAmountBookCanSell = RuleStore.instance.getValue(AppEnum.LuongTonToiDaKhiBan);
+            List<SACH> books = (await bookRepo.GetListAsync(p=>p.SoLuong > minAmountBookCanSell && p.IsActive == true, p=>p.DAUSACH, p=>p.DAUSACH.TACGIAs, p=>p.DAUSACH.THELOAI))
                 .OrderBy(p=>p.DAUSACH.TenSach).ThenBy(p=>p.NhaXuatBan).ToList();
             foreach (SACH item in books)
             {
@@ -252,5 +306,6 @@ namespace BookManagement
                 }
             }
         }
+        #endregion 
     }
 }

@@ -160,41 +160,35 @@ namespace BookManagement
         {
             if(book.MaSach==null)
             {
-                List<CHITIETPHIEUNHAP> importListHasBookHeader = allImportDetails.Where(p => p.SACH.DAUSACH.TenSach == book.DAUSACH.TenSach).ToList();
-                if(importListHasBookHeader.Any(p=>p.SACH.NhaXuatBan == book.NhaXuatBan))
+                List<string> authorNames = book.DAUSACH.TACGIAs.Select(a=>a.TenTacGia).ToList();
+                List<CHITIETPHIEUNHAP> importListHasBookHeader = allImportDetails.Where(p =>
                 {
-                    var dl = new ConfirmDialog()
+                    if (p.SACH.DAUSACH.TenSach != book.DAUSACH.TenSach)
                     {
-                        ContentString = "Bạn đã thêm vào sách có cùng tên và nhà xuất bản với sách đã có sẵn.",
-                        Header = "Oops"
-                    };
-                    DialogHost.Show(dl, "Main");
-                    return;
-                }
-                if (importListHasBookHeader.Any(p => p.SACH.DAUSACH.THELOAI.TenTheLoai != book.DAUSACH.THELOAI.TenTheLoai))
-                {
-                    var dl = new ConfirmDialog()
-                    {
-                        ContentString = "Mỗi đầu sách chỉ tương ứng với 1 thể loại.",
-                        Header = "Oops"
-                    };
-                    DialogHost.Show(dl, "Main");
-                    return;
-                }
-                if (importListHasBookHeader.Any(p =>
-                {
-                    List<String> importPageAuthors = p.SACH.DAUSACH.TACGIAs.Select(a=>a.TenTacGia).ToList();
-                    List<String> bookAuthors = book.DAUSACH.TACGIAs.Select(a => a.TenTacGia).ToList();
-                    if (importPageAuthors.Count != bookAuthors.Count)
-                    {
-                        return true;
+                        return false;
                     }
-                    return importPageAuthors.Intersect(bookAuthors).ToList().Count != importPageAuthors.Count;
-                }))
+                    List<string> tempAuthorNames = p.SACH.DAUSACH.TACGIAs.Select(a => a.TenTacGia).ToList();
+                    if(tempAuthorNames.Count!=authorNames.Count)
+                    {
+                        return false;
+                    }
+                    return tempAuthorNames.Intersect(authorNames).ToList().Count == authorNames.Count;
+                }).ToList();
+                if(importListHasBookHeader.Any(p=>p.SACH.DAUSACH.THELOAI.TenTheLoai!=book.DAUSACH.THELOAI.TenTheLoai))
                 {
                     var dl = new ConfirmDialog()
                     {
-                        ContentString = "Mỗi đầu sách chỉ tương ứng với 1 nhóm tác giả.",
+                        ContentString = "Không thể tồn tại 2 sách có cùng tên, cùng nhóm tác giả nhưng khác thể loại.",
+                        Header = "Oops"
+                    };
+                    DialogHost.Show(dl, "Main");
+                    return;
+                }    
+                if(importListHasBookHeader.Any(p=>p.SACH.NhaXuatBan == book.NhaXuatBan && p.SACH.LanTaiBan == book.LanTaiBan))
+                {
+                    var dl = new ConfirmDialog()
+                    {
+                        ContentString = "Bạn đã thêm vào sách đã có.",
                         Header = "Oops"
                     };
                     DialogHost.Show(dl, "Main");
@@ -207,11 +201,11 @@ namespace BookManagement
                 allImportDetails.Insert(0, importDetail);
                 Search();
             }
-            else if(allImportDetails.Any(p => p.MaSach == book.MaSach || p.SACH.MaSach == book.MaSach))
+            else if(allImportDetails.Any(p => p.SACH.MaSach == book.MaSach))
             {
                 var dl = new ConfirmDialog()
                 {
-                    ContentString = "Bạn đã thêm vào sách có cùng tên và nhà xuất bản với sách đã có sẵn.",
+                    ContentString = "Bạn đã thêm vào sách đã có.",
                     Header = "Oops"
                 };
                 DialogHost.Show(dl, "Main");
@@ -281,14 +275,38 @@ namespace BookManagement
                         //book's name handle
                         bookHeader.TenSach = book.DAUSACH.TenSach;
 
+                        List<string> authorNames = book.DAUSACH.TACGIAs.Select(a => a.TenTacGia).ToList();
                         for (int u = i + 1; u < allImportDetails.Count; u++)
                         {
                             DAUSACH tempBookHeader = allImportDetails.ElementAt(u).SACH.DAUSACH;
-                            if (tempBookHeader.TenSach == bookHeader.TenSach)
+                            List<string> tempAuthorNames = tempBookHeader.TACGIAs.Select(a => a.TenTacGia).ToList();
+                            if (tempBookHeader.TenSach == bookHeader.TenSach && 
+                                tempAuthorNames.Count == authorNames.Count && 
+                                tempAuthorNames.Intersect(authorNames).ToList().Count == tempAuthorNames.Count)
                             {
                                 tempBookHeader.MaDauSach = bookHeader.MaDauSach;
                             }
                         }
+
+                        //author handle
+                        for (int j = 0; j < book.DAUSACH.TACGIAs.Count; j++)
+                        {
+                            TACGIA author = book.DAUSACH.TACGIAs.ElementAt(j);
+                            if (author.MaTacGia == null)
+                            {
+                                TACGIA doubleAuthor = await authorRepo.GetSingleAsync(p => p.TenTacGia == author.TenTacGia);
+                                if (doubleAuthor == null)
+                                {
+                                    author.MaTacGia = await GenerateId.Gen(typeof(TACGIA), "MaTacGia");
+                                    await authorRepo.Add(author);
+                                }
+                                else
+                                {
+                                    author.MaTacGia = doubleAuthor.MaTacGia;
+                                }
+                            }
+                        }
+
                         //category handle
                         THELOAI bookCategory;
                         if(book.DAUSACH.THELOAI.MaTheLoai == null)
@@ -312,24 +330,7 @@ namespace BookManagement
                         }
                         bookHeader.MaTheLoai = bookCategory.MaTheLoai;
 
-                        //author handle
-                        for (int j = 0; j < book.DAUSACH.TACGIAs.Count; j++)
-                        {
-                            TACGIA author = book.DAUSACH.TACGIAs.ElementAt(j);
-                            if(author.MaTacGia == null)
-                            {
-                                TACGIA doubleAuthor = await authorRepo.GetSingleAsync(p=>p.TenTacGia == author.TenTacGia);
-                                if(doubleAuthor == null)
-                                {
-                                    author.MaTacGia = await GenerateId.Gen(typeof(TACGIA), "MaTacGia");
-                                    await authorRepo.Add(author);
-                                }
-                                else
-                                {
-                                    author.MaTacGia = doubleAuthor.MaTacGia;
-                                }   
-                            }
-                        }
+                        
                         await bookHeaderRepo.Add(bookHeader);
                     }
                     else
@@ -353,6 +354,7 @@ namespace BookManagement
                     book.MaDauSach = bookHeader.MaDauSach;
                     book.MaSach = await GenerateId.Gen(typeof(SACH), "MaSach");
                     book.DAUSACH = null;
+                    book.IsActive = true;
                     await bookRepo.Add(book);
                 }
                 else
