@@ -199,7 +199,8 @@ namespace BookManagement
                 importDetail.SoLuong = number;
                 importDetail.DonGiaNhap = unitImportPrice;
                 allImportDetails.Insert(0, importDetail);
-                Search();
+                SearchByValue = "";
+                FilterImportDetails = new ObservableCollection<CHITIETPHIEUNHAP>(allImportDetails);
             }
             else if(allImportDetails.Any(p => p.SACH.MaSach == book.MaSach))
             {
@@ -218,7 +219,8 @@ namespace BookManagement
                 importDetail.SoLuong = number;
                 importDetail.DonGiaNhap = unitImportPrice;
                 allImportDetails.Insert(0, importDetail);
-                Search();
+                SearchByValue = "";
+                FilterImportDetails = new ObservableCollection<CHITIETPHIEUNHAP>(allImportDetails);
             }
             TotalPrice += number * unitImportPrice;
         }

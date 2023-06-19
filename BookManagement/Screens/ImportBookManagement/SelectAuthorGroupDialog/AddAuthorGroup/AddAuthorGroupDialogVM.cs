@@ -110,7 +110,10 @@ namespace BookManagement
                         await DialogHost.Show(dl, "Main");
                     }
                 });
-                AddAuthorGroupSuccessCommand = new RelayCommandWithNoParameter(() =>
+                AddAuthorGroupSuccessCommand = new RelayCommand<object>(p=> 
+                {
+                    return FilterAuthors.Count != 0;
+                },(p) =>
                 {
                     DialogHost.CloseDialogCommand.Execute(null, null);
                     EditAuthorSuccess?.Invoke(FilterAuthors);
