@@ -20,6 +20,12 @@ namespace BookManagement
             AccountStore.instance.CurrentAccount.NHOMNGUOIDUNG.CHUCNANGs.Any(p => p.MaChucNang == AppEnum.TraCuuNhanVien);
         public bool IsAllowAddUser =>
             AccountStore.instance.CurrentAccount.NHOMNGUOIDUNG.CHUCNANGs.Any(p => p.MaChucNang == AppEnum.ThemNguoiDung);
+        public bool IsAllowChangeUserInfo =>
+            AccountStore.instance.CurrentAccount.NHOMNGUOIDUNG.CHUCNANGs.Any(p => p.MaChucNang == AppEnum.DoiThongTinNhanVien);
+        public bool IsAllowChangeUserActive =>
+            AccountStore.instance.CurrentAccount.NHOMNGUOIDUNG.CHUCNANGs.Any(p => p.MaChucNang == AppEnum.DoiTrangThaiHoatDongNhanVien);
+        public bool IsAllowResetPassword =>
+            AccountStore.instance.CurrentAccount.NHOMNGUOIDUNG.CHUCNANGs.Any(p => p.MaChucNang == AppEnum.KhoiPhucMatKhauNhanVien);
         #endregion
 
         #region DataRepository
@@ -33,6 +39,7 @@ namespace BookManagement
         public ICommand CloseSearchCommand { get; set; }
         public ICommand ResetPasswordCommand { get; set; }
         public ICommand SavePasswordCommand { get; set; }
+        public ICommand ChangeInforCommand { get; set; }
         #endregion
 
         #region Properties
@@ -209,12 +216,24 @@ namespace BookManagement
                     ConfirmNewPassword = "";
                 });
 
-                ResetPasswordCommand = new RelayCommand<NHANVIEN>(p => { return true; }, async p =>
+                ResetPasswordCommand = new RelayCommand<NHANVIEN>(p => { return p != null; }, async p =>
                 {
                     ConfirmAccountDialog confirmAccountDialog = new ConfirmAccountDialog();
                     ConfirmAccountDialogVM confirmAccountDialogVM = new ConfirmAccountDialogVM(AccountStore.instance.CurrentAccount, p);
                     confirmAccountDialog.DataContext = confirmAccountDialogVM;
                     await DialogHost.Show(confirmAccountDialog, "Main");
+                });
+
+                ChangeInforCommand = new RelayCommand<NHANVIEN>(p => { return p != null; }, async p =>
+                {
+                    ChangeUserInfoDialog changeUserInfoDialog = new ChangeUserInfoDialog();
+                    ChangeUserInfoDialogVM changeUserInfoDialogVM = new ChangeUserInfoDialogVM(p);
+                    if (IsAllowSearchUser)
+                    {
+                        changeUserInfoDialogVM.ClosedDialog += reloadDataGrid;
+                    }
+                    changeUserInfoDialog.DataContext = changeUserInfoDialogVM;
+                    await DialogHost.Show(changeUserInfoDialog, "Main");
                 });
                 MainViewModel.SetLoading(false);
             });
@@ -231,11 +250,13 @@ namespace BookManagement
 
             notBannedUsers = new ObservableCollection<NHANVIEN>(await userRepo.GetListAsync(
                 user => user.isActive == true &&
-                user.MaNhanVien != AccountStore.instance.CurrentAccount.MaNhanVien)
+                user.MaNhanVien != AccountStore.instance.CurrentAccount.MaNhanVien &&
+                user.MaNhomNguoiDung != AppEnum.Admin, user=>user.NHOMNGUOIDUNG)
             );
             bannedUsers = new ObservableCollection<NHANVIEN>(await userRepo.GetListAsync(
                 user => user.isActive == false &&
-                user.MaNhanVien != AccountStore.instance.CurrentAccount.MaNhanVien)
+                user.MaNhanVien != AccountStore.instance.CurrentAccount.MaNhanVien &&
+                user.MaNhomNguoiDung != AppEnum.Admin, user => user.NHOMNGUOIDUNG)
             );
             FilteredUsers = usersToSearch = notBannedUsers;
 
@@ -328,13 +349,13 @@ namespace BookManagement
             AdminAddUserDialogVM addUserDialogViewModel = new AdminAddUserDialogVM();
             if(IsAllowSearchUser)
             {
-                addUserDialogViewModel.ClosedDialog += AddUserDialogViewModel_ClosedDialog;
+                addUserDialogViewModel.ClosedDialog += reloadDataGrid;
             }   
             addUserDialog.DataContext = addUserDialogViewModel;
             MainViewModel.SetLoading(false);
             await DialogHost.Show(addUserDialog, "Main");
         }
-        private void AddUserDialogViewModel_ClosedDialog()
+        private void reloadDataGrid()
         {
             _ = Load();
         }

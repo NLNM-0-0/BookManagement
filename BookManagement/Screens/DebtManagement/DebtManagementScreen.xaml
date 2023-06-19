@@ -287,9 +287,9 @@
                     </DataGridTextColumn>
                     <DataGridTextColumn 
                         Header="Tên khách hàng" 
-                        Width="auto" 
+                        Width="150" 
                         MinWidth="150"
-                        MaxWidth="700"
+                        MaxWidth="500"
                         Binding="{Binding TenKhachHang}"
                         HeaderStyle="{StaticResource LeftHeader}"
                         CellStyle="{StaticResource LeftCell}">
@@ -301,7 +301,7 @@
                     </DataGridTextColumn>
                     <DataGridTextColumn 
                         Header="Giới tính"
-                        Width="auto"
+                        Width="100"
                         MinWidth="100"
                         MaxWidth="200"
                         HeaderStyle="{StaticResource CenterHeader}"
@@ -343,9 +343,9 @@
                     </DataGridTextColumn>
                     <DataGridTextColumn 
                         Header="Địa chỉ"
-                        Width="auto"
-                        MinWidth="100"
-                        MaxWidth="700"
+                        Width="100"
+                        MinWidth="80"
+                        MaxWidth="200"
                         HeaderStyle="{StaticResource LeftHeader}"
                         CellStyle="{StaticResource LeftCell}"
                         Binding="{Binding DiaChi}">
@@ -357,9 +357,9 @@
                     </DataGridTextColumn>
                     <DataGridTextColumn 
                         Header="Email"
-                        Width="auto"
-                        MinWidth="150"
-                        MaxWidth="500"
+                        Width="120"
+                        MinWidth="100"
+                        MaxWidth="300"
                         HeaderStyle="{StaticResource LeftHeader}"
                         CellStyle="{StaticResource LeftCell}"
                         Binding="{Binding Email}">
@@ -371,7 +371,7 @@
                     </DataGridTextColumn>
                     <DataGridTextColumn 
                         Header="Tiền nợ"
-                        Width="auto"
+                        Width="150"
                         MinWidth="150"
                         MaxWidth="300"
                         CellStyle="{StaticResource RightCell}"
@@ -423,6 +423,29 @@
                                         CommandParameter="{Binding}">
                                         <TextBlock
                                             Text="Thu">
+                                        </TextBlock>
+                                    </Hyperlink>
+                                </Label>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn 
+                        Header="Sửa" 
+                        Width="80"
+                        MinWidth="80"
+                        MaxWidth="80"
+                        HeaderStyle="{StaticResource CenterHeader}"
+                        CellStyle="{StaticResource CenterCell}"
+                        Visibility="{c:Binding 'DataContext.IsAllowChangeCustomerInfo', Source={x:Reference dummyElement}, UpdateSourceTrigger=PropertyChanged}">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Label>
+                                    <Hyperlink
+                                        Foreground="#4B8CDE"
+                                        Command="{Binding RelativeSource={RelativeSource AncestorType=local:DebtManagementScreen}, Path=DataContext.EditCustomerCommand, UpdateSourceTrigger=PropertyChanged}"
+                                        CommandParameter="{Binding}">
+                                        <TextBlock
+                                            Text="Sửa">
                                         </TextBlock>
                                     </Hyperlink>
                                 </Label>

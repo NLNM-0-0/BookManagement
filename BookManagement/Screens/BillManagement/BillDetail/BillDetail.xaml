@@ -18,7 +18,7 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="20"/>
                 <RowDefinition Height="auto"/>
-                <RowDefinition Height="20"/>
+                <RowDefinition Height="30"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="auto"/>
@@ -260,18 +260,6 @@
                             CellStyle="{StaticResource LeftCell}"
                             Width="4*" 
                             Binding="{Binding SACH.DAUSACH.TenSach}">
-                            <DataGridTextColumn.ElementStyle>
-                                <Style>
-                                    <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
-                                </Style>
-                            </DataGridTextColumn.ElementStyle>
-                        </DataGridTextColumn>
-                        <DataGridTextColumn 
-                            Header="Nhà xuất bản" 
-                            HeaderStyle="{StaticResource LeftHeader}"
-                            CellStyle="{StaticResource LeftCell}"
-                            Width="2*" 
-                            Binding="{Binding SACH.NhaXuatBan}">
                             <DataGridTextColumn.ElementStyle>
                                 <Style>
                                     <Setter Property="TextBlock.TextWrapping" Value="Wrap" />

@@ -42,6 +42,13 @@
                             Height="10"/>
                 </Button>
             </Grid>
+            <TextBlock
+                Margin="0 15 0 0"
+                Text="Thông báo: Hiện tại đang không có nhóm người dùng nào ngoài quản trị viên. Xin hãy tạo thêm nhóm người dùng rồi quay lại."
+                FontSize="{StaticResource FontSize16}"
+                TextWrapping="Wrap"
+                Visibility="{c:Binding 'UserGroups.Count == 0', UpdateSourceTrigger=PropertyChanged}"
+                Foreground="{StaticResource SuccessColorBrush}"/>
             <Grid
                 Height="30"/>
             <Grid>

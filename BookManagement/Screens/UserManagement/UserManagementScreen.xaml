@@ -56,16 +56,25 @@
                             FontSize="{StaticResource FontSize16}"
                             Command="{Binding OpenAddUserDialogCommand, UpdateSourceTrigger=PropertyChanged}"
                             Visibility="{c:Binding IsAllowAddUser, UpdateSourceTrigger=PropertyChanged}"/>
-
-
+                        <Button 
+                            DockPanel.Dock="Right" 
+                            Padding="30 0"
+                            Width="auto"
+                            Margin="0 0 15 0"
+                            FontSize="{StaticResource FontSize16}"
+                            Content="{Binding RemoveOrUnBanned}"
+                            Visibility="{c:Binding IsAllowChangeUserActive, UpdateSourceTrigger=PropertyChanged}"
+                            Command="{Binding RemoveUserCommand}"
+                            CommandParameter="{Binding ElementName=datagrid, Path=SelectedItem}"/>
                         <Button 
                             DockPanel.Dock="Right" 
                             Margin="0 0 15 0"
                             Padding="30 0"
                             Width="auto"
                             FontSize="{StaticResource FontSize16}"
-                            Content="{Binding RemoveOrUnBanned}"
-                            Command="{Binding RemoveUserCommand}"
+                            Content="Đổi thông tin"
+                            Visibility="{c:Binding IsAllowChangeUserInfo, UpdateSourceTrigger=PropertyChanged}"
+                            Command="{Binding ChangeInforCommand, UpdateSourceTrigger=PropertyChanged}"
                             CommandParameter="{Binding ElementName=datagrid, Path=SelectedItem}"/>
 
                         <!-- Search bar -->
@@ -110,6 +119,9 @@
                         materialDesign:ToggleButtonAssist.SwitchTrackOnBackground="{StaticResource BlackColorBrush}"
                         IsChecked="{Binding IsChecked, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
+                <!-- This to make column in Datagrid collapsed -->
+                <FrameworkElement x:Name="dummyElement" Visibility="Collapsed"/>
+                <!--- -->
                 <ScrollViewer
                     x:Name="grid" 
                     Grid.Row="3" 
@@ -199,6 +211,7 @@
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
+                            
                             <DataGridTextColumn 
                                 Header="Ngày vào làm" 
                                 Width="150" 
@@ -224,21 +237,21 @@
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
                             <DataGridTextColumn 
-                                Header="Trang thái"
-                                Width="130" 
-                                CellStyle="{StaticResource CenterCell}"
-                                HeaderStyle="{StaticResource CenterHeader}"
-                                Binding="{Binding isActive, Converter={x:Static local:StatusToTextConverter.Instance}}">
+                                Header="Nhóm người dùng" 
+                                Width="150" 
+                                CellStyle="{StaticResource LeftCell}"
+                                HeaderStyle="{StaticResource LeftHeader}"
+                                Binding="{Binding NHOMNGUOIDUNG.TenNhomNguoiDung}">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style>
                                         <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
-                                        <Setter Property="TextBlock.Foreground" Value="{Binding isActive, Converter={x:Static local:StatusToColorConverter.Instance}}"/>
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
                             <DataGridTemplateColumn
                                 Header="Mật khẩu" 
                                 Width="100"
+                                Visibility="{c:Binding 'DataContext.IsAllowResetPassword', Source={x:Reference dummyElement}, UpdateSourceTrigger=PropertyChanged}"
                                 CellStyle="{StaticResource CenterCell}"
                                 HeaderStyle="{StaticResource CenterHeader}">
                                 <DataGridTemplateColumn.CellTemplate>

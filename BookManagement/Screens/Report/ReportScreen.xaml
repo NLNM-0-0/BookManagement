@@ -96,7 +96,6 @@
                             SelectedValue="{Binding StockSearchBy, UpdateSourceTrigger=PropertyChanged}">
                             <ComboBoxItem Content="Mã sách"/>
                             <ComboBoxItem Content="Tên sách"/>
-                            <ComboBoxItem Content="NXB"/>
                         </ComboBox>
                         <Grid 
                             Grid.Column="1">
@@ -153,18 +152,6 @@
                                 CellStyle="{StaticResource LeftCell}"
                                 Width="*" MinWidth="200" MaxWidth="700" 
                                 Binding="{Binding SACH.DAUSACH.TenSach}">
-                                <DataGridTextColumn.ElementStyle>
-                                    <Style>
-                                        <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
-                                    </Style>
-                                </DataGridTextColumn.ElementStyle>
-                            </DataGridTextColumn>
-                            <DataGridTextColumn 
-                                Header="NXB" 
-                                HeaderStyle="{StaticResource LeftHeader}"
-                                CellStyle="{StaticResource LeftCell}"
-                                Width="auto" MinWidth="250" MaxWidth="700" 
-                                Binding="{Binding SACH.NhaXuatBan}">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style>
                                         <Setter Property="TextBlock.TextWrapping" Value="Wrap" />

@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="BookManagement.AuthorsDetail"
+﻿<UserControl x:Class="BookManagement.AddAuthorGroupDialog"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -49,8 +49,7 @@
             </Grid>
             <Grid
                 Grid.Row="2"
-                Margin="0 0 0 30"
-                Visibility="{c:Binding IsEditable, UpdateSourceTrigger=PropertyChanged}">
+                Margin="0 0 0 30">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="30"/>
@@ -87,7 +86,7 @@
                     VerticalAlignment="Stretch"
                     Style="{StaticResource ButtonRectangle}"
                     HorizontalAlignment="Right"
-                    Command="{Binding CloseDialogCommand, UpdateSourceTrigger=PropertyChanged}">
+                    Command="{Binding AddAuthorGroupSuccessCommand, UpdateSourceTrigger=PropertyChanged}">
                 </Button>
             </Grid>
             <!-- This to make column in Datagrid collapsed -->
@@ -120,8 +119,7 @@
                             Header="" 
                             Width="*" 
                             HeaderStyle="{StaticResource CenterHeader}"
-                            CellStyle="{StaticResource CenterCell}"
-                            Visibility="{c:Binding '(DataContext.IsEditable)', Source={x:Reference dummyElement}, UpdateSourceTrigger=PropertyChanged}">
+                            CellStyle="{StaticResource CenterCell}">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Label>

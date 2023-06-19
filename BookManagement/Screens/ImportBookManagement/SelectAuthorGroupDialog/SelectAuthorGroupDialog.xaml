@@ -1,0 +1,91 @@
+﻿<UserControl x:Class="BookManagement.SelectAuthorGroupDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:local="clr-namespace:BookManagement"
+             mc:Ignorable="d" >
+    <Border 
+        Background="{StaticResource WhiteColorBrush}" 
+        BorderThickness="0" 
+        CornerRadius="20" 
+        Padding="40" 
+        Width="590" 
+        Height="600">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid
+                Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="15"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock 
+                    Grid.Column="0"
+                    Text="Chọn nhóm tác giả" 
+                    HorizontalAlignment="Left" 
+                    VerticalAlignment="Center"
+                    FontSize="{StaticResource FontSize24}"/>
+                <Button
+                    Grid.Column="1"
+                    Content="Thêm"
+                    Command="{Binding AddNewCustomerGroupCommand, UpdateSourceTrigger=PropertyChanged}"/>
+                <Button 
+                    Grid.Column="3"
+                    Command="{Binding CloseDialogCommand, UpdateSourceTrigger=PropertyChanged}"
+                    x:Name="ButtonClose"
+                    Margin="0 0 10 0"
+                    Height="30"
+                    Width="30"
+                    Background="Transparent"
+                    BorderBrush="{StaticResource NotAvailableColorBrush}"
+                    BorderThickness="3">
+                    <fa:ImageAwesome
+                        x:Name="IconButtonClose"
+                        Icon="Close"
+                        Opacity="1"
+                        Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=BorderBrush}"
+                        Width="10"
+                        Height="10"/>
+                </Button>
+            </Grid>
+            <ListView
+                Grid.Row="2"
+                ItemsSource="{Binding AuthorGroupItemVMs, UpdateSourceTrigger=PropertyChanged}"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                BorderBrush="{StaticResource WhiteColorBrush}"
+                ScrollViewer.CanContentScroll="True"
+                Padding="5 0">
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel/>
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem" BasedOn="{StaticResource ListItemContainer}">
+                        <Setter Property="Margin" Value="0"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="BorderBrush" Value="{StaticResource BoxLineColorBrush}"/>
+                        <Setter Property="BorderThickness" Value="0 0 0 1"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <local:AuthorGroupItem 
+                            DataContext="{Binding}"/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+    </Border>
+</UserControl>

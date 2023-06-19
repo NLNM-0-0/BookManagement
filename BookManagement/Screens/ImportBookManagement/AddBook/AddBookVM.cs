@@ -1,4 +1,5 @@
 ﻿using BookManagement.Models;
+using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using DocumentFormat.OpenXml.InkML;
 using DocumentFormat.OpenXml.Spreadsheet;
@@ -7,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -26,30 +28,80 @@ namespace BookManagement
         #endregion
 
         #region Commands
-        public ICommand SeeDetailAuthorsCommand { get; set; }
+        public ICommand ChooseAuthorsGroupCommand { get; set; }
         public ICommand AddBookCommand { get; set; }
         private System.Windows.Controls.UserControl PreviousItem;
         #endregion
 
         #region Properties
-        public ICollection<DAUSACH> allBookHeaers;
-        private ObservableCollection<DAUSACH> filterBookHeaders;
-        public ObservableCollection<DAUSACH> FilterBookHeaders
+        private ICollection<SACH> allBooks;
+        private ICollection<DAUSACH> allBookHeaders;
+        private ObservableCollection<string> bookHeaderNames;
+        public ObservableCollection<string> BookHeaderNames
         {
-            get => filterBookHeaders;
+            get => bookHeaderNames;
             set
             {
-                filterBookHeaders = value;
+                bookHeaderNames = value;
                 OnPropertyChanged();
             }
         }
-        private DAUSACH selectedBookHeader;
-        public DAUSACH SelectedBookHeader
+        private string selectedBookHeaderName;
+        public string SelectedBookHeaderName
         {
-            get => selectedBookHeader;
+            get => selectedBookHeaderName;
             set
             {
-                selectedBookHeader = value;
+                selectedBookHeaderName = value;
+                OnPropertyChanged();
+            }
+        }
+        private string selectedBookHeaderNameString;
+        public string SelectedBookHeaderNameString
+        {
+            get => selectedBookHeaderNameString;
+            set
+            {
+                selectedBookHeaderNameString = value;
+                if(String.IsNullOrEmpty(value))
+                {
+                    FinalBookHeader = null;
+                }    
+                else if(SelectedBookHeaderName == value && Authors!=null && Authors.Count != 0)
+                {
+                    Task.Run(() =>
+                    {
+                        try
+                        {
+                            List<String> authorNames = Authors.Select(a => a.TenTacGia).ToList();
+                            FinalBookHeader = allBookHeaders.Single(p =>
+                            {
+                                if (p.TenSach != selectedBookHeaderName)
+                                {
+                                    return false;
+                                }
+                                List<String> tempAuthorNames = p.TACGIAs.Select(a => a.TenTacGia).ToList();
+                                if (tempAuthorNames.Count != authorNames.Count)
+                                {
+                                    return false;
+                                }
+                                if (tempAuthorNames.Intersect(authorNames).ToList().Count != authorNames.Count)
+                                {
+                                    return false;
+                                }
+                                return true;
+                            });
+                        }
+                        catch
+                        {
+                            FinalBookHeader = new DAUSACH();
+                        }
+                    });
+                }   
+                else
+                {
+                    FinalBookHeader = new DAUSACH();
+                }    
                 OnPropertyChanged();
             }
         }
@@ -65,106 +117,22 @@ namespace BookManagement
                     if (finalBookHeader.MaDauSach == null)
                     {
                         FilterNXBs = new ObservableCollection<string>(allNXBs);
-                        Authors = new ObservableCollection<TACGIA>();
+                        FilterTimeRepublish = new ObservableCollection<int>();
+                        SelectedNXBString = "";
+                        SelectedCategoryString = "";
                     }
                     else
                     {
-                        FilterNXBs = new ObservableCollection<string>((finalBookHeader.SACHes).Select(p => p.NhaXuatBan));
-
-                        Authors = new ObservableCollection<TACGIA>(finalBookHeader.TACGIAs);
-
+                        FilterNXBs = new ObservableCollection<string>((finalBookHeader.SACHes).Select(p => p.NhaXuatBan).Distinct());
+                        FilterTimeRepublish = new ObservableCollection<int>();
                         SelectedCategory = finalBookHeader.THELOAI;
                         SelectedCategoryString = finalBookHeader.THELOAI.TenTheLoai;
                     }
-                }    
-                else
-                {
-                    Authors = new ObservableCollection<TACGIA>();
-                }    
+                }       
                 OnPropertyChanged();
             }
         }
-        private string selectedBookHeaderString;
-        public string SelectedBookHeaderString
-        {
-            get => selectedBookHeaderString;
-            set
-            {
-                selectedBookHeaderString = value;
-                selectedNXBString = "";
-                if (selectedBookHeaderString == null || selectedBookHeaderString.Length == 0)
-                {
-                    FinalBookHeader = null;
-                    AuthorActionText = "";
-                }
-                else if(allBookHeaers.Any(p => p.TenSach == selectedBookHeaderString))
-                {
-                    FinalBookHeader = SelectedBookHeader;
-                    AuthorActionText = "Xem chi tiết";
-                }
-                else
-                {
-                    FinalBookHeader = new DAUSACH();
-                    AuthorActionText = "Chỉnh";
-                }
-                OnPropertyChanged();
-            }
-        }
-        private List<string> allNXBs;
-        private ObservableCollection<string> filternxbs;
-        public ObservableCollection<string> FilterNXBs
-        {
-            get => filternxbs;
-            set
-            {
-                filternxbs = value;
-                OnPropertyChanged();
-            }
-        }
-        private string selectedNXB;
-        public string SelectedNXB
-        {
-            get => selectedNXB;
-            set
-            {
-                selectedNXB = value;
-                OnPropertyChanged();
-            }
-        }
-        private string selectedNXBString;
-        public string SelectedNXBString
-        {
-            get => selectedNXBString;
-            set
-            {
-                selectedNXBString = value;
-                if(selectedNXBString == null ||
-                    selectedNXBString.Length == 0 || 
-                    selectedNXB == null ||
-                    selectedBookHeader == null || 
-                    selectedBookHeaderString == null ||
-                    selectedBookHeader.TenSach != selectedBookHeaderString ||
-                    selectedNXB != selectedNXBString)
-                {
-                    
-                }
-                else
-                {
-                    Task.Run(async() =>
-                    {
-                        MainViewModel.IsLoading = true;
-                        decimal tempPrice = (await bookRepo.GetSingleAsync(b => b.MaDauSach == SelectedBookHeader.MaDauSach && b.NhaXuatBan == SelectedNXB)).DonGiaNhapMoiNhat;
-                        App.Current.Dispatcher.Invoke((Action)(() =>
-                        {
-                            Price = tempPrice.ToString("G29");
-                        }));
-                        MainViewModel.IsLoading = false;
-                    });
-                    
-                }
-                OnPropertyChanged();
-            }
-        }
+
         private ICollection<TACGIA> allAuthors;
         private ObservableCollection<TACGIA> authors;
         public ObservableCollection<TACGIA> Authors
@@ -173,16 +141,45 @@ namespace BookManagement
             set
             {
                 authors = value;
-                OnPropertyChanged();
-            }
-        }
-        private String authorActionText;
-        public String AuthorActionText
-        {
-            get => authorActionText;
-            set
-            {
-                authorActionText = value;
+                if (String.IsNullOrEmpty(selectedBookHeaderNameString))
+                {
+                    FinalBookHeader = null;
+                }
+                else if (SelectedBookHeaderName == selectedBookHeaderNameString && value != null && value.Count != 0)
+                {
+                    Task.Run(() =>
+                    {
+                        try
+                        {
+                            List<String> authorNames = Authors.Select(a => a.TenTacGia).ToList();
+                            FinalBookHeader = allBookHeaders.Single(p =>
+                            {
+                                if (p.TenSach != selectedBookHeaderName)
+                                {
+                                    return false;
+                                }
+                                List<String> tempAuthorNames = p.TACGIAs.Select(a => a.TenTacGia).ToList();
+                                if (tempAuthorNames.Count != authorNames.Count)
+                                {
+                                    return false;
+                                }
+                                if (tempAuthorNames.Intersect(authorNames).ToList().Count != authorNames.Count)
+                                {
+                                    return false;
+                                }
+                                return true;
+                            });
+                        }
+                        catch
+                        {
+                            FinalBookHeader = new DAUSACH();
+                        }
+                    });
+                }
+                else
+                {
+                    FinalBookHeader = new DAUSACH();
+                }
                 OnPropertyChanged();
             }
         }
@@ -217,6 +214,109 @@ namespace BookManagement
                 OnPropertyChanged();
             }
         }
+
+        private List<string> allNXBs;
+        private ObservableCollection<string> filternxbs;
+        public ObservableCollection<string> FilterNXBs
+        {
+            get => filternxbs;
+            set
+            {
+                filternxbs = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        private string selectedNXB;
+        public string SelectedNXB
+        {
+            get => selectedNXB;
+            set
+            {
+                selectedNXB = value;
+                OnPropertyChanged();
+            }
+        }
+        private string selectedNXBString;
+        public string SelectedNXBString
+        {
+            get => selectedNXBString;
+            set
+            {
+                selectedNXBString = value;
+                SelectedTimeRepublishString = "";
+                SelectedTimeRepublish = null;
+                if(String.IsNullOrEmpty(selectedNXBString) ||
+                    selectedNXB == null ||
+                    selectedNXB != selectedNXBString ||
+                    finalBookHeader == null ||
+                    finalBookHeader.MaDauSach == null)
+                {
+                    FilterTimeRepublish = new ObservableCollection<int>();
+                }
+                else
+                {
+                    FilterTimeRepublish = new ObservableCollection<int>(
+                        allBooks.Where(
+                            b=>b.MaDauSach == FinalBookHeader.MaDauSach && b.NhaXuatBan == SelectedNXB
+                        ).Select(b=>b.LanTaiBan).ToList()
+                    );
+                }
+                OnPropertyChanged();
+            }
+        }
+        private ObservableCollection<int> filterTimeRepublish;
+        public ObservableCollection<int> FilterTimeRepublish
+        {
+            get => filterTimeRepublish;
+            set
+            {
+                filterTimeRepublish = value;
+                OnPropertyChanged();
+            }
+        }
+        private int? selectedTimeRepublish;
+        public int? SelectedTimeRepublish
+        {
+            get => selectedTimeRepublish;
+            set
+            {
+                selectedTimeRepublish = value;
+                OnPropertyChanged();
+            }    
+        }
+        private string selectedTimeRepublishString;
+        public string SelectedTimeRepublishString
+        {
+            get => selectedTimeRepublishString;
+            set
+            {
+                selectedTimeRepublishString = value;
+                int temp;
+                if(int.TryParse(selectedTimeRepublishString, out temp))
+                {
+                    if (selectedTimeRepublish != null &&
+                        !String.IsNullOrEmpty(value) ||
+                        selectedTimeRepublish == temp
+                    )
+                    {
+                        Task.Run(async () =>
+                        {
+                            decimal tempPrice = (await bookRepo.GetSingleAsync(
+                                b => b.MaDauSach == FinalBookHeader.MaDauSach
+                                && b.NhaXuatBan == SelectedNXB
+                                && b.LanTaiBan == SelectedTimeRepublish)
+                            ).DonGiaNhapMoiNhat;
+                            App.Current.Dispatcher.Invoke((Action)(() =>
+                            {
+                                Price = tempPrice.ToString("G29");
+                            }));
+                        });
+                    }
+                }  
+                OnPropertyChanged();    
+            }    
+        }
         public string Amount { get; set; }
 
         public string Price { get; set; }
@@ -227,20 +327,28 @@ namespace BookManagement
             {
                 await Load();
             });
-            SeeDetailAuthorsCommand = new RelayCommandWithNoParameter(async () => 
+            ChooseAuthorsGroupCommand = new RelayCommandWithNoParameter(async () => 
             {
                 PreviousItem = MainViewModel.UpdateDialog("Main");
                 MainViewModel.SetLoading(true);
-                AuthorsDetail authorsdetailDialog = new AuthorsDetail();
-                AuthorsDetailVM authorsDetailVM = new AuthorsDetailVM(Authors, AuthorActionText == "Chỉnh");
-                authorsDetailVM.EditAuthorSuccess += OnEditAuthorSuccess;
-                authorsdetailDialog.DataContext = authorsDetailVM;
+                SelectAuthorGroupDialog selectAuthorGroupDialog = new SelectAuthorGroupDialog();
+                SelectAuthorGroupDialogVM selectAuthorGroupDialogVM = new SelectAuthorGroupDialogVM(SelectedBookHeaderNameString);
+                selectAuthorGroupDialogVM.CloseDialogCommand = new RelayCommandWithNoParameter(async () =>
+                {
+                    DialogHost.CloseDialogCommand.Execute(null, null);
+                    if (PreviousItem != null)
+                    {
+                        await DialogHost.Show(PreviousItem, "Main");
+                    }
+                });
+                selectAuthorGroupDialogVM.ChooseAuthorSuccess += OnChooseAuthorSuccess;
+                selectAuthorGroupDialog.DataContext = selectAuthorGroupDialogVM;
                 MainViewModel.SetLoading(false);
-                await DialogHost.Show(authorsdetailDialog, "Main");
+                await DialogHost.Show(selectAuthorGroupDialog, "Main");
             });
             AddBookCommand = new RelayCommand<object>(p =>
             {
-                return !String.IsNullOrEmpty(SelectedBookHeaderString) &&
+                return !String.IsNullOrEmpty(SelectedBookHeaderNameString) &&
                 !String.IsNullOrEmpty(SelectedCategoryString) &&
                 !String.IsNullOrEmpty(SelectedNXBString) &&
                 Authors != null && Authors.Count > 0 && 
@@ -248,13 +356,113 @@ namespace BookManagement
                 !String.IsNullOrEmpty(Amount);
             }, async p =>
             {
-                if(int.Parse(Amount) < RuleStore.instance.getValue(AppEnum.LuongSachNhapItNhat))
+                int selectedTimeRepublish = -1;
+                if(int.TryParse(SelectedTimeRepublishString, out selectedTimeRepublish) && selectedTimeRepublish >= 0)
+                {  
+                    if (int.Parse(Amount) < RuleStore.instance.getValue(AppEnum.LuongSachNhapItNhat))
+                    {
+                        PreviousItem = MainViewModel.UpdateDialog("Main");
+                        var dl = new ConfirmDialog()
+                        {
+                            Header = "Oops",
+                            ContentString = "Bạn phải nhập sách số lượng lớn hơn " + RuleStore.instance.getValue(AppEnum.LuongSachNhapItNhat).ToString() + ".",
+                            CM = new RelayCommandWithNoParameter(() =>
+                            {
+                                DialogHost.CloseDialogCommand.Execute(null, null);
+                                if (PreviousItem != null)
+                                {
+                                    DialogHost.Show(PreviousItem, "Main");
+                                }
+                            })
+                        };
+                        await DialogHost.Show(dl, "Main");
+                    }
+                    else
+                    {
+                        //category handle
+                        THELOAI bookCategory;
+                        if (SelectedCategory == null || SelectedCategory.TenTheLoai != SelectedCategoryString)
+                        {
+                            bookCategory = new THELOAI();
+                            bookCategory.TenTheLoai = SelectedCategoryString.Trim();
+                        }
+                        else
+                        {
+                            bookCategory = SelectedCategory;
+                        }
+
+                        //book header handle
+                        DAUSACH bookHeader;
+                        if (FinalBookHeader != null && FinalBookHeader.MaDauSach != null)
+                        {
+                            bookHeader = FinalBookHeader;
+                        }
+                        else
+                        {
+                            bookHeader = new DAUSACH();
+                            bookHeader.TenSach = SelectedBookHeaderNameString.Trim();
+                            bookHeader.THELOAI = bookCategory;
+                            bookHeader.TACGIAs = Authors;
+                        }
+
+                        //book handle
+                        SACH book;
+                        if (bookHeader == null || 
+                            bookHeader.MaDauSach == null || 
+                            SelectedNXB == null ||
+                            SelectedNXB != SelectedNXBString ||
+                            SelectedTimeRepublish == null ||
+                            SelectedTimeRepublish != selectedTimeRepublish)
+                        {
+                            book = new SACH();
+                            book.SoLuong = int.Parse(Amount);
+                            book.DonGiaNhapMoiNhat = decimal.Parse(Price);
+                            book.DAUSACH = bookHeader;
+                            book.NhaXuatBan = SelectedNXBString.Trim();
+                            book.LanTaiBan = selectedTimeRepublish;
+                            DialogHost.CloseDialogCommand.Execute(null, null);
+                            AddBookSuccess?.Invoke(book, book.SoLuong ?? 0, book.DonGiaNhapMoiNhat);
+                        }
+                        else
+                        {
+                            book = await bookRepo.GetSingleAsync(
+                                b => b.MaDauSach == bookHeader.MaDauSach && b.NhaXuatBan == SelectedNXB && b.LanTaiBan == selectedTimeRepublish,
+                                b => b.DAUSACH,
+                                b => b.DAUSACH.THELOAI,
+                                b => b.DAUSACH.TACGIAs);      
+                            if (book.SoLuong >= RuleStore.instance.getValue(AppEnum.LuongTonToiDaKhiNhap))
+                            {
+                                PreviousItem = MainViewModel.UpdateDialog("Main");
+                                var dl = new ConfirmDialog()
+                                {
+                                    Header = "Oops",
+                                    ContentString = "Chỉ nhập các sách có lượng tồn ít hơn " + RuleStore.instance.getValue(AppEnum.LuongTonToiDaKhiNhap).ToString() + ".",
+                                    CM = new RelayCommandWithNoParameter(() =>
+                                    {
+                                        DialogHost.CloseDialogCommand.Execute(null, null);
+                                        if (PreviousItem != null)
+                                        {
+                                            DialogHost.Show(PreviousItem, "Main");
+                                        }
+                                    })
+                                };
+                                await DialogHost.Show(dl, "Main");
+                            }
+                            else
+                            {
+                                DialogHost.CloseDialogCommand.Execute(null, null);
+                                AddBookSuccess?.Invoke(book, int.Parse(Amount), Decimal.Parse(Price));
+                            }
+                        }
+                    }
+                }
+                else
                 {
                     PreviousItem = MainViewModel.UpdateDialog("Main");
                     var dl = new ConfirmDialog()
                     {
                         Header = "Oops",
-                        ContentString = "Bạn phải nhập sách số lượng lớn hơn " + RuleStore.instance.getValue(AppEnum.LuongSachNhapItNhat).ToString() + ".",
+                        ContentString = "Số lần xuất bản bạn đang nhập không phải số tự nhiên. Xin hãy nhập lại.",
                         CM = new RelayCommandWithNoParameter(() =>
                         {
                             DialogHost.CloseDialogCommand.Execute(null, null);
@@ -265,91 +473,23 @@ namespace BookManagement
                         })
                     };
                     await DialogHost.Show(dl, "Main");
-                }    
-                else
-                {
-                    //category handle
-                    THELOAI bookCategory;
-                    if (SelectedCategory == null || SelectedCategory.TenTheLoai != SelectedCategoryString)
-                    {
-                        bookCategory = new THELOAI();
-                        bookCategory.TenTheLoai = SelectedCategoryString.Trim();
-                    }
-                    else
-                    {
-                        bookCategory = SelectedCategory;
-                    }
 
-                    //book header handle
-                    DAUSACH bookHeader;
-                    if (SelectedBookHeader == null || SelectedBookHeader.TenSach != SelectedBookHeaderString)
-                    {
-                        bookHeader = new DAUSACH();
-                        bookHeader.TenSach = SelectedBookHeaderString.Trim();
-                        bookHeader.THELOAI = bookCategory;
-                    }
-                    else
-                    {
-                        bookHeader = SelectedBookHeader;
-                    }
-                    bookHeader.TACGIAs = Authors;
-
-                    //book handle
-                    SACH book;
-                    if (SelectedBookHeader == null || SelectedBookHeader.TenSach != SelectedBookHeaderString || SelectedNXB == null ||
-                        (SelectedBookHeader.TenSach == SelectedBookHeaderString && SelectedNXB != SelectedNXBString))
-                    {
-                        book = new SACH();
-                        book.SoLuong = int.Parse(Amount);
-                        book.DonGiaNhapMoiNhat = decimal.Parse(Price);
-                        book.DAUSACH = bookHeader;
-                        book.NhaXuatBan = SelectedNXBString.Trim();
-                        DialogHost.CloseDialogCommand.Execute(null, null);
-                        AddBookSuccess?.Invoke(book, book.SoLuong??0, book.DonGiaNhapMoiNhat);
-                    }
-                    else
-                    {
-                        book = await bookRepo.GetSingleAsync(
-                            b => b.MaDauSach == SelectedBookHeader.MaDauSach && b.NhaXuatBan == SelectedNXB,
-                            b => b.DAUSACH,
-                            b => b.DAUSACH.THELOAI,
-                            b => b.DAUSACH.TACGIAs);
-                        if(book.SoLuong >= RuleStore.instance.getValue(AppEnum.LuongTonToiDaKhiNhap))
-                        {
-                            PreviousItem = MainViewModel.UpdateDialog("Main");
-                            var dl = new ConfirmDialog()
-                            {
-                                Header = "Oops",
-                                ContentString = "Chỉ nhập các sách có lượng tồn ít hơn " + RuleStore.instance.getValue(AppEnum.LuongTonToiDaKhiNhap).ToString() + ".",
-                                CM = new RelayCommandWithNoParameter(() =>
-                                {
-                                    DialogHost.CloseDialogCommand.Execute(null, null);
-                                    if (PreviousItem != null)
-                                    {
-                                        DialogHost.Show(PreviousItem, "Main");
-                                    }
-                                })
-                            };
-                            await DialogHost.Show(dl, "Main");
-                        }    
-                        else
-                        {
-                            DialogHost.CloseDialogCommand.Execute(null, null);
-                            AddBookSuccess?.Invoke(book, int.Parse(Amount), Decimal.Parse(Price));
-                        }    
-                    }
                 }    
             });
         }
-        public void OnEditAuthorSuccess(ObservableCollection<TACGIA> authors)
+        public void OnChooseAuthorSuccess(List<TACGIA> authors)
         {
             Authors = new ObservableCollection<TACGIA>(authors);
-            DialogHost.Show(PreviousItem, "Main");
+            if(PreviousItem!= null)
+            {
+                DialogHost.Show(PreviousItem, "Main");
+            }
         }
         public async Task Load()
         {
-            allBookHeaers = new ObservableCollection<DAUSACH>(await bookHeaderRepo.GetAllAsync(p=>p.SACHes, p=>p.TACGIAs, p=>p.THELOAI));
-            FilterBookHeaders = new ObservableCollection<DAUSACH>(allBookHeaers);
+            allBooks = await bookRepo.GetAllAsync();
+            allBookHeaders = new ObservableCollection<DAUSACH>(await bookHeaderRepo.GetAllAsync(p=>p.SACHes, p=>p.TACGIAs, p=>p.THELOAI));
+            BookHeaderNames = new ObservableCollection<string>(allBookHeaders.Select(p => p.TenSach).Distinct().ToList());
 
             allNXBs = (await bookRepo.GetAllAsync()).Select(p=>p.NhaXuatBan).Distinct().ToList();
             FilterNXBs = new ObservableCollection<string>(allNXBs);
@@ -358,7 +498,6 @@ namespace BookManagement
             FilterCategories = new ObservableCollection<THELOAI>(allCategories);
 
             allAuthors = await authorRepo.GetAllAsync();
-            AuthorActionText = "";
         }
     }
 }

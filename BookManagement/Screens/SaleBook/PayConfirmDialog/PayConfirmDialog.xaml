@@ -41,15 +41,8 @@
                         Height="10"/>
                 </Button>
             </Grid>
-            <TextBlock
-                Margin="0 10 0 0"
-                Text="* Bạn hiện không có quyền ghi nợ cho khách hàng. Hãy liên hệ với người có quyền hành để được giải quyết."
-                FontSize="{StaticResource FontSize16}"
-                Foreground="{StaticResource ErrorColorBrush}"
-                TextWrapping="Wrap"
-                Visibility="{c:Binding '!IsAllowSaveBillWithDebt', UpdateSourceTrigger=PropertyChanged, FalseToVisibility=Collapsed}"/>
             <Grid
-                Margin="0 30 0 0">
+                Margin="0 10 0 0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
@@ -69,9 +62,8 @@
                     </Grid.RowDefinitions>
                     <RadioButton
                         FontSize="{StaticResource FontSize16}"
-                         Style="{StaticResource MaterialDesignRadioButton}"
-                        GroupName="comboBox"
-                        IsChecked="{c:Binding IsBillNotHasDebt, UpdateSourceTrigger=PropertyChanged}">
+                        Style="{StaticResource MaterialDesignRadioButton}"
+                        GroupName="comboBox">
                         Đã nhận đủ tiền
                     </RadioButton>
                     <RadioButton

@@ -65,8 +65,10 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="auto"/>
+                <RowDefinition Height="30"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="auto"/>
@@ -106,37 +108,23 @@
             <ComboBox
                 Grid.Row="4"
                 Style="{StaticResource MaterialDesignOutlinedComboBox}"
-                ItemsSource="{Binding FilterBookHeaders, UpdateSourceTrigger=PropertyChanged}"
+                ItemsSource="{Binding BookHeaderNames, UpdateSourceTrigger=PropertyChanged}"
                 IsTextSearchEnabled="True"
-                DisplayMemberPath="TenSach"
                 FontSize="{StaticResource FontSize16}"
                 IsEditable="True"
                 materialDesign:HintAssist.Hint="Tên sách"
-                SelectedItem="{Binding SelectedBookHeader, UpdateSourceTrigger=PropertyChanged}"
+                SelectedItem="{Binding SelectedBookHeaderName, UpdateSourceTrigger=PropertyChanged}"
                 MaxDropDownHeight="200"
-                Text="{Binding SelectedBookHeaderString, Mode=OneWayToSource}"
-                materialDesign:ComboBoxAssist.MaxLength="100"/>
-            <ComboBox
-                Grid.Row="6"
-                Style="{StaticResource MaterialDesignOutlinedComboBox}"
-                ItemsSource="{Binding FilterNXBs, UpdateSourceTrigger=PropertyChanged}"
-                IsTextSearchEnabled="True"
-                FontSize="{StaticResource FontSize16}"
-                IsEditable="True"
-                SelectedItem="{Binding SelectedNXB, UpdateSourceTrigger=PropertyChanged}"
-                materialDesign:HintAssist.Hint="Nhà xuất bản"
-                MaxDropDownHeight="200"
-                IsEnabled="{c:Binding 'FinalBookHeader != null', UpdateSourceTrigger=PropertyChanged}"
-                Text="{Binding SelectedNXBString, Mode=OneWayToSource}"
+                Text="{Binding SelectedBookHeaderNameString, UpdateSourceTrigger=PropertyChanged}"
                 materialDesign:ComboBoxAssist.MaxLength="100"/>
             <TextBox
                 x:Name="authorTextBox"
-                Grid.Row="8"
+                Grid.Row="6"
                 Style="{StaticResource MaterialDesignOutlinedTextBox}"
                 materialDesign:HintAssist.Hint="Tác giả"
                 FontSize="{StaticResource FontSize16}"
                 TextWrapping="Wrap"
-                Height="100"
+                Height="100"    
                 MaxHeight="100"
                 VerticalAlignment="Top"
                 VerticalContentAlignment="Top"
@@ -156,7 +144,7 @@
                 </TextBox.Text>
             </TextBox>
             <Grid
-                Grid.Row="9"
+                Grid.Row="7"
                 Margin="0 5 0 0"
                 Visibility="{c:Binding 'FinalBookHeader != null', UpdateSourceTrigger=PropertyChanged}">
                 <Grid.ColumnDefinitions>
@@ -167,17 +155,17 @@
                     Grid.Column="1">
                     <Hyperlink
                         Foreground="#4B8CDE"
-                        Command="{Binding SeeDetailAuthorsCommand, UpdateSourceTrigger=PropertyChanged}">
+                        Command="{Binding ChooseAuthorsGroupCommand, UpdateSourceTrigger=PropertyChanged}">
                         <TextBlock
                             FontSize="{StaticResource FontSize14}"
-                            Text="{Binding AuthorActionText, UpdateSourceTrigger=PropertyChanged}"
+                            Text="Chọn nhóm tác giả"
                             TextAlignment="Right">
                         </TextBlock>
                     </Hyperlink>
                 </Label>
             </Grid>
             <ComboBox
-                Grid.Row="11"
+                Grid.Row="9"
                 Style="{StaticResource MaterialDesignOutlinedComboBox}"
                 ItemsSource="{Binding FilterCategories, UpdateSourceTrigger=PropertyChanged}"
                 IsTextSearchEnabled="True"
@@ -190,9 +178,34 @@
                 IsEnabled="{c:Binding 'FinalBookHeader != null and FinalBookHeader.MaDauSach == null', UpdateSourceTrigger=PropertyChanged}"
                 Text="{Binding SelectedCategoryString, UpdateSourceTrigger=PropertyChanged}"
                 materialDesign:ComboBoxAssist.MaxLength="100"/>
-
+            <ComboBox
+                Grid.Row="11"
+                Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                ItemsSource="{Binding FilterNXBs, UpdateSourceTrigger=PropertyChanged}"
+                IsTextSearchEnabled="True"
+                FontSize="{StaticResource FontSize16}"
+                IsEditable="True"
+                SelectedItem="{Binding SelectedNXB, UpdateSourceTrigger=PropertyChanged}"
+                materialDesign:HintAssist.Hint="Nhà xuất bản"
+                MaxDropDownHeight="200"
+                IsEnabled="{c:Binding 'FinalBookHeader != null', UpdateSourceTrigger=PropertyChanged}"
+                Text="{Binding SelectedNXBString, UpdateSourceTrigger=PropertyChanged}"
+                materialDesign:ComboBoxAssist.MaxLength="100"/>
+            <ComboBox
+                Grid.Row="13"
+                Style="{StaticResource MaterialDesignOutlinedComboBox}"
+                ItemsSource="{Binding FilterTimeRepublish, UpdateSourceTrigger=PropertyChanged}"
+                IsTextSearchEnabled="True"
+                FontSize="{StaticResource FontSize16}"
+                IsEditable="True"
+                SelectedItem="{Binding SelectedTimeRepublish, UpdateSourceTrigger=PropertyChanged}"
+                materialDesign:HintAssist.Hint="Lần tái bản"
+                MaxDropDownHeight="200"
+                IsEnabled="{c:Binding 'FinalBookHeader != null and SelectedNXBString!=null and SelectedNXBString!=&quot;&quot;', UpdateSourceTrigger=PropertyChanged}"
+                Text="{Binding SelectedTimeRepublishString, UpdateSourceTrigger=PropertyChanged}"
+                materialDesign:ComboBoxAssist.MaxLength="4"/>
             <Grid
-                Grid.Row="13">
+                Grid.Row="15">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition Width="30"/>
@@ -243,7 +256,7 @@
                 </TextBox>
             </Grid>
             <Button 
-                Grid.Row="15"
+                Grid.Row="17"
                 Content="Thêm" 
                 HorizontalAlignment="Right"
                 Command="{Binding AddBookCommand, UpdateSourceTrigger=PropertyChanged}"

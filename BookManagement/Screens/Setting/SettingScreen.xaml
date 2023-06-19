@@ -313,6 +313,8 @@
                     <RowDefinition Height="20"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="20"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="20"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="20"/>
                     <RowDefinition Height="auto"/>
@@ -323,6 +325,7 @@
                         <ColumnDefinition Width="*"/>
                         <!--The column below just to decorate has not use-->
                         <ColumnDefinition Width="4*"/>
+                        <ColumnDefinition Width="auto"/>
                     </Grid.ColumnDefinitions>
                     <ComboBox
                         x:Name="userGroupComboBox"
@@ -333,9 +336,22 @@
                         FontSize="{StaticResource FontSize16}"
                         material:HintAssist.Hint="Nhóm người dùng"
                         DisplayMemberPath="TenNhomNguoiDung"/>
+                    <Button
+                        Content="Thêm nhóm người dùng"
+                        Padding="15 0"
+                        Width="auto"
+                        FontSize="{StaticResource FontSize16}"
+                        Command="{Binding AddNewUserGroup, UpdateSourceTrigger=PropertyChanged}"
+                        Grid.Column="2"/>
                 </Grid>
+                <TextBlock
+                    Grid.Row="3"
+                    Text="Lưu ý: Có 1 số chức năng phải đi kèm chung với chức năng tra cứu của nó. Hãy kiểm tra ở máy bạn trước khi thiết lập cho các nhóm người dùng khác."
+                    FontSize="{StaticResource FontSize16}"
+                    TextWrapping="Wrap"
+                    Foreground="{StaticResource SuccessColorBrush}"/>
                 <ScrollViewer
-                    Grid.Row="3">
+                    Grid.Row="5">
                     <StackPanel 
                         IsHitTestVisible="True"
                         ScrollViewer.CanContentScroll="False"
@@ -386,7 +402,7 @@
                     </StackPanel>
                 </ScrollViewer>
                 <Grid
-                    Grid.Row="5"
+                    Grid.Row="7"
                     Margin="30 0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>

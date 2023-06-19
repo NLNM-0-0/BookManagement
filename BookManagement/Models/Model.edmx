@@ -103,7 +103,7 @@
           <Property Name="TenKhachHang" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="GioiTinh" Type="nvarchar" MaxLength="4" />
           <Property Name="NgaySinh" Type="smalldatetime" />
-          <Property Name="DienThoai" Type="varchar" MaxLength="13" />
+          <Property Name="DienThoai" Type="varchar" MaxLength="13" Nullable="false" />
           <Property Name="DiaChi" Type="nvarchar" MaxLength="200" />
           <Property Name="Email" Type="varchar" MaxLength="200" />
           <Property Name="TienNo" Type="money" />
@@ -121,14 +121,14 @@
           <Property Name="NgayVaoLam" Type="smalldatetime" Nullable="false" />
           <Property Name="UserName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Password" Type="varchar" MaxLength="100" />
-          <Property Name="MaNhomNguoiDung" Type="varchar" MaxLength="4" />
+          <Property Name="MaNhomNguoiDung" Type="varchar" MaxLength="8" />
           <Property Name="isActive" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="NHOMNGUOIDUNG">
           <Key>
             <PropertyRef Name="MaNhomNguoiDung" />
           </Key>
-          <Property Name="MaNhomNguoiDung" Type="varchar" MaxLength="4" Nullable="false" />
+          <Property Name="MaNhomNguoiDung" Type="varchar" MaxLength="8" Nullable="false" />
           <Property Name="TenNhomNguoiDung" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="PHANQUYEN">
@@ -136,7 +136,7 @@
             <PropertyRef Name="MaNhomNguoiDung" />
             <PropertyRef Name="MaChucNang" />
           </Key>
-          <Property Name="MaNhomNguoiDung" Type="varchar" MaxLength="4" Nullable="false" />
+          <Property Name="MaNhomNguoiDung" Type="varchar" MaxLength="8" Nullable="false" />
           <Property Name="MaChucNang" Type="varchar" MaxLength="4" Nullable="false" />
         </EntityType>
         <EntityType Name="PHIEUNHAPSACH">
@@ -165,8 +165,10 @@
           <Property Name="MaSach" Type="varchar" MaxLength="8" Nullable="false" />
           <Property Name="MaDauSach" Type="varchar" MaxLength="8" />
           <Property Name="NhaXuatBan" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="LanTaiBan" Type="int" Nullable="false" />
           <Property Name="SoLuong" Type="int" />
           <Property Name="DonGiaNhapMoiNhat" Type="money" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="TACGIA">
           <Key>
@@ -734,7 +736,7 @@
           <Property Name="TenKhachHang" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="GioiTinh" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
           <Property Name="NgaySinh" Type="DateTime" Precision="0" />
-          <Property Name="DienThoai" Type="String" MaxLength="13" FixedLength="false" Unicode="false" />
+          <Property Name="DienThoai" Type="String" Nullable="false" MaxLength="13" FixedLength="false" Unicode="false" />
           <Property Name="DiaChi" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="Email" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="TienNo" Type="Decimal" Precision="19" Scale="4" />
@@ -755,7 +757,7 @@
           <Property Name="NgayVaoLam" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="UserName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Password" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="MaNhomNguoiDung" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="MaNhomNguoiDung" Type="String" MaxLength="8" FixedLength="false" Unicode="false" />
           <Property Name="isActive" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="HOADONs" Relationship="WPFBookManagementModel.FK__HOADON__MaNhanVi__5FB337D6" FromRole="NHANVIEN" ToRole="HOADON" />
           <NavigationProperty Name="NHOMNGUOIDUNG" Relationship="WPFBookManagementModel.FK__NHANVIEN__MaNhom__412EB0B6" FromRole="NHANVIEN" ToRole="NHOMNGUOIDUNG" />
@@ -766,7 +768,7 @@
           <Key>
             <PropertyRef Name="MaNhomNguoiDung" />
           </Key>
-          <Property Name="MaNhomNguoiDung" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="MaNhomNguoiDung" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="false" />
           <Property Name="TenNhomNguoiDung" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="NHANVIENs" Relationship="WPFBookManagementModel.FK__NHANVIEN__MaNhom__412EB0B6" FromRole="NHOMNGUOIDUNG" ToRole="NHANVIEN" />
           <NavigationProperty Name="CHUCNANGs" Relationship="WPFBookManagementModel.PHANQUYEN" FromRole="NHOMNGUOIDUNG" ToRole="CHUCNANG" />
@@ -801,8 +803,10 @@
           <Property Name="MaSach" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="false" />
           <Property Name="MaDauSach" Type="String" MaxLength="8" FixedLength="false" Unicode="false" />
           <Property Name="NhaXuatBan" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="LanTaiBan" Type="Int32" Nullable="false" />
           <Property Name="SoLuong" Type="Int32" />
           <Property Name="DonGiaNhapMoiNhat" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="CHITIETBAOCAOTONs" Relationship="WPFBookManagementModel.FK__CHITIETBA__MaSac__6A30C649" FromRole="SACH" ToRole="CHITIETBAOCAOTON" />
           <NavigationProperty Name="CHITIETHOADONs" Relationship="WPFBookManagementModel.FK__CHITIETHO__MaSac__6477ECF3" FromRole="SACH" ToRole="CHITIETHOADON" />
           <NavigationProperty Name="CHITIETPHIEUNHAPs" Relationship="WPFBookManagementModel.FK__CHITIETPH__MaSac__5BE2A6F2" FromRole="SACH" ToRole="CHITIETPHIEUNHAP" />
@@ -1187,8 +1191,10 @@
           <EntitySetMapping Name="SACHes">
             <EntityTypeMapping TypeName="WPFBookManagementModel.SACH">
               <MappingFragment StoreEntitySet="SACH">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
                 <ScalarProperty Name="DonGiaNhapMoiNhat" ColumnName="DonGiaNhapMoiNhat" />
                 <ScalarProperty Name="SoLuong" ColumnName="SoLuong" />
+                <ScalarProperty Name="LanTaiBan" ColumnName="LanTaiBan" />
                 <ScalarProperty Name="NhaXuatBan" ColumnName="NhaXuatBan" />
                 <ScalarProperty Name="MaDauSach" ColumnName="MaDauSach" />
                 <ScalarProperty Name="MaSach" ColumnName="MaSach" />

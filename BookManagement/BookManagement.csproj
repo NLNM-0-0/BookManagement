@@ -73,10 +73,30 @@
     <Compile Include="API\UserGroupAccessAPI.cs" />
     <Compile Include="AppModel\AccessItem.cs" />
     <Compile Include="AppModel\BillDetailCanPropertyChange.cs" />
-    <Compile Include="Components\UserControls\Dialogs\AdminAddUserDialog\AdminAddUserDialog.xaml.cs">
+    <Compile Include="Screens\DebtManagement\DebtDetail\EditCustomer\EditCustomer.xaml.cs">
+      <DependentUpon>EditCustomer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\DebtManagement\DebtDetail\EditCustomer\EditCustomerVM.cs" />
+    <Compile Include="Screens\ImportBookManagement\SelectAuthorGroupDialog\AuthorGroupItem\AuthorGroupItem.xaml.cs">
+      <DependentUpon>AuthorGroupItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\ImportBookManagement\SelectAuthorGroupDialog\AuthorGroupItem\AuthorGroupItemVM.cs" />
+    <Compile Include="Screens\ImportBookManagement\SelectAuthorGroupDialog\SelectAuthorGroupDialog.xaml.cs">
+      <DependentUpon>SelectAuthorGroupDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\ImportBookManagement\SelectAuthorGroupDialog\SelectAuthorGroupDialogVM.cs" />
+    <Compile Include="Screens\SaleBook\BookDetail\BookDetail.xaml.cs">
+      <DependentUpon>BookDetail.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\SaleBook\BookDetail\BookDetailVM.cs" />
+    <Compile Include="Screens\Setting\AddNewUserGroup\AddNewUserGroupVM.cs" />
+    <Compile Include="Screens\Setting\AddNewUserGroup\AddNewUserGroup.xaml.cs">
+      <DependentUpon>AddNewUserGroup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\UserManagement\AdminAddUserDialog\AdminAddUserDialog.xaml.cs">
       <DependentUpon>AdminAddUserDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Components\UserControls\Dialogs\AdminAddUserDialog\AdminAddUserDialogVM.cs" />
+    <Compile Include="Screens\UserManagement\AdminAddUserDialog\AdminAddUserDialogVM.cs" />
     <Compile Include="Components\UserControls\Dialogs\ConfirmDialog.xaml.cs">
       <DependentUpon>ConfirmDialog.xaml</DependentUpon>
     </Compile>
@@ -224,10 +244,10 @@
       <DependentUpon>AddBook.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\ImportBookManagement\AddBook\AddBookVM.cs" />
-    <Compile Include="Screens\ImportBookManagement\AuthorDetails\AuthorsDetail.xaml.cs">
-      <DependentUpon>AuthorsDetail.xaml</DependentUpon>
+    <Compile Include="Screens\ImportBookManagement\SelectAuthorGroupDialog\AddAuthorGroup\AddAuthorGRoupDialog.xaml.cs">
+      <DependentUpon>AddAuthorGRoupDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\ImportBookManagement\AuthorDetails\AuthorsDetailVM.cs" />
+    <Compile Include="Screens\ImportBookManagement\SelectAuthorGroupDialog\AddAuthorGroup\AddAuthorGroupDialogVM.cs" />
     <Compile Include="Screens\ImportBookManagement\ImportBookManagementScreen.xaml.cs">
       <DependentUpon>ImportBookManagementScreen.xaml</DependentUpon>
     </Compile>
@@ -266,6 +286,10 @@
       <DependentUpon>SettingScreen.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\Setting\SettingScreenVM.cs" />
+    <Compile Include="Screens\UserManagement\ChangeUserInfoDialog\ChangeUserInfoDialog.xaml.cs">
+      <DependentUpon>ChangeUserInfoDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\UserManagement\ChangeUserInfoDialog\ChangeUserInfoDialogVM.cs" />
     <Compile Include="Screens\UserManagement\ConfirmAccountDialog\ConfirmAccountDialog.xaml.cs">
       <DependentUpon>ConfirmAccountDialog.xaml</DependentUpon>
     </Compile>
@@ -392,7 +416,27 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Components\UserControls\Dialogs\AdminAddUserDialog\AdminAddUserDialog.xaml">
+    <Page Include="Screens\DebtManagement\DebtDetail\EditCustomer\EditCustomer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\ImportBookManagement\SelectAuthorGroupDialog\AuthorGroupItem\AuthorGroupItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\ImportBookManagement\SelectAuthorGroupDialog\SelectAuthorGroupDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\SaleBook\BookDetail\BookDetail.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Setting\AddNewUserGroup\AddNewUserGroup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\UserManagement\AdminAddUserDialog\AdminAddUserDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -464,7 +508,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Screens\ImportBookManagement\AuthorDetails\AuthorsDetail.xaml">
+    <Page Include="Screens\ImportBookManagement\SelectAuthorGroupDialog\AddAuthorGroup\AddAuthorGRoupDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -537,6 +581,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Screens\Setting\SettingScreen.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\UserManagement\ChangeUserInfoDialog\ChangeUserInfoDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

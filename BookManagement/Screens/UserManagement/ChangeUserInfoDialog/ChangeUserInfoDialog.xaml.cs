@@ -16,13 +16,14 @@ using System.Windows.Shapes;
 namespace BookManagement
 {
     /// <summary>
-    /// Interaction logic for AddNewBook.xaml
+    /// Interaction logic for ChangeUserInfoDialog.xaml
     /// </summary>
-    public partial class AuthorsDetail : UserControl
+    public partial class ChangeUserInfoDialog : UserControl
     {
-        public AuthorsDetail()
+        public ChangeUserInfoDialog()
         {
             InitializeComponent();
+            genderComboBox.ItemsSource = new List<String>() { "Nữ", "Nam", "Khác" };
         }
     }
 }

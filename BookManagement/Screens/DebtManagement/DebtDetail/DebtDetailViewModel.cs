@@ -110,6 +110,7 @@ namespace BookManagement
 
         private async Task ResetSearch()
         {
+            SearchMaPhieuThu = string.Empty;
             SearchMaNV = string.Empty;
             MaxPriceSearch = string.Empty;
             MinPriceSearch = string.Empty;

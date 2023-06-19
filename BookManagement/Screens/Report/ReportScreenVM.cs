@@ -237,11 +237,6 @@ namespace BookManagement
                 FilterStockReports = new ObservableCollection<CHITIETBAOCAOTON>(
                     AllStockReports.Where(p => Helpers.convertToUnSign3(p.SACH.DAUSACH.TenSach).ToLower().Contains(Helpers.convertToUnSign3(StockSearchByValue.Trim()).ToLower())));
             }
-            else if (StockSearchBy == "NXB")
-            {
-                FilterStockReports = new ObservableCollection<CHITIETBAOCAOTON>(
-                    AllStockReports.Where(p => Helpers.convertToUnSign3(p.SACH.NhaXuatBan).ToLower().Contains(Helpers.convertToUnSign3(StockSearchByValue.Trim()).ToLower())));
-            }
         }
         private void ResetSearchStock()
         {

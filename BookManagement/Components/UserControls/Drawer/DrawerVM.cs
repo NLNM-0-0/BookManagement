@@ -248,7 +248,7 @@ namespace BookManagement {
                 List<CHUCNANG> accessList = CurrentUser.NHOMNGUOIDUNG.CHUCNANGs.ToList();
                 buttonItems.Add(new ButtonItem("CreditCardSettings", "Bán sách", 0, 
                     isExistAccess(accessList, AppEnum.LapHoaDonBanSach)));
-                buttonItems.Add(new ButtonItem("Book", "Sách", 1, 
+                buttonItems.Add(new ButtonItem("Book", "Tìm Sách", 1, 
                     isExistAccess(accessList, AppEnum.TraCuuSach)));
                 buttonItems.Add(new ButtonItem("Import", "Nhập sách", 2, 
                     isExistAccess(accessList, AppEnum.LapPhieuNhapSach) ||
@@ -256,7 +256,7 @@ namespace BookManagement {
                 buttonItems.Add(new ButtonItem("PageLayoutFooter", "Hóa đơn", 3, 
                     isExistAccess(accessList, AppEnum.TraCuuHoaDonBanSach)));
                 buttonItems.Add(new ButtonItem("CashRefund", "Khách hàng", 4, 
-                    isExistAccess(accessList, AppEnum.TraCuukhachHang)));
+                    isExistAccess(accessList, AppEnum.TraCuuThongTinKhachHang)));
                 buttonItems.Add(new ButtonItem("CalendarText", "Báo cáo", 5,
                     isExistAccess(accessList, AppEnum.LapBaoCaoThang)));
                 buttonItems.Add(new ButtonItem("Cog", "Cài đặt", 6, true));

@@ -25,8 +25,10 @@ namespace BookManagement.Models
         public string MaSach { get; set; }
         public string MaDauSach { get; set; }
         public string NhaXuatBan { get; set; }
+        public int LanTaiBan { get; set; }
         public Nullable<int> SoLuong { get; set; }
         public decimal DonGiaNhapMoiNhat { get; set; }
+        public bool IsActive { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CHITIETBAOCAOTON> CHITIETBAOCAOTONs { get; set; }
