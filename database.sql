@@ -1,4 +1,4 @@
-﻿use master
+use master
 drop database WPFBookManagement
 
 create database WPFBookManagement
